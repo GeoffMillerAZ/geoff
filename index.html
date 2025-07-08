@@ -125,31 +125,20 @@
     .toggle-button.open .arrow {
         transform: rotate(180deg);
     }
-    
-    #skill-search {
-        background-color: rgba(0,0,0,0.2);
-        border: 1px solid var(--synth-border);
-        color: white;
-    }
-    #skill-search:focus {
-        outline: none;
-        border-color: var(--synth-cyan);
-        box-shadow: 0 0 10px var(--synth-cyan);
-    }
   </style>
 </head>
 <body class="antialiased">
 
   <!-- Main Container -->
-  <div class="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
-    <div class="flex flex-col lg:flex-row gap-12">
+  <div class="container mx-auto max-w-screen-xl p-4 sm:p-6 lg:p-8">
+    <div class="flex flex-col lg:flex-row gap-8 xl:gap-12">
 
       <!-- Left Column (Sticky) -->
-      <aside class="w-full lg:w-1/3 lg:sticky top-8 self-start space-y-8">
+      <aside class="w-full lg:w-1/3 xl:w-1/4 lg:sticky top-8 self-start space-y-8">
         <!-- Contact & Profile -->
         <div class="card p-6">
           <div class="text-center">
-            <h1 class="text-3xl font-bold text-glow">Geoffrey Miller</h1>
+            <h1 class="text-3xl xl:text-4xl font-bold text-glow">Geoffrey Miller</h1>
             <p class="text-accent font-medium mt-1">Infrastructure Director & Principal Cloud Architect</p>
             <p class="text-sm text-gray-400 mt-2">Phoenix, AZ</p>
           </div>
@@ -169,6 +158,21 @@
                 <p class="text-sm text-gray-400 text-center">
                     Please feel free to contact me via <a href="https://linkedin.com/in/geoff-e-miller" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-white font-medium transition-colors">LinkedIn</a>.
                 </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="card p-6">
+          <h2 class="text-xl font-bold text-white border-b-2 border-accent pb-2">Core Skills</h2>
+          <div class="mt-4">
+            <p class="font-semibold text-accent">Primary</p>
+            <div class="flex flex-wrap mt-2">
+              <span class="skill-badge">Cloud Strategy</span><span class="skill-badge">Infrastructure Architecture</span><span class="skill-badge">Platform Engineering</span><span class="skill-badge">DevOps / DevSecOps</span><span class="skill-badge">Kubernetes</span><span class="skill-badge">IaC & Policy-as-Code</span><span class="skill-badge">CI/CD & GitOps</span><span class="skill-badge">FinOps</span><span class="skill-badge">Agentic AI Workflows</span>
+            </div>
+             <p class="font-semibold text-accent mt-4">Languages & Frameworks</p>
+            <div class="flex flex-wrap mt-2">
+                <span class="skill-badge">Go / Golang</span><span class="skill-badge">Python</span><span class="skill-badge">TypeScript</span><span class="skill-badge">Bash</span><span class="skill-badge">CUE</span><span class="skill-badge">Nushell</span>
             </div>
           </div>
         </div>
@@ -199,80 +203,35 @@
           </div>
         </div>
 
-        <!-- Skills Section -->
-        <div class="card p-6">
-            <h2 class="text-xl font-bold text-white border-b-2 border-accent pb-2 mb-4">Technical Skills</h2>
-            <input type="text" id="skill-search" placeholder="Search skills..." class="w-full p-2 rounded-md mb-4">
-            
-            <div id="skills-container" class="space-y-4">
-                <div class="skill-category">
-                    <h3 class="font-semibold text-accent">Cloud & AWS Services</h3>
-                    <div class="flex flex-wrap mt-1">
-                        <span class="skill-badge" data-highlight="true">AWS</span><span class="skill-badge" data-highlight="true">EC2</span><span class="skill-badge" data-highlight="true">S3</span><span class="skill-badge" data-highlight="true">EKS</span><span class="skill-badge" data-highlight="true">VPC</span><span class="skill-badge">RDS</span><span class="skill-badge">DynamoDB</span><span class="skill-badge">Lambda</span><span class="skill-badge">API Gateway</span><span class="skill-badge">Route 53</span><span class="skill-badge">CloudFront</span><span class="skill-badge">CloudWatch</span><span class="skill-badge">Direct Connect</span><span class="skill-badge">Fargate</span><span class="skill-badge">AWS Organizations</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="font-semibold text-accent">CNCF & Kubernetes</h3>
-                    <div class="flex flex-wrap mt-1">
-                        <span class="skill-badge" data-highlight="true">Kubernetes (k8s)</span><span class="skill-badge" data-highlight="true">Docker</span><span class="skill-badge" data-highlight="true">Helm</span><span class="skill-badge" data-highlight="true">Istio</span><span class="skill-badge" data-highlight="true">Prometheus</span><span class="skill-badge">Kustomize</span><span class="skill-badge">Karpenter</span><span class="skill-badge">Kyverno</span><span class="skill-badge">Cilium</span><span class="skill-badge">Fluentd</span><span class="skill-badge">cert-manager</span><span class="skill-badge">KEDA</span><span class="skill-badge">external-secrets</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="font-semibold text-accent">IaC, GitOps & CI/CD</h3>
-                    <div class="flex flex-wrap mt-1">
-                        <span class="skill-badge" data-highlight="true">Terraform</span><span class="skill-badge" data-highlight="true">Pulumi</span><span class="skill-badge" data-highlight="true">GitOps</span><span class="skill-badge" data-highlight="true">GitHub Actions</span><span class="skill-badge" data-highlight="true">Argo CD</span><span class="skill-badge">CloudFormation</span><span class="skill-badge">Packer</span><span class="skill-badge">Jenkins</span><span class="skill-badge">GitLab CI</span><span class="skill-badge">Flux CD</span><span class="skill-badge">Tekton</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="font-semibold text-accent">Security & Compliance</h3>
-                    <div class="flex flex-wrap mt-1">
-                        <span class="skill-badge" data-highlight="true">Policy as Code</span><span class="skill-badge" data-highlight="true">OPA</span><span class="skill-badge" data-highlight="true">Snyk</span><span class="skill-badge" data-highlight="true">FFIEC</span><span class="skill-badge" data-highlight="true">PCI-DSS</span><span class="skill-badge">SOC 2</span><span class="skill-badge">Zero Trust</span><span class="skill-badge">IAM</span><span class="skill-badge">Aqua Security</span><span class="skill-badge">Falco</span><span class="skill-badge">CIS Benchmarks</span>
-                    </div>
-                </div>
-                <div class="skill-category">
-                    <h3 class="font-semibold text-accent">Languages & Frameworks</h3>
-                    <div class="flex flex-wrap mt-1">
-                        <span class="skill-badge" data-highlight="true">Go</span><span class="skill-badge" data-highlight="true">Python</span><span class="skill-badge" data-highlight="true">TypeScript</span><span class="skill-badge" data-highlight="true">Bash</span><span class="skill-badge">Node.js</span><span class="skill-badge">CUE</span><span class="skill-badge">Nushell</span><span class="skill-badge">SQL</span>
-                    </div>
-                </div>
-                 <div class="skill-category">
-                    <h3 class="font-semibold text-accent">Databases</h3>
-                    <div class="flex flex-wrap mt-1">
-                        <span class="skill-badge" data-highlight="true">PostgreSQL</span><span class="skill-badge" data-highlight="true">MySQL</span><span class="skill-badge" data-highlight="true">DynamoDB</span><span class="skill-badge" data-highlight="true">Redis</span><span class="skill-badge">MongoDB</span><span class="skill-badge">Amazon RDS</span><span class="skill-badge">Amazon Aurora</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
       </aside>
 
       <!-- Right Column (Main Content) -->
-      <main class="w-full lg:w-2/3 space-y-8">
+      <main class="w-full lg:w-2/3 xl:w-3/4 space-y-8">
         <!-- Summary Section -->
         <section id="summary" class="card p-6">
-          <h2 class="text-2xl font-bold text-white mb-4">Career Summary</h2>
-          <p class="text-gray-300 leading-relaxed">
+          <h2 class="text-2xl xl:text-3xl font-bold text-white mb-4">Career Summary</h2>
+          <p class="text-gray-300 leading-relaxed lg:text-base">
             Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale. Designs platform services that unify tools into a single end-to-end experience using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more. Advanced leader in AI-driven agentic workflows, building organization-wide coding platforms that triple developer throughput while maintaining security and compliance.
           </p>
         </section>
 
         <!-- Experience Section -->
         <section id="experience" class="card p-6">
-          <h2 class="text-2xl font-bold text-white mb-6">Professional Experience</h2>
+          <h2 class="text-2xl xl:text-3xl font-bold text-white mb-6">Professional Experience</h2>
           <div class="timeline pl-6 space-y-10">
             <!-- Job Entry 1 -->
             <div class="job-entry relative">
               <p class="absolute -left-[78px] top-1 text-xs text-gray-400">Present</p>
-              <h3 class="text-lg font-semibold text-white">Director of Cloud Infrastructure</h3>
+              <h3 class="text-lg xl:text-xl font-semibold text-white">Director of Cloud Infrastructure</h3>
               <p class="font-medium text-accent">First Citizens Bank <span class="text-gray-500 font-normal">| Tempe, AZ</span></p>
               <p class="text-sm text-gray-500 mb-3">Jul 2021 - Present</p>
-              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm">
+              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base">
                 <li>Guided platform integrations and migrations during the transition from Silicon Valley Bank.</li>
                 <li>Built a secure AWS Landing Zone for 100+ accounts, cutting AWS spend 30% YoY through FinOps automation.</li>
                 <li>Engineered an enterprise-grade, bank-hardened Kubernetes platform on EKS.</li>
               </ul>
               <div class="details-section">
-                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm mt-2">
+                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base mt-2">
                     <li>Enforced FFIEC/PCI-DSS/SOC 2 compliance using policy-as-code gates.</li>
                     <li>Sat on the bank’s AI governance board, crafting secure onboarding patterns for GenAI/ML tools.</li>
                     <li>Integrated DevSecOps tool chain (Sentinel, Snyk) into CI/CD.</li>
@@ -288,16 +247,16 @@
             </div>
             <!-- Job Entry 2 -->
             <div class="job-entry relative">
-              <h3 class="text-lg font-semibold text-white">Director of Cloud Infrastructure</h3>
+              <h3 class="text-lg xl:text-xl font-semibold text-white">Director of Cloud Infrastructure</h3>
               <p class="font-medium text-accent">REPAY <span class="text-gray-500 font-normal">| Tempe, AZ</span></p>
               <p class="text-sm text-gray-500 mb-3">Oct 2017 - Jul 2021</p>
-              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm">
+              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base">
                 <li>Built a green-field AWS platform from scratch, achieving PCI compliance with zero criticals.</li>
                 <li>Grew the team from a single engineer to a 10-person SRE team and a 5-person operations team.</li>
                 <li>Delivered a multi-account Landing Zone with automated FinOps, saving 30% YoY.</li>
               </ul>
               <div class="details-section">
-                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm mt-2">
+                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base mt-2">
                     <li>Launched Backstage IDP and Documentation-as-Code, reducing documentation drift by 75%.</li>
                     <li>Engineered and deployed enterprise observability and monitoring solutions (Prometheus, Loki, Grafana).</li>
                     <li>Architected reusable patterns, reducing cloud migration time from months to a single day.</li>
@@ -311,66 +270,66 @@
             </div>
             <!-- Other Job Entries... -->
             <div class="job-entry relative">
-              <h3 class="text-lg font-semibold text-white">DevOps Engineer</h3>
+              <h3 class="text-lg xl:text-xl font-semibold text-white">DevOps Engineer</h3>
               <p class="font-medium text-accent">Early Warning Services (Zelle) <span class="text-gray-500 font-normal">| Scottsdale, AZ</span></p>
               <p class="text-sm text-gray-500 mb-3">Jan 2017 - Oct 2017</p>
-              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm">
+              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base">
                 <li>Launched and scaled a large-scale SaaS payments service to 25M users with zero downtime.</li>
                 <li>Built immutable CI/CD pipelines for containerized microservices, enabling daily releases.</li>
                 <li>Automated blue-green rollouts and A/B tests, reducing RTO to <5 min.</li>
               </ul>
             </div>
             <div class="job-entry relative">
-              <h3 class="text-lg font-semibold text-white">Principal Cloud Architect</h3>
+              <h3 class="text-lg xl:text-xl font-semibold text-white">Principal Cloud Architect</h3>
               <p class="font-medium text-accent">Thinkvine <span class="text-gray-500 font-normal">| Remote / Chandler, AZ</span></p>
               <p class="text-sm text-gray-500 mb-3">Apr 2016 - Jan 2017</p>
-              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm">
+              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base">
                 <li>Migrated Windows & Linux workloads to AWS, cutting hosting costs by 45%.</li>
                 <li>Converted legacy infrastructure to Terraform IaC, achieving 75% faster deployments.</li>
               </ul>
             </div>
             <div class="job-entry relative">
-                <h3 class="text-lg font-semibold text-white">Lead DevOps Engineer</h3>
+                <h3 class="text-lg xl:text-xl font-semibold text-white">Lead DevOps Engineer</h3>
                 <p class="font-medium text-accent">OWNZONES Media Network <span class="text-gray-500 font-normal">| Scottsdale, AZ</span></p>
                 <p class="text-sm text-gray-500 mb-3">Apr 2016 - Jul 2016</p>
-                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm">
+                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base">
                     <li>Designed green-field AWS infra; saved USD 300k/yr via S3 lifecycle + Glacier.</li>
                 </ul>
             </div>
             <div class="job-entry relative">
-                <h3 class="text-lg font-semibold text-white">Applications Developer</h3>
+                <h3 class="text-lg xl:text-xl font-semibold text-white">Applications Developer</h3>
                 <p class="font-medium text-accent">State of Arizona - Dept. of Administration <span class="text-gray-500 font-normal">| Phoenix, AZ</span></p>
                 <p class="text-sm text-gray-500 mb-3">Jan 2015 - Apr 2016</p>
-                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm">
+                <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base">
                     <li>Introduced Git and automated unit testing to mainframe COBOL systems.</li>
                 </ul>
             </div>
           </div>
           <!-- Additional Experience Toggle -->
           <div class="mt-10">
-              <button class="toggle-button text-lg w-full justify-center p-2 rounded-lg" style="background-color: rgba(37, 176, 188, 0.1);" onclick="toggleDetails(this, true)">
+              <button class="toggle-button text-lg w-full justify-center p-2 rounded-lg" style="background-color: rgba(37, 176, 188, 0.1);">
                   <span class="button-text">Show Additional Experience (2001 - 2015)</span>
                   <svg class="arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
               </button>
               <div class="details-section timeline pl-6 mt-6 space-y-10">
-                  <div class="job-entry relative"><h3 class="text-lg font-semibold text-white">Undergraduate and Graduate Teaching Assistant</h3><p class="font-medium text-accent">Northern Illinois University</p><p class="text-sm text-gray-500 mb-3">2012 - 2015</p></div>
-                  <div class="job-entry relative"><h3 class="text-lg font-semibold text-white">Mainframe Technical Analyst Intern</h3><p class="font-medium text-accent">Bank of America</p><p class="text-sm text-gray-500 mb-3">2013 & 2014</p></div>
-                  <div class="job-entry relative"><h3 class="text-lg font-semibold text-white">Help Desk Manager</h3><p class="font-medium text-accent">Universal Technical Institute</p><p class="text-sm text-gray-500 mb-3">2010</p></div>
-                  <div class="job-entry relative"><h3 class="text-lg font-semibold text-white">Help Desk Manager</h3><p class="font-medium text-accent">J-Curve Technologies</p><p class="text-sm text-gray-500 mb-3">2009 - 2010</p></div>
-                  <div class="job-entry relative"><h3 class="text-lg font-semibold text-white">Systems Support Analyst</h3><p class="font-medium text-accent">Bank of America</p><p class="text-sm text-gray-500 mb-3">2006 - 2009</p></div>
-                  <div class="job-entry relative"><h3 class="text-lg font-semibold text-white">Desktop Repair</h3><p class="font-medium text-accent">Geek Squad</p><p class="text-sm text-gray-500 mb-3">2001 - 2006</p></div>
+                  <div class="job-entry relative"><h3 class="text-lg xl:text-xl font-semibold text-white">Undergraduate and Graduate Teaching Assistant</h3><p class="font-medium text-accent">Northern Illinois University</p><p class="text-sm text-gray-500 mb-3">2012 - 2015</p></div>
+                  <div class="job-entry relative"><h3 class="text-lg xl:text-xl font-semibold text-white">Mainframe Technical Analyst Intern</h3><p class="font-medium text-accent">Bank of America</p><p class="text-sm text-gray-500 mb-3">2013 & 2014</p></div>
+                  <div class="job-entry relative"><h3 class="text-lg xl:text-xl font-semibold text-white">Help Desk Manager</h3><p class="font-medium text-accent">Universal Technical Institute</p><p class="text-sm text-gray-500 mb-3">2010</p></div>
+                  <div class="job-entry relative"><h3 class="text-lg xl:text-xl font-semibold text-white">Help Desk Manager</h3><p class="font-medium text-accent">J-Curve Technologies</p><p class="text-sm text-gray-500 mb-3">2009 - 2010</p></div>
+                  <div class="job-entry relative"><h3 class="text-lg xl:text-xl font-semibold text-white">Systems Support Analyst</h3><p class="font-medium text-accent">Bank of America</p><p class="text-sm text-gray-500 mb-3">2006 - 2009</p></div>
+                  <div class="job-entry relative"><h3 class="text-lg xl:text-xl font-semibold text-white">Desktop Repair</h3><p class="font-medium text-accent">Geek Squad</p><p class="text-sm text-gray-500 mb-3">2001 - 2006</p></div>
               </div>
           </div>
         </section>
 
         <!-- Technical Achievements Section -->
         <section id="achievements" class="card p-6">
-            <h2 class="text-2xl font-bold text-white mb-4">Key Technical Achievements</h2>
-            <div class="space-y-4">
-                <div><h3 class="font-semibold text-accent">AI-Driven Engineering & Coding</h3><p class="text-gray-300 text-sm leading-relaxed">Architected organization-wide platforms combining AI-assisted development with controlled agentic execution, tripling engineering throughput by generating production-ready IaC and policy code with robust hallucination detection.</p></div>
-                <div><h3 class="font-semibold text-accent">Automated Cloud Cost Optimization</h3><p class="text-gray-300 text-sm leading-relaxed">Architected an event-driven automation platform for intelligent, on-demand non-production environments, cutting spend by over 70% through scheduled teardowns and usage-based spin-ups.</p></div>
-                <div><h3 class="font-semibold text-accent">Secure AWS Landing Zone</h3><p class="text-gray-300 text-sm leading-relaxed">Designed a robust, multi-account architecture for 100+ AWS accounts with centralized networking, logging, and policy-as-code, enabling highly scalable and secure onboarding for 30+ development teams.</p></div>
-                <div><h3 class="font-semibold text-accent">Kubernetes Deployment Automation</h3><p class="text-gray-300 text-sm leading-relaxed">Implemented scalable EKS blueprints with GitOps, admission control, and advanced autoscaling. Developed architectural patterns that simplified adoption and optimized spot instance usage for cost savings.</p></div>
+            <h2 class="text-2xl xl:text-3xl font-bold text-white mb-4">Key Technical Achievements</h2>
+            <div class="grid lg:grid-cols-2 gap-6">
+                <div><h3 class="font-semibold text-accent xl:text-lg">AI-Driven Engineering & Coding</h3><p class="text-gray-300 text-sm lg:text-base leading-relaxed mt-1">Architected organization-wide platforms combining AI-assisted development with controlled agentic execution, tripling engineering throughput by generating production-ready IaC and policy code with robust hallucination detection.</p></div>
+                <div><h3 class="font-semibold text-accent xl:text-lg">Automated Cloud Cost Optimization</h3><p class="text-gray-300 text-sm lg:text-base leading-relaxed mt-1">Architected an event-driven automation platform for intelligent, on-demand non-production environments, cutting spend by over 70% through scheduled teardowns and usage-based spin-ups.</p></div>
+                <div><h3 class="font-semibold text-accent xl:text-lg">Secure AWS Landing Zone</h3><p class="text-gray-300 text-sm lg:text-base leading-relaxed mt-1">Designed a robust, multi-account architecture for 100+ AWS accounts with centralized networking, logging, and policy-as-code, enabling highly scalable and secure onboarding for 30+ development teams.</p></div>
+                <div><h3 class="font-semibold text-accent xl:text-lg">Kubernetes Deployment Automation</h3><p class="text-gray-300 text-sm lg:text-base leading-relaxed mt-1">Implemented scalable EKS blueprints with GitOps, admission control, and advanced autoscaling. Developed architectural patterns that simplified adoption and optimized spot instance usage for cost savings.</p></div>
             </div>
         </section>
 
@@ -387,89 +346,16 @@
   <script>
     // This script handles the "Show More/Less" functionality for expandable sections.
     function toggleDetails(button, isFullSection = false) {
-        let details;
-        if (isFullSection) {
-            // For the main section toggle, the details div is the next element sibling.
-            details = button.nextElementSibling;
-        } else {
-            // For a job entry, the details div is the previous element sibling.
-            details = button.previousElementSibling;
-        }
-
-        // If for some reason the details element isn't found, exit gracefully.
-        if (!details) {
-            console.error("Could not find the details section to toggle for button:", button);
-            return;
-        }
-
+        const details = isFullSection ? button.nextElementSibling : button.previousElementSibling;
         const buttonText = button.querySelector('.button-text');
-        
-        // Toggle the classes that control visibility and arrow direction.
         button.classList.toggle('open');
         details.classList.toggle('open');
-
-        // Update the button's text based on the new state.
-        const isOpen = details.classList.contains('open');
-        if (isFullSection) {
-            buttonText.textContent = isOpen ? 'Hide Additional Experience' : 'Show Additional Experience (2001 - 2015)';
+        if (details.classList.contains('open')) {
+            buttonText.textContent = isFullSection ? 'Hide Additional Experience' : 'Show Less';
         } else {
-            buttonText.textContent = isOpen ? 'Show Less' : 'Show More';
+            buttonText.textContent = isFullSection ? 'Show Additional Experience (2001 - 2015)' : 'Show More';
         }
     }
-
-    // This script handles the interactive skills search functionality.
-    document.addEventListener('DOMContentLoaded', () => {
-        const searchInput = document.getElementById('skill-search');
-        const skillBadges = document.querySelectorAll('#skills-container .skill-badge');
-        const skillCategories = document.querySelectorAll('#skills-container .skill-category');
-
-        function filterSkills() {
-            const searchTerm = searchInput.value.toLowerCase();
-
-            // If search is empty, restore the default view (highlights only)
-            if (searchTerm === '') {
-                skillCategories.forEach(category => {
-                    category.style.display = 'block';
-                    const badges = category.querySelectorAll('.skill-badge');
-                    badges.forEach(badge => {
-                        if (badge.dataset.highlight === 'true') {
-                            badge.style.display = 'inline-block';
-                        } else {
-                            badge.style.display = 'none';
-                        }
-                    });
-                });
-                return;
-            }
-
-            // If search is active, filter all skills
-            skillCategories.forEach(category => {
-                let categoryHasVisibleBadge = false;
-                const badges = category.querySelectorAll('.skill-badge');
-                badges.forEach(badge => {
-                    const skillName = badge.textContent.toLowerCase();
-                    if (skillName.includes(searchTerm)) {
-                        badge.style.display = 'inline-block';
-                        categoryHasVisibleBadge = true;
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                });
-
-                // Hide category title if no badges in it match the search
-                if (categoryHasVisibleBadge) {
-                    category.style.display = 'block';
-                } else {
-                    category.style.display = 'none';
-                }
-            });
-        }
-
-        searchInput.addEventListener('input', filterSkills);
-        
-        // Set the initial view on page load
-        filterSkills();
-    });
   </script>
 
 </body>
