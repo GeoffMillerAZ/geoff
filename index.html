@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Geoffreys Miller - Infrastructure Director & Principal Cloud Architect</title>
+  <title>Geoffrey Miller - Infrastructure Director & Principal Cloud Architect</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,15 +130,15 @@
 <body class="antialiased">
 
   <!-- Main Container -->
-  <div class="mx-auto px-4 sm:px-6 lg:px-8 xl:px-16 2xl:px-24">
-    <div class="flex flex-col lg:flex-row gap-8 xl:gap-12 py-8 lg:py-12">
+  <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-12 gap-8 py-8 lg:py-12">
 
-      <!-- Left Column (Sticky) -->
-      <aside class="w-full lg:w-1/3 xl:w-4/12 2xl:w-3/12 lg:sticky top-8 self-start space-y-8">
+      <!-- Left Column -->
+      <aside class="col-span-12 lg:col-span-4 2xl:col-span-3 lg:sticky top-8 self-start space-y-8">
         <!-- Contact & Profile -->
         <div class="card p-6">
           <div class="text-center">
-            <h1 class="text-3xl lg:text-4xl xl:text-5xl font-bold text-glow">Geoffrey Miller</h1>
+            <h1 class="text-3xl lg:text-4xl font-bold text-glow">Geoffrey Miller</h1>
             <p class="text-accent font-medium mt-1 lg:text-lg">Infrastructure Director & Principal Cloud Architect</p>
             <p class="text-sm text-gray-400 mt-2">Phoenix, AZ</p>
           </div>
@@ -177,36 +177,35 @@
           </div>
         </div>
 
-        <!-- Education Section -->
-        <div class="card p-6">
-          <h2 class="text-xl lg:text-2xl font-bold text-white border-b-2 border-accent pb-2">Education</h2>
-          <div class="mt-4 space-y-3">
-            <div>
-              <p class="font-semibold text-gray-100">Master of Science, Computer Science</p>
-              <p class="text-gray-400 text-sm">Northern Illinois University — DeKalb, IL</p>
-              <p class="text-gray-500 text-xs">Jan 2015</p>
+        <!-- Education & Certs for smaller screens -->
+        <div class="space-y-8 2xl:hidden">
+            <div class="card p-6">
+              <h2 class="text-xl lg:text-2xl font-bold text-white border-b-2 border-accent pb-2">Education</h2>
+              <div class="mt-4 space-y-3">
+                <div>
+                  <p class="font-semibold text-gray-100">Master of Science, Computer Science</p>
+                  <p class="text-gray-400 text-sm">Northern Illinois University — DeKalb, IL</p>
+                  <p class="text-gray-500 text-xs">Jan 2015</p>
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-100">Bachelor of Science, Computer Science</p>
+                  <p class="text-gray-400 text-sm">Northern Illinois University — DeKalb, IL</p>
+                  <p class="text-gray-500 text-xs">Jan 2013</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p class="font-semibold text-gray-100">Bachelor of Science, Computer Science</p>
-              <p class="text-gray-400 text-sm">Northern Illinois University — DeKalb, IL</p>
-              <p class="text-gray-500 text-xs">Jan 2013</p>
+            <div class="card p-6">
+              <h2 class="text-xl lg:text-2xl font-bold text-white border-b-2 border-accent pb-2">Certifications</h2>
+              <div class="mt-4 space-y-2">
+                <p class="text-gray-200">AWS Certified Solutions Architect – Associate</p>
+                <p class="text-gray-200">AWS Certified Developer – Associate</p>
+              </div>
             </div>
-          </div>
         </div>
-        
-        <!-- Certifications Section -->
-        <div class="card p-6">
-          <h2 class="text-xl lg:text-2xl font-bold text-white border-b-2 border-accent pb-2">Certifications</h2>
-          <div class="mt-4 space-y-2">
-            <p class="text-gray-200">AWS Certified Solutions Architect – Associate</p>
-            <p class="text-gray-200">AWS Certified Developer – Associate</p>
-          </div>
-        </div>
-
       </aside>
 
-      <!-- Right Column (Main Content) -->
-      <main class="w-full lg:w-2/3 xl:w-8/12 2xl:w-9/12 space-y-8">
+      <!-- Center Column -->
+      <main class="col-span-12 lg:col-span-8 2xl:col-span-6 space-y-8">
         <!-- Summary Section -->
         <section id="summary" class="card p-6">
           <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-4">Career Summary</h2>
@@ -336,8 +335,34 @@
                 <div><h3 class="font-semibold text-accent xl:text-xl">Kubernetes Deployment Automation</h3><p class="text-gray-300 text-sm lg:text-base xl:text-lg leading-relaxed mt-1">Implemented scalable EKS blueprints with GitOps, admission control, and advanced autoscaling. Developed architectural patterns that simplified adoption and optimized spot instance usage for cost savings.</p></div>
             </div>
         </section>
-
       </main>
+
+      <!-- Right Column (for very wide screens) -->
+      <aside class="hidden 2xl:block 2xl:col-span-3 2xl:sticky top-8 self-start space-y-8">
+        <div class="card p-6">
+          <h2 class="text-xl lg:text-2xl font-bold text-white border-b-2 border-accent pb-2">Education</h2>
+          <div class="mt-4 space-y-3">
+            <div>
+              <p class="font-semibold text-gray-100">Master of Science, Computer Science</p>
+              <p class="text-gray-400 text-sm">Northern Illinois University — DeKalb, IL</p>
+              <p class="text-gray-500 text-xs">Jan 2015</p>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-100">Bachelor of Science, Computer Science</p>
+              <p class="text-gray-400 text-sm">Northern Illinois University — DeKalb, IL</p>
+              <p class="text-gray-500 text-xs">Jan 2013</p>
+            </div>
+          </div>
+        </div>
+        <div class="card p-6">
+          <h2 class="text-xl lg:text-2xl font-bold text-white border-b-2 border-accent pb-2">Certifications</h2>
+          <div class="mt-4 space-y-2">
+            <p class="text-gray-200">AWS Certified Solutions Architect – Associate</p>
+            <p class="text-gray-200">AWS Certified Developer – Associate</p>
+          </div>
+        </div>
+      </aside>
+
     </div>
     <!-- Footer -->
     <footer class="text-center mt-12 py-4">
