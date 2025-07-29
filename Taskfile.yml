@@ -1,0 +1,120 @@
+version: '3'
+
+includes:
+  build: ./taskfiles/Taskfile.build.yml
+  test: ./taskfiles/Taskfile.test.yml
+  content: ./taskfiles/Taskfile.content.yml
+  deploy: ./taskfiles/Taskfile.deploy.yml
+
+vars:
+  PROJECT_NAME: geoff-miller-platform
+  NODE_VERSION: 20
+  ASTRO_VERSION: latest
+
+env:
+  NODE_ENV: development
+  ASTRO_TELEMETRY_DISABLED: 1
+
+tasks:
+  # Core development tasks
+  dev:
+    desc: Start development server with hot reloading
+    cmds:
+      - npm run dev
+    sources:
+      - "src/**/*"
+      - "astro.config.mjs"
+      - "package.json"
+
+  install:
+    desc: Install project dependencies
+    cmds:
+      - npm install
+    sources:
+      - "package.json"
+      - "package-lock.json"
+    generates:
+      - "node_modules/**/*"
+
+  clean:
+    desc: Clean build artifacts and dependencies
+    cmds:
+      - rm -rf dist/
+      - rm -rf .astro/
+      - rm -rf node_modules/
+    silent: true
+
+  setup:
+    desc: Initial project setup
+    deps: [install]
+    cmds:
+      - echo "Geoff Miller Cloud Platform setup complete!"
+      - echo "Run 'task dev' to start development server"
+
+  # Quality assurance
+  lint:
+    desc: Lint code and content
+    cmds:
+      - npm run lint
+
+  format:
+    desc: Format code with Prettier
+    cmds:
+      - npm run format
+
+  type-check:
+    desc: Run TypeScript type checking
+    cmds:
+      - npm run type-check
+
+  validate:
+    desc: Run all validation checks
+    deps: [type-check, lint]
+    cmds:
+      - echo "All validation checks passed!"
+
+  # Performance and analysis
+  lighthouse:
+    desc: Run Lighthouse performance audit
+    cmds:
+      - npm run lighthouse
+
+  a11y:
+    desc: Run accessibility audit
+    cmds:
+      - npm run a11y
+
+  analyze:
+    desc: Analyze bundle size and performance
+    deps: [build:prod]
+    cmds:
+      - npm run analyze
+
+  # Git and version control
+  commit:
+    desc: Interactive commit with conventional commits
+    cmds:
+      - git add .
+      - npm run commit
+
+  push:
+    desc: Push changes and trigger deployment
+    cmds:
+      - git push origin {{.CLI_ARGS | default "main"}}
+
+  # Documentation
+  docs:
+    desc: Generate and serve documentation
+    cmds:
+      - echo "Serving documentation locally..."
+      - echo "Available documentation:"
+      - echo "README.md - Project overview"
+      - echo "CLAUDE.md - Claude context and commands"
+      - echo "docs/adr/ - Architecture decisions"
+      - echo "specs/ - Feature specifications"
+
+  # Default task
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list

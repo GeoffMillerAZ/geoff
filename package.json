@@ -1,0 +1,67 @@
+{
+  "name": "geoff-miller-platform",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Personal brand and knowledge-sharing platform for Geoff Miller - Infrastructure Director & Principal Cloud Architect",
+  "keywords": [
+    "platform-engineering",
+    "cloud-architecture",
+    "devops",
+    "kubernetes",
+    "astro",
+    "typescript"
+  ],
+  "author": "Geoffrey Miller <contact@geoffmiller.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GeoffMillerAZ/geoff.git"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "type-check": "astro check",
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx,.astro && prettier --check src/",
+    "lint:fix": "eslint src --ext .js,.jsx,.ts,.tsx,.astro --fix && prettier --write src/",
+    "format": "prettier --write src/",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lighthouse": "lhci autorun",
+    "a11y": "axe-cli http://localhost:4321",
+    "new:blog": "node scripts/new-blog.mjs",
+    "new:project": "node scripts/new-project.mjs",
+    "new:guide": "node scripts/new-guide.mjs",
+    "validate:content": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^3.1.7",
+    "@astrojs/rss": "^4.0.9",
+    "@astrojs/sitemap": "^3.2.1",
+    "@astrojs/tailwind": "^5.1.2",
+    "astro": "^4.15.12",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "eslint": "^9.14.0",
+    "eslint-plugin-astro": "^1.2.4",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "vitest": "^2.1.4",
+    "@lhci/cli": "^0.14.0",
+    "@axe-core/cli": "^4.10.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  }
+}

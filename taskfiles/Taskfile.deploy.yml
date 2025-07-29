@@ -1,0 +1,230 @@
+version: '3'
+
+vars:
+  STAGING_BRANCH: develop
+  PRODUCTION_BRANCH: main
+  DEPLOY_DIR: dist
+
+tasks:
+  # Pre-deployment checks
+  pre-check:
+    desc: Run pre-deployment validation checks
+    cmds:
+      - echo "Running pre-deployment checks..."
+      - task test:ci
+      - task build:prod
+      - task build:check
+      - echo "✓ All pre-deployment checks passed"
+
+  # Staging deployment
+  staging:
+    desc: Deploy to staging environment
+    deps: [pre-check]
+    cmds:
+      - echo "Deploying to staging..."
+      - git checkout {{.STAGING_BRANCH}}
+      - git pull origin {{.STAGING_BRANCH}}
+      - git push origin {{.STAGING_BRANCH}}
+      - echo "✓ Staging deployment initiated"
+      - echo "Preview URL will be available shortly at:"
+      - echo "https://geoff-git-{{.STAGING_BRANCH}}-geoffmilleraz.vercel.app"
+
+  # Production deployment
+  production:
+    desc: Deploy to production (requires confirmation)
+    deps: [pre-check]
+    interactive: true
+    cmds:
+      - echo "🚨 Production Deployment"
+      - echo "This will deploy to https://geoffmiller.dev"
+      - echo "Are you sure you want to continue? (y/N)"
+      - read -r CONFIRM
+      - |
+        if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+          echo "Deployment cancelled"
+          exit 1
+        fi
+      - echo "Deploying to production..."
+      - git checkout {{.PRODUCTION_BRANCH}}
+      - git pull origin {{.PRODUCTION_BRANCH}}
+      - git push origin {{.PRODUCTION_BRANCH}}
+      - echo "✓ Production deployment initiated"
+      - echo "Site will be live at https://geoffmiller.dev in a few minutes"
+
+  # Preview deployment (for pull requests)
+  preview:
+    desc: Create preview deployment for current branch
+    cmds:
+      - echo "Creating preview deployment..."
+      - BRANCH=$(git branch --show-current)
+      - git push origin $BRANCH
+      - echo "✓ Preview deployment initiated for branch: $BRANCH"
+      - echo "Preview URL will be available at:"
+      - echo "https://geoff-git-$BRANCH-geoffmilleraz.vercel.app"
+
+  # Rollback deployment
+  rollback:
+    desc: Rollback to previous deployment
+    interactive: true
+    cmds:
+      - echo "🔄 Rollback Previous Deployment"
+      - echo "This will rollback the production deployment"
+      - echo "Are you sure you want to continue? (y/N)"
+      - read -r CONFIRM
+      - |
+        if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+          echo "Rollback cancelled"
+          exit 1
+        fi
+      - echo "Rolling back deployment..."
+      - vercel rollback --token=$VERCEL_TOKEN
+      - echo "✓ Rollback completed"
+
+  # Deployment status
+  status:
+    desc: Check deployment status
+    cmds:
+      - echo "Checking deployment status..."
+      - vercel ls --token=$VERCEL_TOKEN
+      - echo ""
+      - echo "Recent deployments:"
+      - vercel ls --limit=5 --token=$VERCEL_TOKEN
+
+  # Domain management
+  domains:
+    desc: Manage custom domains
+    cmds:
+      - echo "Custom domains:"
+      - vercel domains ls --token=$VERCEL_TOKEN
+
+  # Environment management
+  env:
+    desc: Manage environment variables
+    cmds:
+      - echo "Environment variables (production):"
+      - vercel env ls production --token=$VERCEL_TOKEN
+      - echo ""
+      - echo "Environment variables (preview):"
+      - vercel env ls preview --token=$VERCEL_TOKEN
+
+  # Add environment variables
+  env-add:
+    desc: Add environment variable
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task deploy:env-add -- KEY=value"
+          exit 1
+        fi
+        KEY=$(echo "{{.CLI_ARGS}}" | cut -d'=' -f1)
+        VALUE=$(echo "{{.CLI_ARGS}}" | cut -d'=' -f2-)
+        vercel env add $KEY production --token=$VERCEL_TOKEN
+        echo "Environment variable $KEY added to production"
+
+  # Performance monitoring
+  monitor:
+    desc: Monitor deployment performance
+    cmds:
+      - echo "Monitoring deployment performance..."
+      - echo "Checking Core Web Vitals..."
+      - npm run lighthouse -- --url=https://geoffmiller.dev
+      - echo "Checking uptime..."
+      - curl -I https://geoffmiller.dev
+
+  # Cache management
+  cache-clear:
+    desc: Clear CDN cache
+    cmds:
+      - echo "Clearing CDN cache..."
+      - vercel --scope=geoffmilleraz redeploy --token=$VERCEL_TOKEN
+      - echo "✓ CDN cache cleared"
+
+  # Post-deployment verification
+  verify:
+    desc: Verify deployment health
+    cmds:
+      - echo "Verifying deployment health..."
+      - echo "Checking main pages..."
+      - curl -f -s https://geoffmiller.dev > /dev/null && echo "✓ Homepage accessible"
+      - curl -f -s https://geoffmiller.dev/blog > /dev/null && echo "✓ Blog accessible"
+      - curl -f -s https://geoffmiller.dev/projects > /dev/null && echo "✓ Projects accessible"
+      - curl -f -s https://geoffmiller.dev/sitemap-index.xml > /dev/null && echo "✓ Sitemap accessible"
+      - echo "Checking SEO meta tags..."
+      - curl -s https://geoffmiller.dev | grep -q "<title>" && echo "✓ Title tag present"
+      - curl -s https://geoffmiller.dev | grep -q 'meta name="description"' && echo "✓ Meta description present"
+      - echo "✓ Deployment verification complete"
+
+  # Security checks
+  security-check:
+    desc: Run post-deployment security checks
+    cmds:
+      - echo "Running security checks..."
+      - echo "Checking HTTPS configuration..."
+      - curl -I https://geoffmiller.dev | grep -q "Strict-Transport-Security" && echo "✓ HSTS enabled"
+      - echo "Checking security headers..."
+      - curl -I https://geoffmiller.dev | grep -q "X-Content-Type-Options" && echo "✓ Content type options set"
+      - curl -I https://geoffmiller.dev | grep -q "X-Frame-Options" && echo "✓ Frame options set"
+      - echo "✓ Security check complete"
+
+  # Analytics setup
+  analytics:
+    desc: Verify analytics integration
+    cmds:
+      - echo "Checking analytics integration..."
+      - curl -s https://geoffmiller.dev | grep -q "vercel.com/insights" && echo "✓ Vercel Analytics detected"
+      - echo "Analytics verification complete"
+
+  # Full deployment pipeline
+  full:
+    desc: Run complete deployment pipeline
+    cmds:
+      - task deploy:pre-check
+      - task deploy:staging
+      - echo "Waiting for staging deployment..."
+      - sleep 30
+      - task deploy:verify-staging
+      - echo "Staging deployment successful. Ready for production."
+
+  # Verify staging deployment
+  verify-staging:
+    desc: Verify staging deployment
+    cmds:
+      - echo "Verifying staging deployment..."
+      - BRANCH=$(git branch --show-current)
+      - curl -f -s "https://geoff-git-$BRANCH-geoffmilleraz.vercel.app" > /dev/null && echo "✓ Staging site accessible"
+      - echo "✓ Staging verification complete"
+
+  # Hot fix deployment
+  hotfix:
+    desc: Deploy urgent hotfix to production
+    interactive: true
+    cmds:
+      - echo "🚨 HOTFIX DEPLOYMENT"
+      - echo "This bypasses normal checks for urgent fixes"
+      - echo "Are you absolutely sure this is a critical hotfix? (y/N)"
+      - read -r CONFIRM
+      - |
+        if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
+          echo "Hotfix cancelled"
+          exit 1
+        fi
+      - echo "Deploying hotfix..."
+      - git push origin {{.PRODUCTION_BRANCH}}
+      - echo "✓ Hotfix deployed - monitoring for issues..."
+      - task deploy:verify
+
+  # Maintenance mode
+  maintenance:
+    desc: Enable/disable maintenance mode
+    cmds:
+      - |
+        if [ "{{.CLI_ARGS}}" = "on" ]; then
+          echo "Enabling maintenance mode..."
+          # Implementation would depend on your setup
+          echo "Maintenance mode enabled"
+        elif [ "{{.CLI_ARGS}}" = "off" ]; then
+          echo "Disabling maintenance mode..."
+          echo "Maintenance mode disabled"
+        else
+          echo "Usage: task deploy:maintenance -- on|off"
+        fi

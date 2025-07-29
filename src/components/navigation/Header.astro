@@ -1,0 +1,84 @@
+---
+// Header component for main navigation
+const currentPath = Astro.url.pathname;
+
+const navItems = [
+  { name: 'Home', href: '/', current: currentPath === '/' },
+  { name: 'About', href: '/about', current: currentPath === '/about' },
+  { name: 'Blog', href: '/blog', current: currentPath.startsWith('/blog') },
+  { name: 'Projects', href: '/projects', current: currentPath.startsWith('/projects') },
+  { name: 'Guides', href: '/guides', current: currentPath.startsWith('/guides') },
+  { name: 'Resources', href: '/resources', current: currentPath.startsWith('/resources') },
+  { name: 'Contact', href: '/contact', current: currentPath === '/contact' },
+];
+---
+
+<header class="sticky top-0 z-50 card mx-4 mt-4">
+  <nav class="flex items-center justify-between p-4">
+    <!-- Logo/Brand -->
+    <div class="flex items-center space-x-2">
+      <a href="/" class="text-xl font-bold text-glow hover:text-accent transition-colors">
+        Geoffrey Miller
+      </a>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex items-center space-x-1">
+      {navItems.map(item => (
+        <a 
+          href={item.href}
+          class={`nav-link ${item.current ? 'active' : ''}`}
+        >
+          {item.name}
+        </a>
+      ))}
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button 
+      id="mobile-menu-button"
+      class="md:hidden p-2 text-synth-text hover:text-accent transition-colors"
+      aria-label="Toggle mobile menu"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-synth-border">
+    <div class="px-4 py-2 space-y-1">
+      {navItems.map(item => (
+        <a 
+          href={item.href}
+          class={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+            item.current 
+              ? 'text-accent bg-synth-card-bg' 
+              : 'text-synth-text hover:text-accent hover:bg-synth-card-bg'
+          }`}
+        >
+          {item.name}
+        </a>
+      ))}
+    </div>
+  </div>
+</header>
+
+<script>
+  // Mobile menu toggle functionality
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuButton?.addEventListener('click', () => {
+    mobileMenu?.classList.toggle('hidden');
+  });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (event) => {
+    if (!mobileMenuButton?.contains(event.target as Node) && 
+        !mobileMenu?.contains(event.target as Node)) {
+      mobileMenu?.classList.add('hidden');
+    }
+  });
+</script>

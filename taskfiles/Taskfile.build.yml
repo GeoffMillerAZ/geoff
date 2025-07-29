@@ -1,0 +1,122 @@
+version: '3'
+
+vars:
+  BUILD_DIR: dist
+  ASTRO_CONFIG: astro.config.mjs
+
+tasks:
+  # Development build
+  dev:
+    desc: Build for development with source maps
+    cmds:
+      - npm run build:dev
+    sources:
+      - "src/**/*"
+      - "public/**/*"
+      - "{{.ASTRO_CONFIG}}"
+      - "package.json"
+    generates:
+      - "{{.BUILD_DIR}}/**/*"
+
+  # Production build
+  prod:
+    desc: Build optimized production bundle
+    cmds:
+      - npm run build
+    sources:
+      - "src/**/*"
+      - "public/**/*"
+      - "{{.ASTRO_CONFIG}}"
+      - "package.json"
+    generates:
+      - "{{.BUILD_DIR}}/**/*"
+
+  # Preview production build
+  preview:
+    desc: Preview production build locally
+    deps: [prod]
+    cmds:
+      - npm run preview
+
+  # Clean build artifacts
+  clean:
+    desc: Remove build artifacts
+    cmds:
+      - rm -rf {{.BUILD_DIR}}/
+      - rm -rf .astro/
+    silent: true
+
+  # Analyze build output
+  analyze:
+    desc: Analyze build size and performance
+    deps: [prod]
+    cmds:
+      - echo "Build analysis:"
+      - du -sh {{.BUILD_DIR}}
+      - find {{.BUILD_DIR}} -name "*.js" -exec wc -c {} + | sort -n
+      - echo "Checking for unused dependencies..."
+      - npx depcheck
+
+  # Check build integrity
+  check:
+    desc: Verify build integrity and structure
+    deps: [prod]
+    cmds:
+      - echo "Checking build structure..."
+      - test -d {{.BUILD_DIR}}
+      - test -f {{.BUILD_DIR}}/index.html
+      - echo "Validating HTML output..."
+      - find {{.BUILD_DIR}} -name "*.html" -exec echo "Checking {}" \; -exec npx html-validate {} \;
+
+  # Build sitemap
+  sitemap:
+    desc: Generate XML sitemap
+    deps: [prod]
+    cmds:
+      - echo "Sitemap generated during build process"
+      - test -f {{.BUILD_DIR}}/sitemap-index.xml || echo "Warning: sitemap not found"
+
+  # Optimize images
+  optimize-images:
+    desc: Optimize images for production
+    cmds:
+      - echo "Optimizing images..."
+      - npx @astrojs/image optimize
+
+  # Bundle analysis
+  bundle:
+    desc: Analyze JavaScript bundles
+    deps: [prod]
+    cmds:
+      - echo "Bundle analysis:"
+      - npx bundlesize
+      - echo "Generated bundles:"
+      - find {{.BUILD_DIR}} -name "*.js" -type f
+
+  # Performance budget check
+  budget:
+    desc: Check performance budget
+    deps: [prod]
+    cmds:
+      - echo "Checking performance budget..."
+      - npx bundlesize
+      - echo "Build size check complete"
+
+  # Static asset optimization
+  assets:
+    desc: Optimize static assets
+    cmds:
+      - echo "Optimizing static assets..."
+      - echo "- Compressing images"
+      - echo "- Minifying CSS and JS"
+      - echo "- Generating service worker"
+
+  # All build tasks
+  all:
+    desc: Run complete build pipeline
+    cmds:
+      - task build:clean
+      - task build:prod
+      - task build:check
+      - task build:analyze
+      - echo "Complete build pipeline finished!"

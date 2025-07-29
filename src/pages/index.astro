@@ -1,0 +1,53 @@
+---
+import HomeLayout from '../layouts/HomeLayout.astro';
+import ProfileCard from '../components/home/ProfileCard.astro';
+import SkillsSection from '../components/home/SkillsSection.astro';
+import EducationSection from '../components/home/EducationSection.astro';
+import ExperienceTimeline from '../components/home/ExperienceTimeline.astro';
+import AchievementsSection from '../components/home/AchievementsSection.astro';
+
+const pageTitle = 'Geoffrey Miller - Infrastructure Director & Principal Cloud Architect';
+const pageDescription = 'Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale.';
+---
+
+<HomeLayout title={pageTitle} description={pageDescription}>
+  <div class="grid grid-cols-12 gap-8 py-8 lg:py-12">
+    
+    <!-- Left Column - Profile and Skills -->
+    <aside class="col-span-12 lg:col-span-4 2xl:col-span-3 lg:sticky top-8 self-start space-y-8">
+      <ProfileCard />
+      <SkillsSection />
+      
+      <!-- Education & Certs for smaller screens -->
+      <div class="2xl:hidden">
+        <EducationSection />
+      </div>
+    </aside>
+
+    <!-- Center Column - Main Content -->
+    <main class="col-span-12 lg:col-span-8 2xl:col-span-6 space-y-8">
+      <!-- Summary Section -->
+      <section id="summary" class="card p-6">
+        <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-4">Career Summary</h2>
+        <p class="text-gray-300 leading-relaxed lg:text-lg xl:text-xl">
+          Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms 
+          (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on 
+          developer efficiency and platform scale. Designs platform services that unify tools into a single end-to-end experience 
+          using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend 
+          analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more. Advanced 
+          leader in AI-driven agentic workflows, building organization-wide coding platforms that triple developer throughput 
+          while maintaining security and compliance.
+        </p>
+      </section>
+
+      <ExperienceTimeline />
+      <AchievementsSection />
+    </main>
+
+    <!-- Right Column - Education and Certifications (for very wide screens) -->
+    <aside class="hidden 2xl:block 2xl:col-span-3 2xl:sticky top-8 self-start">
+      <EducationSection />
+    </aside>
+
+  </div>
+</HomeLayout>

@@ -1,0 +1,149 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Source code
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.astro text eol=lf
+*.vue text eol=lf
+*.svelte text eol=lf
+
+# Web files
+*.html text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+*.less text eol=lf
+*.styl text eol=lf
+
+# Configuration files
+*.json text eol=lf
+*.jsonc text eol=lf
+*.json5 text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.xml text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.mdx text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+*.adoc text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+
+# Git files
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.gitmodules text eol=lf
+
+# Docker files
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
+docker-compose*.yml text eol=lf
+
+# CI/CD files
+*.yml text eol=lf
+*.yaml text eol=lf
+.github/**/* text eol=lf
+
+# Package manager files
+package.json text eol=lf
+package-lock.json text eol=lf
+yarn.lock text eol=lf
+pnpm-lock.yaml text eol=lf
+
+# Taskfile
+Taskfile.yml text eol=lf
+taskfiles/*.yml text eol=lf
+
+# Environment files
+.env* text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.svg text eol=lf
+
+# Fonts
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
+
+# Audio/Video
+*.mp3 binary
+*.mp4 binary
+*.wav binary
+*.flac binary
+*.aac binary
+*.mov binary
+*.avi binary
+*.webm binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+*.rar binary
+*.7z binary
+
+# PDFs
+*.pdf binary
+
+# Office documents
+*.doc binary
+*.docx binary
+*.xls binary
+*.xlsx binary
+*.ppt binary
+*.pptx binary
+
+# Language specific attributes
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+*.astro linguist-language=Astro
+*.mdx linguist-language=Markdown
+
+# Generated files - exclude from language stats
+dist/** linguist-generated=true
+.astro/** linguist-generated=true
+coverage/** linguist-generated=true
+test-results/** linguist-generated=true
+
+# Documentation files - include in language stats
+docs/** linguist-documentation=false
+*.md linguist-documentation=false
+*.mdx linguist-documentation=false
+
+# Configuration files - exclude from language stats  
+*.json linguist-language=JSON
+*.yaml linguist-language=YAML
+*.yml linguist-language=YAML
+*.toml linguist-language=TOML
+
+# Lock files - treat as generated
+package-lock.json linguist-generated=true
+yarn.lock linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+
+# Merge strategies for specific files
+package.json merge=union
+package-lock.json merge=union
+CHANGELOG.md merge=union

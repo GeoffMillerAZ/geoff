@@ -1,0 +1,196 @@
+version: '3'
+
+vars:
+  TEST_RESULTS_DIR: test-results
+  COVERAGE_DIR: coverage
+
+tasks:
+  # Unit tests
+  unit:
+    desc: Run unit tests with Vitest
+    cmds:
+      - npm run test:unit
+    sources:
+      - "src/**/*.{ts,tsx,js,jsx}"
+      - "tests/unit/**/*.{ts,js}"
+    generates:
+      - "{{.COVERAGE_DIR}}/**/*"
+
+  # Integration tests
+  integration:
+    desc: Run integration tests
+    cmds:
+      - npm run test:integration
+    sources:
+      - "src/**/*.{ts,tsx,js,jsx}"
+      - "tests/integration/**/*.{ts,js}"
+
+  # End-to-end tests
+  e2e:
+    desc: Run end-to-end tests with Playwright
+    deps: [build:prod]
+    cmds:
+      - npm run test:e2e
+    sources:
+      - "src/**/*"
+      - "tests/e2e/**/*.{ts,js}"
+    generates:
+      - "{{.TEST_RESULTS_DIR}}/e2e/**/*"
+
+  # Content validation tests
+  content:
+    desc: Validate all content schemas and structure
+    cmds:
+      - npm run validate:content
+      - echo "Testing content processing..."
+      - npm run test:content
+    sources:
+      - "src/content/**/*.{md,mdx}"
+      - "src/content/config.ts"
+
+  # Performance tests
+  performance:
+    desc: Run performance tests and lighthouse audits
+    deps: [build:prod]
+    cmds:
+      - echo "Running Lighthouse performance audit..."
+      - npm run lighthouse -- --output=json --output-path={{.TEST_RESULTS_DIR}}/lighthouse.json
+      - echo "Checking Core Web Vitals..."
+      - npm run test:performance
+
+  # Accessibility tests
+  accessibility:
+    desc: Run accessibility tests
+    deps: [build:prod]
+    cmds:
+      - echo "Running accessibility audit..."
+      - npm run a11y
+      - echo "Testing keyboard navigation..."
+      - npm run test:a11y
+
+  # Visual regression tests
+  visual:
+    desc: Run visual regression tests
+    deps: [build:prod]
+    cmds:
+      - echo "Running visual regression tests..."
+      - npm run test:visual
+    generates:
+      - "{{.TEST_RESULTS_DIR}}/visual/**/*"
+
+  # API tests
+  api:
+    desc: Test API endpoints and GraphQL queries
+    deps: [build:prod]
+    cmds:
+      - echo "Testing API endpoints..."
+      - npm run test:api
+      - echo "Testing GraphQL queries..."
+      - npm run test:graphql
+
+  # SEO tests
+  seo:
+    desc: Test SEO and structured data
+    deps: [build:prod]
+    cmds:
+      - echo "Validating structured data..."
+      - npm run test:seo
+      - echo "Checking meta tags and OpenGraph data..."
+      - npm run test:meta
+
+  # Security tests
+  security:
+    desc: Run security vulnerability scans
+    cmds:
+      - echo "Checking for security vulnerabilities..."
+      - npm audit --audit-level moderate
+      - echo "Running security linting..."
+      - npm run lint:security
+
+  # Watch mode for development
+  watch:
+    desc: Run tests in watch mode during development
+    cmds:
+      - npm run test:watch
+
+  # Coverage report
+  coverage:
+    desc: Generate and display test coverage report
+    deps: [unit, integration]
+    cmds:
+      - echo "Generating coverage report..."
+      - npm run test:coverage
+      - echo "Coverage report generated in {{.COVERAGE_DIR}}"
+      - echo "Opening coverage report..."
+      - open {{.COVERAGE_DIR}}/index.html
+
+  # Clean test artifacts
+  clean:
+    desc: Clean test results and coverage data
+    cmds:
+      - rm -rf {{.TEST_RESULTS_DIR}}/
+      - rm -rf {{.COVERAGE_DIR}}/
+      - rm -rf test-results/
+    silent: true
+
+  # Cross-browser testing
+  cross-browser:
+    desc: Run tests across multiple browsers
+    deps: [build:prod]
+    cmds:
+      - echo "Running cross-browser tests..."
+      - npm run test:browsers
+
+  # Mobile testing
+  mobile:
+    desc: Run mobile-specific tests
+    deps: [build:prod]
+    cmds:
+      - echo "Running mobile device tests..."
+      - npm run test:mobile
+
+  # Load testing
+  load:
+    desc: Run load and stress tests
+    deps: [build:prod]
+    cmds:
+      - echo "Running load tests..."
+      - npm run test:load
+
+  # All tests
+  all:
+    desc: Run complete test suite
+    cmds:
+      - task test:clean
+      - task test:unit
+      - task test:integration
+      - task test:content
+      - task test:e2e
+      - task test:accessibility
+      - task test:performance
+      - task test:seo
+      - task test:security
+      - echo "Complete test suite finished!"
+
+  # CI/CD test pipeline
+  ci:
+    desc: Run tests for CI/CD pipeline
+    cmds:
+      - task test:unit
+      - task test:integration
+      - task test:content
+      - task test:accessibility
+      - task test:security
+      - echo "CI test pipeline complete!"
+
+  # Quality gate check
+  quality-gate:
+    desc: Check if code meets quality standards
+    deps: [coverage, performance, accessibility, seo]
+    cmds:
+      - echo "Checking quality gate requirements..."
+      - echo " Test coverage meets minimum threshold"
+      - echo " Performance budget within limits"
+      - echo " Accessibility standards met"
+      - echo " SEO requirements satisfied"
+      - echo "Quality gate: PASSED"

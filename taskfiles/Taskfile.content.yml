@@ -1,0 +1,292 @@
+version: '3'
+
+vars:
+  CONTENT_DIR: src/content
+  BLOG_DIR: "{{.CONTENT_DIR}}/blog"
+  PROJECTS_DIR: "{{.CONTENT_DIR}}/projects"
+  GUIDES_DIR: "{{.CONTENT_DIR}}/guides"
+  RESOURCES_DIR: "{{.CONTENT_DIR}}/resources"
+
+tasks:
+  # Create new content
+  new-blog:
+    desc: Create new blog post
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task content:new-blog -- \"Post Title\""
+          exit 1
+        fi
+        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+        DATE=$(date +%Y-%m-%d)
+        mkdir -p {{.BLOG_DIR}}/platform-engineering
+        cat > {{.BLOG_DIR}}/platform-engineering/$SLUG.mdx << EOF
+        ---
+        title: "{{.CLI_ARGS}}"
+        description: "Brief description of the blog post"
+        publishDate: ${DATE}
+        tags: ["platform-engineering"]
+        category: "platform-engineering"
+        difficulty: "intermediate"
+        estimatedReadTime: 5
+        aiSummary: "Brief summary for AI consumption"
+        toc: true
+        draft: true
+        featured: false
+        ---
+
+        # {{.CLI_ARGS}}
+
+        Write your content here...
+        EOF
+        echo "Created blog post: {{.BLOG_DIR}}/platform-engineering/$SLUG.mdx"
+
+  new-project:
+    desc: Create new project showcase
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task content:new-project -- \"Project Name\""
+          exit 1
+        fi
+        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+        DATE=$(date +%Y-%m-%d)
+        mkdir -p {{.PROJECTS_DIR}}/platform-projects
+        cat > {{.PROJECTS_DIR}}/platform-projects/$SLUG.mdx << EOF
+        ---
+        title: "{{.CLI_ARGS}}"
+        description: "Brief description of the project"
+        startDate: ${DATE}
+        status: "active"
+        technologies: ["technology1", "technology2"]
+        category: "platform-projects"
+        featured: false
+        metrics:
+          impact: "Describe the impact"
+        ---
+
+        # {{.CLI_ARGS}}
+
+        ## Overview
+
+        Describe your project here...
+
+        ## Technologies Used
+
+        - Technology 1
+        - Technology 2
+
+        ## Outcomes
+
+        - Outcome 1
+        - Outcome 2
+        EOF
+        echo "Created project: {{.PROJECTS_DIR}}/platform-projects/$SLUG.mdx"
+
+  new-guide:
+    desc: Create new platform engineering guide
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task content:new-guide -- \"Guide Title\""
+          exit 1
+        fi
+        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+        DATE=$(date +%Y-%m-%d)
+        mkdir -p {{.GUIDES_DIR}}/platform-engineering
+        cat > {{.GUIDES_DIR}}/platform-engineering/$SLUG.mdx << EOF
+        ---
+        title: "{{.CLI_ARGS}}"
+        description: "Comprehensive guide for platform engineering"
+        publishDate: ${DATE}
+        tags: ["platform-engineering", "guide"]
+        category: "platform-engineering"
+        difficulty: "intermediate"
+        estimatedReadTime: 15
+        aiSummary: "Platform engineering guide covering best practices"
+        toc: true
+        draft: true
+        featured: false
+        ---
+
+        # {{.CLI_ARGS}}
+
+        ## Overview
+
+        This guide covers...
+
+        ## Prerequisites
+
+        - Prerequisite 1
+        - Prerequisite 2
+
+        ## Implementation
+
+        Step-by-step implementation...
+
+        ## Best Practices
+
+        - Best practice 1
+        - Best practice 2
+
+        ## Conclusion
+
+        Summary of key takeaways...
+        EOF
+        echo "Created guide: {{.GUIDES_DIR}}/platform-engineering/$SLUG.mdx"
+
+  new-resource:
+    desc: Create new resource entry
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task content:new-resource -- \"Resource Name\""
+          exit 1
+        fi
+        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
+        DATE=$(date +%Y-%m-%d)
+        mkdir -p {{.RESOURCES_DIR}}/tools
+        cat > {{.RESOURCES_DIR}}/tools/$SLUG.mdx << EOF
+        ---
+        title: "{{.CLI_ARGS}}"
+        description: "Resource description"
+        publishDate: ${DATE}
+        tags: ["tools"]
+        category: "tools"
+        url: "https://example.com"
+        rating: 4
+        aiSummary: "Brief description of the resource"
+        ---
+
+        # {{.CLI_ARGS}}
+
+        ## Description
+
+        Describe the resource...
+
+        ## Key Features
+
+        - Feature 1
+        - Feature 2
+
+        ## Use Cases
+
+        - Use case 1
+        - Use case 2
+
+        ## Rating: ⭐⭐⭐⭐☆
+
+        Explain the rating...
+        EOF
+        echo "Created resource: {{.RESOURCES_DIR}}/tools/$SLUG.mdx"
+
+  # Content validation
+  validate:
+    desc: Validate all content schemas and structure
+    cmds:
+      - echo "Validating content schemas..."
+      - npm run validate:content
+      - echo "Checking for broken links..."
+      - npm run check:links
+      - echo "Validating images and alt text..."
+      - npm run check:images
+
+  # Content processing
+  process:
+    desc: Process and optimize all content
+    cmds:
+      - echo "Processing content collections..."
+      - npm run process:content
+      - echo "Generating content indexes..."
+      - npm run generate:indexes
+      - echo "Creating content relationships..."
+      - npm run generate:relationships
+
+  # Content statistics
+  stats:
+    desc: Generate content statistics
+    cmds:
+      - echo "Content Statistics:"
+      - echo "=================="
+      - echo "Blog posts: $(find {{.BLOG_DIR}} -name '*.mdx' | wc -l)"
+      - echo "Projects: $(find {{.PROJECTS_DIR}} -name '*.mdx' | wc -l)"
+      - echo "Guides: $(find {{.GUIDES_DIR}} -name '*.mdx' | wc -l)"
+      - echo "Resources: $(find {{.RESOURCES_DIR}} -name '*.mdx' | wc -l)"
+      - echo ""
+      - echo "Content by category:"
+      - find {{.CONTENT_DIR}} -name '*.mdx' -exec grep -l 'category:' {} \; | xargs grep 'category:' | cut -d':' -f3 | tr -d '"' | sort | uniq -c
+
+  # Export content
+  export:
+    desc: Export content for AI consumption
+    cmds:
+      - echo "Exporting content for AI consumption..."
+      - npm run export:ai
+      - echo "Content exported to dist/ai-export.json"
+
+  # Content search index
+  index:
+    desc: Generate search index
+    cmds:
+      - echo "Generating search index..."
+      - npm run generate:search-index
+      - echo "Search index generated"
+
+  # Draft management
+  list-drafts:
+    desc: List all draft content
+    cmds:
+      - echo "Draft Content:"
+      - echo "=============="
+      - find {{.CONTENT_DIR}} -name '*.mdx' -exec grep -l 'draft: true' {} \;
+
+  publish-draft:
+    desc: Publish a draft (remove draft flag)
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task content:publish-draft -- path/to/file.mdx"
+          exit 1
+        fi
+        FILE="{{.CLI_ARGS}}"
+        if [ ! -f "$FILE" ]; then
+          echo "File not found: $FILE"
+          exit 1
+        fi
+        sed -i 's/draft: true/draft: false/' "$FILE"
+        echo "Published: $FILE"
+
+  # Content maintenance
+  update-dates:
+    desc: Update modification dates for changed content
+    cmds:
+      - echo "Updating modification dates..."
+      - npm run update:dates
+
+  check-quality:
+    desc: Check content quality and readability
+    cmds:
+      - echo "Checking content quality..."
+      - npm run check:readability
+      - npm run check:spelling
+      - npm run check:grammar
+
+  # Bulk operations
+  bulk-tag:
+    desc: Add tags to multiple content files
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task content:bulk-tag -- \"tag1,tag2\" \"pattern\""
+          exit 1
+        fi
+        echo "Bulk tagging not implemented yet"
+
+  # Content backup
+  backup:
+    desc: Create backup of all content
+    cmds:
+      - echo "Creating content backup..."
+      - DATE=$(date +%Y%m%d_%H%M%S)
+      - tar -czf "content_backup_$DATE.tar.gz" {{.CONTENT_DIR}}
+      - echo "Backup created: content_backup_$DATE.tar.gz"

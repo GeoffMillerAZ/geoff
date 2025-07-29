@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/main/.schema/devbox.schema.json",
+  "packages": [
+    "nodejs",
+    "git",
+    "gh"
+  ],
+  "shell": {
+    "init_hook": [
+      "echo 'Welcome to Geoff Miller Cloud Platform Development Environment'",
+      "echo '=================================================='",
+      "echo ''",
+      "echo 'Available commands:'",
+      "echo '  npm run dev         - Start development server'",
+      "echo '  npm run build       - Build for production'",
+      "echo '  npm run test        - Run all tests'",
+      "echo '  npm run lint        - Lint code and content'",
+      "echo '  task --list         - Show all available tasks'",
+      "echo ''",
+      "echo 'Project documentation:'",
+      "echo '  CLAUDE.md          - Claude context and commands'",
+      "echo '  README.md          - Project overview and setup'",
+      "echo '  docs/adr/          - Architecture decisions'",
+      "echo '  specs/             - Feature specifications'",
+      "echo ''",
+      "if [ ! -d node_modules ]; then",
+      "  echo 'Installing dependencies...'",
+      "  npm install",
+      "fi",
+      "echo 'Development environment ready! 🚀'",
+      "echo ''"
+    ],
+    "scripts": {
+      "test": [
+        "npm run test"
+      ],
+      "build": [
+        "npm run build"
+      ],
+      "dev": [
+        "npm run dev"
+      ],
+      "setup": [
+        "npm install",
+        "echo 'Setup complete! Run devbox shell to enter development environment.'"
+      ],
+      "lint": [
+        "npm run lint"
+      ],
+      "format": [
+        "npm run format"
+      ],
+      "validate": [
+        "npm run type-check",
+        "npm run validate:content",
+        "npm run lint"
+      ]
+    }
+  },
+  "env": {
+    "NODE_ENV": "development",
+    "ASTRO_TELEMETRY_DISABLED": "1",
+    "NPM_CONFIG_UPDATE_NOTIFIER": "false"
+  },
+  "nixpkgs": {
+    "commit": "af9e00071d0971eb292fd5abef334e66eda3cb69"
+  }
+}

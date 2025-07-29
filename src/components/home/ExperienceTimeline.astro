@@ -1,0 +1,179 @@
+---
+// Experience timeline component for the homepage
+---
+
+<section id="experience" class="card p-6">
+  <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-6">Professional Experience</h2>
+  
+  <div class="timeline pl-6 space-y-10">
+    <!-- Current Role -->
+    <div class="job-entry-container">
+      <div class="job-entry relative">
+        <p class="absolute -left-[78px] top-1 text-xs text-gray-400">Present</p>
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Director of Cloud Infrastructure</h3>
+        <p class="font-medium text-accent">First Citizens Bank <span class="text-gray-500 font-normal">| Tempe, AZ</span></p>
+        <p class="text-sm text-gray-500 mb-3">Jul 2021 - Present</p>
+        
+        <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
+          <li>Guided platform integrations and migrations during the transition from Silicon Valley Bank.</li>
+          <li>Built a secure AWS Landing Zone for 100+ accounts, cutting AWS spend 30% YoY through FinOps automation.</li>
+          <li>Engineered an enterprise-grade, bank-hardened Kubernetes platform on EKS.</li>
+        </ul>
+        
+        <div class="details-section">
+          <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg mt-2">
+            <li>Enforced FFIEC/PCI-DSS/SOC 2 compliance using policy-as-code gates.</li>
+            <li>Sat on the bank's AI governance board, crafting secure onboarding patterns for GenAI/ML tools.</li>
+            <li>Integrated DevSecOps tool chain (Sentinel, Snyk) into CI/CD.</li>
+            <li>Introduced an "override-as-code" workflow that embeds risk-acceptance and governance logic directly in Git.</li>
+            <li>Decomposed a monolithic repo into team-owned repositories, dropping feature lead time from weeks to days.</li>
+            <li>Consolidated "VPC-per-service" sprawl into a shared-services VPC hub, saving hundreds of thousands of dollars annually.</li>
+          </ul>
+        </div>
+        
+        <button class="toggle-button" onclick="toggleDetails(this)">
+          <span class="button-text">Show More</span>
+          <svg class="arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- REPAY Role -->
+    <div class="job-entry-container">
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Director of Cloud Infrastructure</h3>
+        <p class="font-medium text-accent">REPAY <span class="text-gray-500 font-normal">| Tempe, AZ</span></p>
+        <p class="text-sm text-gray-500 mb-3">Oct 2017 - Jul 2021</p>
+        
+        <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
+          <li>Built a green-field AWS platform from scratch, achieving PCI compliance with zero criticals.</li>
+          <li>Grew the team from a single engineer to a 10-person SRE team and a 5-person operations team.</li>
+          <li>Delivered a multi-account Landing Zone with automated FinOps, saving 30% YoY.</li>
+        </ul>
+        
+        <div class="details-section">
+          <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg mt-2">
+            <li>Launched Backstage IDP and Documentation-as-Code, reducing documentation drift by 75%.</li>
+            <li>Engineered and deployed enterprise observability and monitoring solutions (Prometheus, Loki, Grafana).</li>
+            <li>Architected reusable patterns, reducing cloud migration time from months to a single day.</li>
+            <li>Provided 24/7 on-call support and incident response with PagerDuty.</li>
+          </ul>
+        </div>
+        
+        <button class="toggle-button" onclick="toggleDetails(this)">
+          <span class="button-text">Show More</span>
+          <svg class="arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Other Roles -->
+    <div class="job-entry relative">
+      <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">DevOps Engineer</h3>
+      <p class="font-medium text-accent">Early Warning Services (Zelle) <span class="text-gray-500 font-normal">| Scottsdale, AZ</span></p>
+      <p class="text-sm text-gray-500 mb-3">Jan 2017 - Oct 2017</p>
+      <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
+        <li>Launched and scaled a large-scale SaaS payments service to 25M users with zero downtime.</li>
+        <li>Built immutable CI/CD pipelines for containerized microservices, enabling daily releases.</li>
+        <li>Automated blue-green rollouts and A/B tests, reducing RTO to &lt;5 min.</li>
+      </ul>
+    </div>
+
+    <div class="job-entry relative">
+      <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Principal Cloud Architect</h3>
+      <p class="font-medium text-accent">Thinkvine <span class="text-gray-500 font-normal">| Remote / Chandler, AZ</span></p>
+      <p class="text-sm text-gray-500 mb-3">Apr 2016 - Jan 2017</p>
+      <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
+        <li>Migrated Windows & Linux workloads to AWS, cutting hosting costs by 45%.</li>
+        <li>Converted legacy infrastructure to Terraform IaC, achieving 75% faster deployments.</li>
+      </ul>
+    </div>
+
+    <div class="job-entry relative">
+      <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Lead DevOps Engineer</h3>
+      <p class="font-medium text-accent">OWNZONES Media Network <span class="text-gray-500 font-normal">| Scottsdale, AZ</span></p>
+      <p class="text-sm text-gray-500 mb-3">Apr 2016 - Jul 2016</p>
+      <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
+        <li>Designed green-field AWS infra; saved USD 300k/yr via S3 lifecycle + Glacier.</li>
+      </ul>
+    </div>
+
+    <div class="job-entry relative">
+      <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Applications Developer</h3>
+      <p class="font-medium text-accent">State of Arizona - Dept. of Administration <span class="text-gray-500 font-normal">| Phoenix, AZ</span></p>
+      <p class="text-sm text-gray-500 mb-3">Jan 2015 - Apr 2016</p>
+      <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
+        <li>Introduced Git and automated unit testing to mainframe COBOL systems.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Additional Experience Toggle -->
+  <div class="mt-10 additional-experience-container">
+    <button class="toggle-button text-lg w-full justify-center p-2 rounded-lg" style="background-color: rgba(37, 176, 188, 0.1);" onclick="toggleDetails(this)">
+      <span class="button-text">Show Additional Experience (2001 - 2015)</span>
+      <svg class="arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+      </svg>
+    </button>
+    
+    <div class="details-section timeline pl-6 mt-6 space-y-10">
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Undergraduate and Graduate Teaching Assistant</h3>
+        <p class="font-medium text-accent">Northern Illinois University</p>
+        <p class="text-sm text-gray-500 mb-3">2012 - 2015</p>
+      </div>
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Mainframe Technical Analyst Intern</h3>
+        <p class="font-medium text-accent">Bank of America</p>
+        <p class="text-sm text-gray-500 mb-3">2013 & 2014</p>
+      </div>
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Help Desk Manager</h3>
+        <p class="font-medium text-accent">Universal Technical Institute</p>
+        <p class="text-sm text-gray-500 mb-3">2010</p>
+      </div>
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Help Desk Manager</h3>
+        <p class="font-medium text-accent">J-Curve Technologies</p>
+        <p class="text-sm text-gray-500 mb-3">2009 - 2010</p>
+      </div>
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Systems Support Analyst</h3>
+        <p class="font-medium text-accent">Bank of America</p>
+        <p class="text-sm text-gray-500 mb-3">2006 - 2009</p>
+      </div>
+      <div class="job-entry relative">
+        <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">Desktop Repair</h3>
+        <p class="font-medium text-accent">Geek Squad</p>
+        <p class="text-sm text-gray-500 mb-3">2001 - 2006</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Toggle functionality for expandable sections
+  function toggleDetails(button) {
+    const container = button.parentElement;
+    const details = container.querySelector('.details-section');
+    const buttonText = button.querySelector('.button-text');
+    
+    const isFullSection = container.classList.contains('additional-experience-container');
+
+    if (details) {
+      button.classList.toggle('open');
+      details.classList.toggle('open');
+
+      if (details.classList.contains('open')) {
+        buttonText.textContent = isFullSection ? 'Hide Additional Experience' : 'Show Less';
+      } else {
+        buttonText.textContent = isFullSection ? 'Show Additional Experience (2001 - 2015)' : 'Show More';
+      }
+    }
+  }
+</script>
