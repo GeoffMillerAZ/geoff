@@ -2,121 +2,146 @@ version: '3'
 
 vars:
   BUILD_DIR: dist
-  ASTRO_CONFIG: astro.config.mjs
+  NODE_ENV: production
 
 tasks:
+  # Production build
+  prod:
+    desc: Build for production with all optimizations
+    cmds:
+      - echo "Building for production..."
+      - npm run build
+      - task: build:verify
+      - echo "Production build complete!"
+    sources:
+      - "src/**/*"
+      - "public/**/*"
+      - "package.json"
+      - "astro.config.mjs"
+      - "tailwind.config.mjs"
+      - "tsconfig.json"
+    generates:
+      - "{{.BUILD_DIR}}/**/*"
+
   # Development build
   dev:
-    desc: Build for development with source maps
+    desc: Build for development
     cmds:
+      - echo "Building for development..."
       - npm run build:dev
     sources:
       - "src/**/*"
       - "public/**/*"
-      - "{{.ASTRO_CONFIG}}"
-      - "package.json"
     generates:
       - "{{.BUILD_DIR}}/**/*"
-
-  # Production build
-  prod:
-    desc: Build optimized production bundle
-    cmds:
-      - npm run build
-    sources:
-      - "src/**/*"
-      - "public/**/*"
-      - "{{.ASTRO_CONFIG}}"
-      - "package.json"
-    generates:
-      - "{{.BUILD_DIR}}/**/*"
-
-  # Preview production build
-  preview:
-    desc: Preview production build locally
-    deps: [prod]
-    cmds:
-      - npm run preview
 
   # Clean build artifacts
   clean:
-    desc: Remove build artifacts
+    desc: Clean build artifacts and cache
     cmds:
+      - echo "Cleaning build artifacts..."
       - rm -rf {{.BUILD_DIR}}/
       - rm -rf .astro/
+      - echo "Build artifacts cleaned"
     silent: true
 
-  # Analyze build output
+  # Verify build
+  verify:
+    desc: Verify build output and quality
+    cmds:
+      - echo "Verifying build output..."
+      - test -d {{.BUILD_DIR}} || (echo "Build directory not found" && exit 1)
+      - test -f {{.BUILD_DIR}}/index.html || (echo "Index.html not found" && exit 1)
+      - echo "Build verification complete"
+
+  # Bundle analysis
   analyze:
-    desc: Analyze build size and performance
+    desc: Analyze bundle size and composition
     deps: [prod]
     cmds:
-      - echo "Build analysis:"
-      - du -sh {{.BUILD_DIR}}
-      - find {{.BUILD_DIR}} -name "*.js" -exec wc -c {} + | sort -n
-      - echo "Checking for unused dependencies..."
-      - npx depcheck
+      - echo "Analyzing bundle size..."
+      - npm run analyze
+      - echo "Bundle analysis complete"
 
-  # Check build integrity
-  check:
-    desc: Verify build integrity and structure
-    deps: [prod]
-    cmds:
-      - echo "Checking build structure..."
-      - test -d {{.BUILD_DIR}}
-      - test -f {{.BUILD_DIR}}/index.html
-      - echo "Validating HTML output..."
-      - find {{.BUILD_DIR}} -name "*.html" -exec echo "Checking {}" \; -exec npx html-validate {} \;
-
-  # Build sitemap
+  # Sitemap generation
   sitemap:
-    desc: Generate XML sitemap
+    desc: Generate sitemap for SEO
     deps: [prod]
     cmds:
       - echo "Sitemap generated during build process"
-      - test -f {{.BUILD_DIR}}/sitemap-index.xml || echo "Warning: sitemap not found"
+      - test -f {{.BUILD_DIR}}/sitemap-index.xml || echo "Warning - sitemap not found"
 
   # Optimize images
   optimize-images:
-    desc: Optimize images for production
+    desc: Optimize images for web delivery
     cmds:
       - echo "Optimizing images..."
-      - npx @astrojs/image optimize
+      - npm run optimize:images
+    sources:
+      - "src/assets/**/*.{jpg,jpeg,png,webp,svg}"
+      - "public/**/*.{jpg,jpeg,png,webp,svg}"
 
-  # Bundle analysis
-  bundle:
-    desc: Analyze JavaScript bundles
+  # Generate RSS feeds
+  rss:
+    desc: Generate RSS feeds for content
     deps: [prod]
     cmds:
-      - echo "Bundle analysis:"
-      - npx bundlesize
-      - echo "Generated bundles:"
-      - find {{.BUILD_DIR}} -name "*.js" -type f
+      - echo "RSS feeds generated during build process"
+      - test -f {{.BUILD_DIR}}/rss.xml || echo "Warning - RSS feed not found"
 
-  # Performance budget check
-  budget:
-    desc: Check performance budget
+  # Build stats
+  stats:
+    desc: Generate build statistics
     deps: [prod]
     cmds:
-      - echo "Checking performance budget..."
-      - npx bundlesize
-      - echo "Build size check complete"
+      - echo "Generating build statistics..."
+      - echo "Build directory size:"
+      - du -sh {{.BUILD_DIR}}
+      - echo "File count:"
+      - find {{.BUILD_DIR}} -type f | wc -l
 
-  # Static asset optimization
-  assets:
-    desc: Optimize static assets
+  # Pre-build setup
+  prebuild:
+    desc: Setup tasks before building
     cmds:
-      - echo "Optimizing static assets..."
-      - echo "- Compressing images"
-      - echo "- Minifying CSS and JS"
-      - echo "- Generating service worker"
+      - echo "Running pre-build setup..."
+      - npm run type-check
+      - npm run lint
+      - echo "Pre-build checks complete"
 
-  # All build tasks
-  all:
-    desc: Run complete build pipeline
+  # Post-build tasks
+  postbuild:
+    desc: Tasks to run after building
+    deps: [verify, stats]
     cmds:
-      - task build:clean
-      - task build:prod
-      - task build:check
-      - task build:analyze
-      - echo "Complete build pipeline finished!"
+      - echo "Running post-build tasks..."
+      - echo "Build process completed successfully"
+
+  # Build for different environments
+  staging:
+    desc: Build for staging environment
+    env:
+      NODE_ENV: staging
+      ASTRO_BUILD_ENV: staging
+    cmds:
+      - echo "Building for staging..."
+      - npm run build
+      - echo "Staging build complete"
+
+  # Fast build (skip optimization)
+  fast:
+    desc: Fast build for development testing
+    cmds:
+      - echo "Running fast build..."
+      - npm run build:fast
+    sources:
+      - "src/**/*"
+    generates:
+      - "{{.BUILD_DIR}}/**/*"
+
+  # Watch build
+  watch:
+    desc: Watch files and rebuild automatically
+    cmds:
+      - echo "Starting watch build..."
+      - npm run build:watch

@@ -5,6 +5,11 @@ export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
+      screens: {
+        '3xl': '1920px',
+        '4xl': '2560px',
+        '5xl': '3840px',
+      },
       colors: {
         synth: {
           bg: '#2a2139',
@@ -16,6 +21,11 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      maxWidth: {
+        '8xl': '88rem',
+        '9xl': '96rem',
+        '10xl': '104rem',
       },
       animation: {
         glow: 'glow 2s ease-in-out infinite alternate',

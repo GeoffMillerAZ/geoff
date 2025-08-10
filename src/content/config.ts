@@ -19,6 +19,13 @@ const blogCollection = defineCollection({
     author: z.string().default('Geoffrey Miller'),
     image: z.string().optional(),
     imageAlt: z.string().optional(),
+    // Series navigation
+    series: z.object({
+      name: z.string(),
+      order: z.number(),
+      next: z.string().optional(), // slug of next post
+      previous: z.string().optional(), // slug of previous post
+    }).optional(),
   })
 });
 
@@ -90,9 +97,71 @@ const resourceCollection = defineCollection({
   })
 });
 
+// Resume collection with multiple types
+const resumeCollection = defineCollection({
+  type: 'content',
+  schema: z.discriminatedUnion('type', [
+    // Experience entries
+    z.object({
+      type: z.literal('experience'),
+      position: z.string(),
+      company: z.string(),
+      location: z.string(),
+      startDate: z.date(),
+      endDate: z.date().optional(),
+      current: z.boolean().default(false),
+      highlights: z.array(z.string()).optional(),
+      technologies: z.array(z.string()).optional(),
+      showInMainSection: z.boolean().default(true),
+      order: z.number(),
+    }),
+    // Education entries
+    z.object({
+      type: z.literal('education'),
+      degree: z.string(),
+      institution: z.string(),
+      location: z.string(),
+      graduationDate: z.date().optional(),
+      gpa: z.string().optional(),
+      honors: z.array(z.string()).optional(),
+      order: z.number(),
+    }),
+    // Certification entries
+    z.object({
+      type: z.literal('certification'),
+      name: z.string(),
+      issuer: z.string(),
+      issueDate: z.date(),
+      expiryDate: z.date().optional(),
+      credentialId: z.string().optional(),
+      url: z.string().url().optional(),
+      order: z.number(),
+    }),
+    // Skill entries
+    z.object({
+      type: z.literal('skill'),
+      category: z.string(),
+      skills: z.array(z.string()),
+      proficiencyLevel: z.enum(['expert', 'advanced', 'intermediate']).optional(),
+      order: z.number(),
+    }),
+    // Achievement entries
+    z.object({
+      type: z.literal('achievement'),
+      title: z.string(),
+      description: z.string(),
+      date: z.date().optional(),
+      category: z.enum(['technical', 'leadership', 'business', 'community']),
+      metrics: z.string().optional(),
+      order: z.number(),
+    }),
+  ])
+});
+
 export const collections = {
   'blog': blogCollection,
   'projects': projectCollection,
   'guides': guideCollection,
   'resources': resourceCollection,
+  'resume': resumeCollection,
 };

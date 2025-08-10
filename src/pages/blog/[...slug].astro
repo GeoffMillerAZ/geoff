@@ -1,0 +1,313 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/navigation/Header.astro';
+import Footer from '../../components/navigation/Footer.astro';
+import SeriesNavigation from '../../components/blog/SeriesNavigation.astro';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug }, props: { entry },
+  }));
+}
+
+type Props = {
+  entry: CollectionEntry<'blog'>;
+};
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+}
+
+// Get related posts (same category, excluding current post)
+const allBlogPosts = await getCollection('blog');
+const relatedPosts = allBlogPosts
+  .filter(post => post.data.category === entry.data.category && post.slug !== entry.slug)
+  .sort((a, b) => new Date(b.data.publishDate).valueOf() - new Date(a.data.publishDate).valueOf())
+  .slice(0, 3);
+
+const publishDate = new Date(entry.data.publishDate);
+const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximate reading time
+---
+
+<BaseLayout 
+  title={`${entry.data.title} | Geoffrey Miller`}
+  description={entry.data.description}
+  canonical={`/blog/${entry.slug}`}
+>
+  <Header />
+  
+  <main class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Breadcrumbs -->
+    <nav class="mb-8">
+      <ol class="flex items-center space-x-2 text-sm text-synth-text-muted">
+        <li><a href="/" class="hover:text-accent transition-colors">Home</a></li>
+        <li class="before:content-['/'] before:mx-2">
+          <a href="/blog" class="hover:text-accent transition-colors">Blog</a>
+        </li>
+        <li class="before:content-['/'] before:mx-2 text-synth-text truncate">
+          {entry.data.title}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="mb-12">
+      <div class="card p-8">
+        <!-- Category and Meta -->
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <span class="px-3 py-1 text-sm font-medium rounded-full bg-accent/20 text-accent border border-accent/30 capitalize">
+            {entry.data.category.replace('-', ' ')}
+          </span>
+          <time class="text-sm text-synth-text-muted">
+            {formatDate(publishDate)}
+          </time>
+          <span class="text-sm text-synth-text-muted">
+            {readingTime} min read
+          </span>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-4xl md:text-5xl font-bold text-glow mb-6 leading-tight">
+          {entry.data.title}
+        </h1>
+
+        <!-- Description -->
+        <p class="text-xl text-synth-text-muted leading-relaxed mb-6">
+          {entry.data.description}
+        </p>
+
+        <!-- Tags -->
+        <div class="flex flex-wrap gap-2">
+          {entry.data.tags.map((tag: string) => (
+            <span class="px-3 py-1 text-sm rounded-full bg-synth-card-bg text-synth-text border border-synth-border">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <!-- Series Navigation (if part of a series) -->
+    {entry.data.series && (
+      <SeriesNavigation series={entry.data.series} currentSlug={entry.slug} />
+    )}
+
+    <!-- Article Content -->
+    <article class="prose prose-lg prose-invert max-w-none">
+      <div class="card p-8">
+        <Content />
+      </div>
+    </article>
+
+    <!-- AI Summary Section (if available) -->
+    {entry.data.aiSummary && (
+      <section class="mt-12">
+        <div class="card p-6 bg-gradient-to-r from-accent/5 to-accent-dark/5 border-accent/20">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center mt-1">
+              <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-accent mb-2">AI Summary</h3>
+              <p class="text-synth-text text-sm leading-relaxed">
+                {entry.data.aiSummary}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Share Section -->
+    <section class="mt-12">
+      <div class="card p-6">
+        <h3 class="font-semibold text-glow mb-4">Share this article</h3>
+        <div class="flex flex-wrap gap-3">
+          <a 
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(entry.data.title)}&url=${encodeURIComponent(`https://geoffmiller.dev/blog/${entry.slug}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-secondary text-sm"
+          >
+            Share on Twitter
+          </a>
+          <a 
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://geoffmiller.dev/blog/${entry.slug}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-secondary text-sm"
+          >
+            Share on LinkedIn
+          </a>
+          <button 
+            onclick={`navigator.clipboard.writeText('https://geoffmiller.dev/blog/${entry.slug}')`}
+            class="btn-secondary text-sm"
+          >
+            Copy Link
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Related Posts -->
+    {relatedPosts.length > 0 && (
+      <section class="mt-16">
+        <h2 class="text-2xl font-bold text-glow mb-8">Related Articles</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {relatedPosts.map((post) => (
+            <article class="card p-6 hover:border-accent transition-colors">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="px-2 py-1 text-xs font-medium rounded bg-accent/20 text-accent">
+                  {post.data.category}
+                </span>
+                <time class="text-xs text-synth-text-muted">
+                  {formatDate(new Date(post.data.publishDate))}
+                </time>
+              </div>
+              
+              <h3 class="font-bold text-glow mb-3 text-lg leading-tight hover:text-accent transition-colors">
+                <a href={`/blog/${post.slug}`}>
+                  {post.data.title}
+                </a>
+              </h3>
+              
+              <p class="text-synth-text-muted text-sm mb-4 leading-relaxed line-clamp-3">
+                {post.data.description}
+              </p>
+              
+              <a 
+                href={`/blog/${post.slug}`} 
+                class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+              >
+                Read more 
+                <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Back to Blog -->
+    <section class="mt-16">
+      <div class="text-center">
+        <a href="/blog" class="btn-secondary">
+          ← Back to All Posts
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Custom prose styles for dark theme */
+  .prose {
+    @apply text-synth-text;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    @apply text-glow;
+  }
+  
+  .prose h2 {
+    @apply text-2xl font-bold mt-8 mb-4;
+  }
+  
+  .prose h3 {
+    @apply text-xl font-semibold mt-6 mb-3;
+  }
+  
+  .prose p {
+    @apply mb-4 leading-relaxed;
+  }
+  
+  .prose a {
+    @apply text-accent hover:text-accent-light transition-colors;
+  }
+  
+  .prose blockquote {
+    @apply border-l-4 border-accent pl-4 italic text-synth-text-muted;
+  }
+  
+  .prose code {
+    @apply bg-synth-card-bg px-2 py-1 rounded text-accent text-sm;
+  }
+  
+  .prose pre {
+    @apply bg-synth-card-bg p-4 rounded-lg border border-synth-border overflow-x-auto;
+  }
+  
+  .prose pre code {
+    @apply bg-transparent p-0;
+  }
+  
+  .prose ul, .prose ol {
+    @apply mb-4 pl-6;
+  }
+  
+  .prose li {
+    @apply mb-2;
+  }
+  
+  .prose table {
+    @apply w-full border-collapse border border-synth-border;
+  }
+  
+  .prose th, .prose td {
+    @apply border border-synth-border px-4 py-2;
+  }
+  
+  .prose th {
+    @apply bg-synth-card-bg font-semibold;
+  }
+  
+  .prose img {
+    @apply rounded-lg border border-synth-border;
+  }
+</style>
+
+<!-- JSON-LD Structured Data for Article -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": entry.data.title,
+  "description": entry.data.description,
+  "author": {
+    "@type": "Person",
+    "name": "Geoffrey Miller",
+    "url": "https://geoffmiller.dev"
+  },
+  "datePublished": entry.data.publishDate,
+  "dateModified": entry.data.publishDate,
+  "publisher": {
+    "@type": "Person",
+    "name": "Geoffrey Miller"
+  },
+  "url": `https://geoffmiller.dev/blog/${entry.slug}`,
+  "keywords": entry.data.tags.join(", "),
+  "articleSection": entry.data.category,
+  "wordCount": entry.body.split(' ').length,
+  "timeRequired": `PT${readingTime}M`
+})} />

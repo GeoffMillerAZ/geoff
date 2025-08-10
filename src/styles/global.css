@@ -60,6 +60,41 @@
 
 /* Component styles */
 @layer components {
+  /* Container responsive widths */
+  .container {
+    @apply mx-auto px-4;
+  }
+  
+  @media (min-width: 640px) {
+    .container {
+      @apply px-6;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container {
+      @apply px-8;
+    }
+  }
+  
+  @media (min-width: 1920px) {
+    .container {
+      @apply max-w-8xl;
+    }
+  }
+  
+  @media (min-width: 2560px) {
+    .container {
+      @apply max-w-9xl;
+    }
+  }
+  
+  @media (min-width: 3840px) {
+    .container {
+      @apply max-w-10xl;
+    }
+  }
+
   .card {
     background-color: var(--synth-card-bg);
     backdrop-filter: blur(4px);
@@ -78,21 +113,85 @@
     color: var(--synth-pink);
   }
 
+  .text-accent-light {
+    color: rgba(249, 42, 173, 0.8);
+  }
+
+  .text-accent-dark {
+    color: rgba(249, 42, 173, 1.2);
+  }
+
+  .hover\:text-accent-light:hover {
+    color: rgba(249, 42, 173, 0.8);
+  }
+
+  .bg-accent {
+    background-color: var(--synth-pink);
+  }
+
+  .bg-accent-dark {
+    background-color: rgba(249, 42, 173, 1.2);
+  }
+
+  .bg-synth-card-bg {
+    background-color: var(--synth-card-bg);
+  }
+
+  .bg-synth-bg {
+    background-color: var(--synth-bg);
+  }
+
+  .text-synth-text {
+    color: var(--synth-text);
+  }
+
+  .text-synth-text-muted {
+    color: rgba(229, 229, 229, 0.7);
+  }
+
+  .border-synth-border {
+    border-color: var(--synth-border);
+  }
+
   .border-accent {
     border-color: var(--synth-pink);
   }
 
+  .border-accent-dark {
+    border-color: rgba(249, 42, 173, 1.2);
+  }
+
+  .accent-dark {
+    color: rgba(249, 42, 173, 1.2);
+  }
+
+  .from-accent {
+    --tw-gradient-from: var(--synth-pink);
+    --tw-gradient-to: rgba(249, 42, 173, 0);
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .to-accent-dark {
+    --tw-gradient-to: rgba(249, 42, 173, 1.2);
+  }
+
   .skill-badge {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
+    padding: 0.375rem 0.875rem;
     border-radius: 9999px;
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     background-color: rgba(37, 176, 188, 0.1);
     color: var(--synth-cyan);
     border: 1px solid rgba(37, 176, 188, 0.4);
-    margin: 0.25rem;
     transition: all 0.2s ease-in-out;
+  }
+  
+  @media (min-width: 1024px) {
+    .skill-badge {
+      padding: 0.375rem 1rem;
+      font-size: 0.875rem;
+    }
   }
 
   .skill-badge:hover {
@@ -287,6 +386,23 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Additional utility classes for custom components */
+  .bg-synth-card-bg {
+    background-color: var(--synth-card-bg);
+  }
+
+  .border-synth-border {
+    border-color: var(--synth-border);
+  }
+
+  .text-synth-text {
+    color: var(--synth-text);
+  }
+
+  .text-synth-text-muted {
+    color: rgba(229, 229, 229, 0.7);
   }
 }
 

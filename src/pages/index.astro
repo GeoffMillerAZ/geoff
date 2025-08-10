@@ -3,7 +3,8 @@ import HomeLayout from '../layouts/HomeLayout.astro';
 import ProfileCard from '../components/home/ProfileCard.astro';
 import SkillsSection from '../components/home/SkillsSection.astro';
 import EducationSection from '../components/home/EducationSection.astro';
-import ExperienceTimeline from '../components/home/ExperienceTimeline.astro';
+import CertificationsSection from '../components/home/CertificationsSection.astro';
+import ExperienceTimelineNew from '../components/home/ExperienceTimelineNew.astro';
 import AchievementsSection from '../components/home/AchievementsSection.astro';
 
 const pageTitle = 'Geoffrey Miller - Infrastructure Director & Principal Cloud Architect';
@@ -11,10 +12,10 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
 ---
 
 <HomeLayout title={pageTitle} description={pageDescription}>
-  <div class="grid grid-cols-12 gap-8 py-8 lg:py-12">
+  <div class="grid grid-cols-12 gap-8 py-8 lg:py-12 max-w-10xl mx-auto px-4">
     
     <!-- Left Column - Profile and Skills -->
-    <aside class="col-span-12 lg:col-span-4 2xl:col-span-3 lg:sticky top-8 self-start space-y-8">
+    <aside class="col-span-12 lg:col-span-5 xl:col-span-4 2xl:col-span-3 3xl:col-span-3 lg:sticky top-8 self-start space-y-8">
       <ProfileCard />
       <SkillsSection />
       
@@ -25,10 +26,22 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
     </aside>
 
     <!-- Center Column - Main Content -->
-    <main class="col-span-12 lg:col-span-8 2xl:col-span-6 space-y-8">
-      <!-- Summary Section -->
+    <main class="col-span-12 lg:col-span-7 xl:col-span-8 2xl:col-span-6 3xl:col-span-6 space-y-8">
+      <!-- Summary Section with Download Button -->
       <section id="summary" class="card p-6">
-        <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-4">Career Summary</h2>
+        <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+          <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white">Career Summary</h2>
+          <a 
+            href="/resume/Geoffrey_Miller_Resume_cv20250723a.pdf" 
+            download
+            class="inline-flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-white font-medium rounded-lg transition-colors"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Download Resume
+          </a>
+        </div>
         <p class="text-gray-300 leading-relaxed lg:text-lg xl:text-xl">
           Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms 
           (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on 
@@ -40,13 +53,14 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
         </p>
       </section>
 
-      <ExperienceTimeline />
+      <ExperienceTimelineNew />
       <AchievementsSection />
     </main>
 
     <!-- Right Column - Education and Certifications (for very wide screens) -->
-    <aside class="hidden 2xl:block 2xl:col-span-3 2xl:sticky top-8 self-start">
+    <aside class="hidden 2xl:block 2xl:col-span-3 3xl:col-span-3 2xl:sticky top-8 self-start space-y-8">
       <EducationSection />
+      <CertificationsSection />
     </aside>
 
   </div>

@@ -1,0 +1,326 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/navigation/Header.astro';
+import Footer from '../../components/navigation/Footer.astro';
+
+// Get all non-draft blog posts
+const allBlogPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Sort posts by publish date (newest first)
+const sortedPosts = allBlogPosts.sort(
+  (a, b) => new Date(b.data.publishDate).valueOf() - new Date(a.data.publishDate).valueOf()
+);
+
+// Get unique categories and tags
+const categories = [...new Set(allBlogPosts.map(post => post.data.category))];
+const allTags = [...new Set(allBlogPosts.flatMap(post => post.data.tags))].sort();
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+}
+---
+
+<BaseLayout 
+  title="Blog | Geoffrey Miller - Platform Engineering & Cloud Architecture Insights"
+  description="Technical insights, platform engineering best practices, and cloud architecture deep-dives from Geoffrey Miller's 12+ years in the field."
+>
+  <Header />
+  
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Hero Section -->
+    <section class="mb-12">
+      <div class="card p-8 text-center">
+        <h1 class="text-4xl font-bold text-glow mb-4">Technical Blog</h1>
+        <p class="text-xl text-synth-text-muted max-w-3xl mx-auto">
+          Deep dives into platform engineering, cloud architecture, and the evolving landscape 
+          of infrastructure at scale. Practical insights from building and operating production systems.
+        </p>
+      </div>
+    </section>
+
+    {sortedPosts.length > 0 ? (
+      <div class="grid lg:grid-cols-4 gap-8">
+        <!-- Filters Sidebar -->
+        <aside class="lg:col-span-1">
+          <div class="card p-6 sticky top-24">
+            <h2 class="text-xl font-bold text-glow mb-4">Filters</h2>
+            
+            <!-- Category Filter -->
+            <div class="mb-6">
+              <h3 class="font-medium text-synth-text mb-3">Categories</h3>
+              <div class="space-y-2">
+                <label class="flex items-center cursor-pointer">
+                  <input type="checkbox" value="all" checked class="filter-checkbox category-filter" data-filter-type="category" />
+                  <span class="ml-2 text-sm text-synth-text">All Categories</span>
+                </label>
+                {categories.map(category => (
+                  <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" value={category} class="filter-checkbox category-filter" data-filter-type="category" />
+                    <span class="ml-2 text-sm text-synth-text capitalize">{category.replace('-', ' ')}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <!-- Tag Filter -->
+            <div>
+              <h3 class="font-medium text-synth-text mb-3">Tags</h3>
+              <div class="max-h-64 overflow-y-auto space-y-2">
+                {allTags.map(tag => (
+                  <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" value={tag} class="filter-checkbox tag-filter" data-filter-type="tag" />
+                    <span class="ml-2 text-sm text-synth-text">{tag}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <!-- Clear Filters -->
+            <button id="clear-filters" class="btn-secondary w-full mt-6 text-sm">
+              Clear All Filters
+            </button>
+          </div>
+        </aside>
+
+        <!-- Blog Posts Grid -->
+        <section class="lg:col-span-3">
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-glow">
+              All Posts <span id="post-count" class="text-lg font-normal text-synth-text-muted">({sortedPosts.length})</span>
+            </h2>
+            <select id="sort-order" class="px-4 py-2 rounded-lg bg-synth-card-bg border border-synth-border text-synth-text focus:border-accent focus:outline-none">
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="title">Title (A-Z)</option>
+            </select>
+          </div>
+          
+          <div id="blog-posts" class="grid gap-6">
+            {sortedPosts.map((post) => (
+              <article 
+                class="blog-post card p-6 hover:border-accent transition-colors" 
+                data-category={post.data.category}
+                data-tags={JSON.stringify(post.data.tags)}
+                data-date={post.data.publishDate.toISOString()}
+                data-title={post.data.title}
+              >
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                  <div class="flex items-center gap-4">
+                    <span class="px-3 py-1 text-xs font-medium rounded-full bg-accent/20 text-accent border border-accent/30">
+                      {post.data.category.replace('-', ' ')}
+                    </span>
+                    <time class="text-sm text-synth-text-muted">
+                      {formatDate(new Date(post.data.publishDate))}
+                    </time>
+                  </div>
+                  {post.data.series && (
+                    <span class="text-xs bg-synth-card-bg px-2 py-1 rounded border border-synth-border">
+                      {post.data.series.name} - Part {post.data.series.order}
+                    </span>
+                  )}
+                </div>
+                
+                <h3 class="text-xl font-bold text-glow mb-3 hover:text-accent transition-colors">
+                  <a href={`/blog/${post.slug}`}>
+                    {post.data.title}
+                  </a>
+                </h3>
+                
+                <p class="text-synth-text mb-4 leading-relaxed">
+                  {post.data.description}
+                </p>
+                
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                  <div class="flex flex-wrap gap-2">
+                    {post.data.tags.slice(0, 3).map((tag: string) => (
+                      <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
+                        {tag}
+                      </span>
+                    ))}
+                    {post.data.tags.length > 3 && (
+                      <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
+                        +{post.data.tags.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                  
+                  <a 
+                    href={`/blog/${post.slug}`} 
+                    class="text-accent hover:text-accent-light transition-colors text-sm font-medium flex items-center gap-1"
+                  >
+                    Read post 
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+          
+          <!-- No results message -->
+          <div id="no-results" class="hidden card p-12 text-center">
+            <p class="text-synth-text-muted">No posts match your current filters. Try adjusting your selection.</p>
+          </div>
+        </section>
+      </div>
+    ) : (
+      <!-- Empty state -->
+      <section class="text-center py-16">
+        <div class="card p-12">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-synth-card-bg border border-synth-border flex items-center justify-center">
+            <svg class="w-8 h-8 text-synth-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-glow mb-4">Coming Soon</h2>
+          <p class="text-synth-text-muted mb-6 max-w-md mx-auto">
+            I'm working on creating valuable content about platform engineering, cloud architecture, 
+            and technical leadership. Check back soon for in-depth articles and insights.
+          </p>
+          <a href="/" class="btn-primary">
+            Back to Home
+          </a>
+        </div>
+      </section>
+    )}
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.1);
+  }
+  
+  /* Custom checkbox styling */
+  .filter-checkbox {
+    @apply w-4 h-4 rounded border-synth-border text-accent focus:ring-2 focus:ring-offset-0;
+    --tw-ring-color: var(--synth-pink);
+  }
+</style>
+
+<script>
+  // Filter functionality
+  const categoryFilters = document.querySelectorAll('.category-filter');
+  const tagFilters = document.querySelectorAll('.tag-filter');
+  const blogPosts = document.querySelectorAll('.blog-post');
+  const postCount = document.getElementById('post-count');
+  const clearButton = document.getElementById('clear-filters');
+  const sortOrder = document.getElementById('sort-order') as HTMLSelectElement;
+  const noResults = document.getElementById('no-results');
+  const postsContainer = document.getElementById('blog-posts');
+  
+  // Handle "All Categories" checkbox
+  const allCategoriesCheckbox = document.querySelector('input[value="all"]') as HTMLInputElement;
+  
+  function updateFilters() {
+    const selectedCategories = Array.from(categoryFilters)
+      .filter((cb: any) => cb.checked && cb.value !== 'all')
+      .map((cb: any) => cb.value);
+    
+    const selectedTags = Array.from(tagFilters)
+      .filter((cb: any) => cb.checked)
+      .map((cb: any) => cb.value);
+    
+    let visibleCount = 0;
+    
+    blogPosts.forEach((post: any) => {
+      const postCategory = post.dataset.category;
+      const postTags = JSON.parse(post.dataset.tags);
+      
+      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(postCategory);
+      const tagMatch = selectedTags.length === 0 || selectedTags.some(tag => postTags.includes(tag));
+      
+      if (categoryMatch && tagMatch) {
+        post.style.display = '';
+        visibleCount++;
+      } else {
+        post.style.display = 'none';
+      }
+    });
+    
+    // Update post count
+    if (postCount) {
+      postCount.textContent = `(${visibleCount})`;
+    }
+    
+    // Show/hide no results message
+    if (noResults && postsContainer) {
+      if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+        postsContainer.classList.add('hidden');
+      } else {
+        noResults.classList.add('hidden');
+        postsContainer.classList.remove('hidden');
+      }
+    }
+  }
+  
+  function sortPosts() {
+    if (!postsContainer) return;
+    
+    const posts = Array.from(blogPosts);
+    const sortValue = sortOrder?.value || 'newest';
+    
+    posts.sort((a: any, b: any) => {
+      switch (sortValue) {
+        case 'oldest':
+          return new Date(a.dataset.date).getTime() - new Date(b.dataset.date).getTime();
+        case 'title':
+          return a.dataset.title.localeCompare(b.dataset.title);
+        case 'newest':
+        default:
+          return new Date(b.dataset.date).getTime() - new Date(a.dataset.date).getTime();
+      }
+    });
+    
+    posts.forEach(post => postsContainer.appendChild(post));
+  }
+  
+  // Event listeners
+  categoryFilters.forEach(filter => {
+    filter.addEventListener('change', (e: any) => {
+      if (e.target.value === 'all') {
+        // If "All" is checked, uncheck all other categories
+        categoryFilters.forEach(cb => {
+          if (cb !== e.target) {
+            (cb as HTMLInputElement).checked = false;
+          }
+        });
+      } else {
+        // If any other category is checked, uncheck "All"
+        if (allCategoriesCheckbox) {
+          allCategoriesCheckbox.checked = false;
+        }
+      }
+      updateFilters();
+    });
+  });
+  
+  tagFilters.forEach(filter => {
+    filter.addEventListener('change', updateFilters);
+  });
+  
+  clearButton?.addEventListener('click', () => {
+    categoryFilters.forEach((cb: any) => {
+      cb.checked = cb.value === 'all';
+    });
+    tagFilters.forEach((cb: any) => {
+      cb.checked = false;
+    });
+    updateFilters();
+  });
+  
+  sortOrder?.addEventListener('change', sortPosts);
+  
+  // Initialize
+  updateFilters();
+</script>

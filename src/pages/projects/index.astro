@@ -1,0 +1,413 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/navigation/Header.astro';
+import Footer from '../../components/navigation/Footer.astro';
+
+// Get all projects
+const allProjects = await getCollection('projects');
+
+// Sort projects by date (newest first) or featured status
+const sortedProjects = allProjects.sort((a, b) => {
+  // Featured projects first
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  
+  // Then by date
+  return new Date(b.data.startDate).valueOf() - new Date(a.data.startDate).valueOf();
+});
+
+// Group projects by category
+const categories = [...new Set(allProjects.map(project => project.data.category))];
+const projectsByCategory = categories.reduce((acc, category) => {
+  acc[category] = sortedProjects.filter(project => project.data.category === category);
+  return acc;
+}, {} as Record<string, typeof sortedProjects>);
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+  }).format(date);
+}
+
+// Define category metadata
+const categoryMeta = {
+  'platform-projects': {
+    title: 'Platform Engineering',
+    description: 'Internal platforms and developer experience tools',
+    icon: '🏗️',
+    color: 'from-blue-500/20 to-cyan-500/20'
+  },
+  'open-source': {
+    title: 'Open Source',
+    description: 'Community contributions and open source projects',
+    icon: '🌟',
+    color: 'from-green-500/20 to-emerald-500/20'
+  },
+  'case-studies': {
+    title: 'Case Studies',
+    description: 'Real-world implementations and outcomes',
+    icon: '📋',
+    color: 'from-purple-500/20 to-pink-500/20'
+  }
+};
+---
+
+<BaseLayout 
+  title="Projects | Geoffrey Miller - Platform Engineering Portfolio & Case Studies"
+  description="Explore platform engineering projects, open source contributions, and real-world case studies from Geoffrey Miller's 12+ years building scalable cloud infrastructure."
+>
+  <Header />
+  
+  <main class="container mx-auto px-4 py-8 max-w-7xl 3xl:max-w-8xl">
+    <!-- Hero Section -->
+    <section class="mb-12">
+      <div class="card p-8 text-center">
+        <h1 class="text-4xl font-bold text-glow mb-4">Projects & Portfolio</h1>
+        <p class="text-xl text-synth-text-muted max-w-4xl mx-auto">
+          A showcase of platform engineering projects, open source contributions, and real-world 
+          case studies demonstrating scalable infrastructure solutions and developer experience innovations.
+        </p>
+      </div>
+    </section>
+
+    {sortedProjects.length > 0 ? (
+      <>
+        <!-- Featured Projects -->
+        {sortedProjects.filter(p => p.data.featured).length > 0 && (
+          <section class="mb-16">
+            <h2 class="text-2xl font-bold text-glow mb-8 flex items-center gap-3">
+              <span class="w-1 h-6 bg-accent rounded-full"></span>
+              Featured Projects
+            </h2>
+            <div class="grid lg:grid-cols-2 3xl:grid-cols-3 gap-8">
+              {sortedProjects.filter(p => p.data.featured).slice(0, 3).map((project) => {
+                const meta = categoryMeta[project.data.category as keyof typeof categoryMeta];
+                return (
+                  <article class={`card p-8 hover:border-accent transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br ${meta?.color || 'from-accent/5 to-accent-dark/5'} border-accent/20 relative overflow-hidden group`}>
+                    {/* Animated background effect */}
+                    <div class="absolute -inset-x-4 -inset-y-4 z-0 bg-gradient-to-r from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+                    <div class="relative z-10">
+                    <div class="flex items-center gap-4 mb-6">
+                      <span class="text-3xl">{meta?.icon || '🚀'}</span>
+                      <div>
+                        <span class="px-3 py-1 text-sm font-medium rounded-full bg-accent/20 text-accent border border-accent/30">
+                          {meta?.title || project.data.category}
+                        </span>
+                        <div class="flex items-center gap-4 mt-2">
+                          <time class="text-sm text-synth-text-muted">
+                            {formatDate(new Date(project.data.startDate))}
+                          </time>
+                          {project.data.status && (
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                              {project.data.status}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-glow mb-4 hover:text-accent transition-colors">
+                      <a href={`/projects/${project.slug}`}>
+                        {project.data.title}
+                      </a>
+                    </h3>
+
+                    <p class="text-synth-text mb-6 leading-relaxed">
+                      {project.data.description}
+                    </p>
+
+                    {/* Metrics if available */}
+                    {project.data.metrics && Object.keys(project.data.metrics).length > 0 && (
+                      <div class="grid grid-cols-2 gap-4 mb-6 p-4 bg-synth-card-bg rounded-lg border border-synth-border">
+                        {project.data.metrics.users && (
+                          <div>
+                            <p class="text-xs text-synth-text-muted">Users</p>
+                            <p class="text-lg font-bold text-accent">{project.data.metrics.users.toLocaleString()}</p>
+                          </div>
+                        )}
+                        {project.data.metrics.costSavings && (
+                          <div>
+                            <p class="text-xs text-synth-text-muted">Cost Savings</p>
+                            <p class="text-lg font-bold text-accent">{project.data.metrics.costSavings}</p>
+                          </div>
+                        )}
+                        {project.data.metrics.performance && (
+                          <div>
+                            <p class="text-xs text-synth-text-muted">Performance</p>
+                            <p class="text-lg font-bold text-accent">{project.data.metrics.performance}</p>
+                          </div>
+                        )}
+                        {project.data.metrics.impact && (
+                          <div>
+                            <p class="text-xs text-synth-text-muted">Impact</p>
+                            <p class="text-lg font-bold text-accent">{project.data.metrics.impact}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Technology stack */}
+                    <div class="flex flex-wrap gap-2 mb-6">
+                      {project.data.technologies?.slice(0, 4).map((tech: string) => (
+                        <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border hover:border-accent hover:text-accent transition-colors cursor-default">
+                          {tech}
+                        </span>
+                      ))}
+                      {project.data.technologies && project.data.technologies.length > 4 && (
+                        <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
+                          +{project.data.technologies.length - 4} more
+                        </span>
+                      )}
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                      <a 
+                        href={`/projects/${project.slug}`} 
+                        class="btn-primary text-sm"
+                      >
+                        View Project
+                      </a>
+                      
+                      <div class="flex gap-2">
+                        {project.data.github && (
+                          <a 
+                            href={project.data.github} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-synth-text-muted hover:text-accent transition-colors"
+                            title="View on GitHub"
+                          >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                          </a>
+                        )}
+                        {project.data.demo && (
+                          <a 
+                            href={project.data.demo} 
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-synth-text-muted hover:text-accent transition-colors"
+                            title="View Live"
+                          >
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                            </svg>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        <!-- All Projects by Category -->
+        <section>
+          <h2 class="text-2xl font-bold text-glow mb-8 flex items-center gap-3">
+            <span class="w-1 h-6 bg-accent rounded-full"></span>
+            All Projects
+          </h2>
+          
+          {Object.entries(projectsByCategory).map(([category, projects]) => {
+            const meta = categoryMeta[category as keyof typeof categoryMeta];
+            return (
+              <div class="mb-12">
+                <div class="flex items-center gap-4 mb-8">
+                  <span class="text-2xl">{meta?.icon || '📁'}</span>
+                  <div>
+                    <h3 class="text-xl font-bold text-accent">
+                      {meta?.title || category.replace('-', ' ')}
+                    </h3>
+                    <p class="text-synth-text-muted text-sm">
+                      {meta?.description || `${projects.length} projects in this category`}
+                    </p>
+                  </div>
+                  <div class="ml-auto">
+                    <span class="px-3 py-1 text-sm rounded-full bg-accent/10 text-accent border border-accent/20">
+                      {projects.length} {projects.length === 1 ? 'project' : 'projects'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-6">
+                  {projects.map((project) => (
+                    <article class="card p-6 hover:border-accent transition-all duration-300 group hover:scale-[1.01] relative overflow-hidden">
+                      {/* Subtle gradient overlay */}
+                      <div class="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                      <div class="relative z-10">
+                      <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                          <time class="text-sm text-synth-text-muted">
+                            {formatDate(new Date(project.data.startDate))}
+                          </time>
+                          {project.data.featured && (
+                            <span class="px-2 py-1 text-xs rounded-full bg-accent/20 text-accent border border-accent/30">
+                              Featured
+                            </span>
+                          )}
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                      
+                      <h4 class="text-xl font-bold text-glow mb-3 hover:text-accent transition-colors leading-tight">
+                        <a href={`/projects/${project.slug}`}>
+                          {project.data.title}
+                        </a>
+                      </h4>
+                      
+                      <p class="text-synth-text mb-4 leading-relaxed line-clamp-3">
+                        {project.data.description}
+                      </p>
+                      
+                      {/* Technology tags */}
+                      <div class="flex flex-wrap gap-2 mb-4">
+                        {project.data.technologies?.slice(0, 3).map((tech: string) => (
+                          <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
+                            {tech}
+                          </span>
+                        ))}
+                        {project.data.technologies && project.data.technologies.length > 3 && (
+                          <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
+                            +{project.data.technologies.length - 3}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div class="flex items-center justify-between">
+                        <a 
+                          href={`/projects/${project.slug}`} 
+                          class="text-accent hover:text-accent-light transition-colors text-sm font-medium inline-flex items-center"
+                        >
+                          View details
+                          <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                          </svg>
+                        </a>
+                        
+                        <div class="flex gap-2">
+                          {project.data.github && (
+                            <a 
+                              href={project.data.github} 
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="text-synth-text-muted hover:text-accent transition-colors"
+                              title="GitHub"
+                            >
+                              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                              </svg>
+                            </a>
+                          )}
+                          {project.data.demo && (
+                            <a 
+                              href={project.data.demo} 
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              class="text-synth-text-muted hover:text-accent transition-colors"
+                              title="Live Demo"
+                            >
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                              </svg>
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </section>
+      </>
+    ) : (
+      <!-- Empty state -->
+      <section class="text-center py-16">
+        <div class="card p-12">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-accent/20 to-accent-dark/20 border border-accent/30 flex items-center justify-center">
+            <svg class="w-10 h-10 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h2 class="text-3xl font-bold text-glow mb-4">Portfolio Coming Soon</h2>
+          <p class="text-synth-text-muted mb-8 max-w-2xl mx-auto leading-relaxed">
+            I'm currently documenting and showcasing my platform engineering projects, 
+            open source contributions, and real-world case studies. This will include 
+            detailed breakdowns of architecture decisions, implementation approaches, 
+            and measurable outcomes.
+          </p>
+          <div class="grid md:grid-cols-3 gap-4 mb-8">
+            {Object.entries(categoryMeta).map(([key, meta]) => (
+              <div class="card p-4 text-center">
+                <div class="text-2xl mb-2">{meta.icon}</div>
+                <h3 class="font-semibold text-accent mb-1 text-sm">{meta.title}</h3>
+                <p class="text-xs text-synth-text-muted">{meta.description}</p>
+              </div>
+            ))}
+          </div>
+          <div class="flex gap-4 justify-center">
+            <a href="/about" class="btn-primary">
+              Learn About My Experience
+            </a>
+            <a href="/guides" class="btn-secondary">
+              Browse Technical Guides
+            </a>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- Call to Action -->
+    <section class="mt-16">
+      <div class="card p-8 text-center bg-gradient-to-r from-accent/5 to-accent-dark/5 border-accent/20">
+        <h2 class="text-2xl font-bold text-glow mb-4">Interested in Collaboration?</h2>
+        <p class="text-synth-text-muted mb-6 max-w-2xl mx-auto">
+          I'm always open to discussing platform engineering challenges, 
+          sharing experiences, or exploring collaboration opportunities on 
+          interesting technical problems.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact" class="btn-primary">
+            Get in Touch
+          </a>
+          <a 
+            href="https://github.com/GeoffMillerAZ" 
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-secondary"
+          >
+            View GitHub Profile
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.1);
+  }
+  
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+</style>

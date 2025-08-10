@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to the Geoff Miller Cloud Platform! This guide will help you understand our development process and how to contribute effectively.
 
-## =Ë Table of Contents
+## =ï¿½ Table of Contents
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
@@ -23,11 +23,12 @@ This project is committed to providing a welcoming and inclusive environment for
 - Focus on what is best for the community
 - Show empathy towards other community members
 
-## =€ Getting Started
+## =ï¿½ Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+- Node.js 18+ (for native development)
+- Docker and Docker Compose (for containerized development - recommended)
+- Task (go-task) for build automation
 - Git
 - Basic understanding of Astro, TypeScript, and MDX
 
@@ -45,9 +46,23 @@ This project is committed to providing a welcoming and inclusive environment for
    ```
 
 3. **Set up development environment**
+   
+   **Option A: Containerized Development (Recommended)**
    ```bash
-   # Copy environment template
-   cp .env.example .env.local
+   # Start development with automatic browser launch
+   task dev:container
+   
+   # View logs
+   task dev:container:logs
+   
+   # Access container shell if needed
+   task dev:container:shell
+   ```
+   
+   **Option B: Native Development**
+   ```bash
+   # Set up devbox environment (if available)
+   devbox shell
    
    # Start development server
    npm run dev
@@ -64,7 +79,60 @@ This project is committed to providing a welcoming and inclusive environment for
 
 ## = Development Workflow
 
-### Branch Strategy
+### Containerized Development (Recommended)
+
+We use Docker containers to ensure consistent development environments across all contributors. This eliminates "works on my machine" issues and provides automated browser launching for immediate feedback.
+
+#### Quick Commands
+```bash
+# Start development environment
+task dev:container
+
+# Monitor development
+task dev:container:logs
+
+# Debug in container
+task dev:container:shell
+
+# Restart container
+task dev:container:restart
+
+# Stop development
+task dev:container:stop
+
+# Clean up
+task dev:container:clean
+```
+
+#### Container Features
+- **Hot Reloading**: File changes in `./src` trigger automatic rebuilds
+- **Volume Mounts**: Source code mounted for instant updates
+- **Health Checks**: Automatic readiness detection
+- **Browser Launch**: Automatically opens `http://localhost:4321`
+- **Cross-Platform**: Works consistently on macOS, Linux, and Windows
+
+#### Production Testing
+```bash
+# Test production build locally
+task prod:container
+
+# Access at http://localhost:8080
+# Stop with: task prod:container:stop
+```
+
+#### Troubleshooting Container Issues
+```bash
+# Container won't start
+docker-compose ps
+task dev:container:logs
+
+# File changes not detected
+task dev:container:restart
+
+# Clean slate
+task dev:container:clean
+task dev:container
+```### Branch Strategy
 - `main` - Production branch (auto-deployed)
 - `develop` - Staging branch (auto-deployed to preview)
 - `feature/*` - Feature development branches
@@ -98,7 +166,7 @@ git commit -m "feat: add amazing feature"
 git push origin feature/amazing-feature
 ```
 
-## =Ý Content Contributions
+## =ï¿½ Content Contributions
 
 ### Content Types
 We welcome contributions for:
@@ -153,7 +221,7 @@ featured: false
 ---
 ```
 
-## =» Code Contributions
+## =ï¿½ Code Contributions
 
 ### Areas for Contribution
 - **Components**: Reusable UI components
@@ -187,7 +255,7 @@ task content:validate   # Validate all content
 task content:stats      # Content statistics
 ```
 
-## >ê Testing Requirements
+## >ï¿½ Testing Requirements
 
 ### Test Coverage
 All contributions must include appropriate tests:
@@ -224,7 +292,7 @@ npm run a11y
 task test:performance
 ```
 
-## <¨ Style Guidelines
+## <ï¿½ Style Guidelines
 
 ### Code Style
 - Use TypeScript for all new code
@@ -258,7 +326,7 @@ test(api): add integration tests
 - Utility files: `camelCase.ts`
 - Content files: `kebab-case.mdx`
 
-## =Ë Pull Request Process
+## =ï¿½ Pull Request Process
 
 ### Before Submitting
 - [ ] Fork the repository and create feature branch
@@ -358,7 +426,7 @@ npm run lint:fix
 npm run format
 ```
 
-## =Ú Resources
+## =ï¿½ Resources
 
 ### Documentation
 - [Astro Documentation](https://docs.astro.build/)
@@ -389,4 +457,4 @@ All contributors will be recognized in:
 - Release notes for significant contributions
 - Annual contributor acknowledgments
 
-Thank you for helping make the Geoff Miller Cloud Platform better for everyone! =€
+Thank you for helping make the Geoff Miller Cloud Platform better for everyone! =ï¿½

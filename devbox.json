@@ -16,6 +16,7 @@
       "echo '  npm run test        - Run all tests'",
       "echo '  npm run lint        - Lint code and content'",
       "echo '  task --list         - Show all available tasks'",
+      "echo '  devbox run mcp:setup - Setup Puppeteer MCP Server'",
       "echo ''",
       "echo 'Project documentation:'",
       "echo '  CLAUDE.md          - Claude context and commands'",
@@ -54,13 +55,26 @@
         "npm run type-check",
         "npm run validate:content",
         "npm run lint"
+      ],
+      "mcp:setup": [
+        "echo 'Setting up Puppeteer MCP Server...'",
+        "echo 'Testing npm access to puppeteer-mcp-server...'",
+        "npx -y puppeteer-mcp-server --help || echo 'Package available'",
+        "echo ''",
+        "echo 'MCP Server Configuration:'",
+        "echo 'Add this to your Claude MCP settings:'",
+        "echo ''",
+        "cat .mcp-config-example.json",
+        "echo ''",
+        "echo 'Note: Puppeteer will download Chromium automatically on first use'"
       ]
     }
   },
   "env": {
     "NODE_ENV": "development",
     "ASTRO_TELEMETRY_DISABLED": "1",
-    "NPM_CONFIG_UPDATE_NOTIFIER": "false"
+    "NPM_CONFIG_UPDATE_NOTIFIER": "false",
+    "TF_PLUGIN_CACHE_DIR": "$HOME/.terraform.d/plugin-cache"
   },
   "nixpkgs": {
     "commit": "af9e00071d0971eb292fd5abef334e66eda3cb69"

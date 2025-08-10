@@ -1,0 +1,388 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/navigation/Header.astro';
+import Footer from '../../components/navigation/Footer.astro';
+
+// Get all resources
+const allResources = await getCollection('resources');
+
+// Sort resources by category and then by title
+const sortedResources = allResources.sort((a, b) => {
+  if (a.data.category !== b.data.category) {
+    return a.data.category.localeCompare(b.data.category);
+  }
+  return a.data.title.localeCompare(b.data.title);
+});
+
+// Group resources by category
+const categories = [...new Set(allResources.map(resource => resource.data.category))];
+const resourcesByCategory = categories.reduce((acc, category) => {
+  acc[category] = sortedResources.filter(resource => resource.data.category === category);
+  return acc;
+}, {} as Record<string, typeof sortedResources>);
+
+// Define category metadata
+const categoryMeta = {
+  'tools': {
+    title: 'Platform Tools',
+    description: 'Essential tools for platform engineering and cloud architecture',
+    icon: '🔧',
+    color: 'from-blue-500/20 to-cyan-500/20'
+  },
+  'reading-list': {
+    title: 'Reading List',
+    description: 'Books, papers, and articles that shaped my thinking',
+    icon: '📚',
+    color: 'from-purple-500/20 to-pink-500/20'
+  },
+  'courses': {
+    title: 'Learning Resources',
+    description: 'Courses, certifications, and training programs',
+    icon: '🎓',
+    color: 'from-green-500/20 to-emerald-500/20'
+  },
+  'conferences': {
+    title: 'Conferences & Events',
+    description: 'Industry conferences and events worth attending',
+    icon: '🎪',
+    color: 'from-orange-500/20 to-red-500/20'
+  },
+  'communities': {
+    title: 'Communities',
+    description: 'Online communities and professional networks',
+    icon: '👥',
+    color: 'from-teal-500/20 to-cyan-500/20'
+  }
+};
+
+// Featured/curated resources (placeholder data)
+const featuredTools = [
+  {
+    name: "Kubernetes",
+    description: "Container orchestration platform for managing cloud-native applications at scale",
+    url: "https://kubernetes.io",
+    category: "Orchestration"
+  },
+  {
+    name: "Terraform",
+    description: "Infrastructure as code tool for building, changing, and versioning infrastructure",
+    url: "https://terraform.io",
+    category: "IaC"
+  },
+  {
+    name: "Prometheus",
+    description: "Open-source monitoring and alerting toolkit for cloud-native environments",
+    url: "https://prometheus.io",
+    category: "Monitoring"
+  },
+  {
+    name: "ArgoCD",
+    description: "Declarative GitOps continuous delivery tool for Kubernetes applications",
+    url: "https://argoproj.github.io/cd/",
+    category: "GitOps"
+  }
+];
+
+const featuredReading = [
+  {
+    title: "Building Secure and Reliable Systems",
+    author: "Google SRE Team",
+    description: "Comprehensive guide to security and reliability in large-scale systems",
+    url: "https://sre.google/books/building-secure-reliable-systems/"
+  },
+  {
+    title: "Team Topologies",
+    author: "Matthew Skelton & Manuel Pais",
+    description: "Organizing business and technology teams for fast flow",
+    url: "https://teamtopologies.com/"
+  },
+  {
+    title: "Platform Engineering",
+    author: "Craig Box",
+    description: "Building internal platforms that enable developer productivity",
+    url: "#"
+  }
+];
+---
+
+<BaseLayout 
+  title="Resources | Geoffrey Miller - Platform Engineering Tools, Books & Communities"
+  description="Curated collection of platform engineering tools, essential reading, learning resources, conferences, and communities from Geoffrey Miller's experience in cloud architecture."
+>
+  <Header />
+  
+  <main class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Hero Section -->
+    <section class="mb-12">
+      <div class="card p-8 text-center">
+        <h1 class="text-4xl font-bold text-glow mb-4">Curated Resources</h1>
+        <p class="text-xl text-synth-text-muted max-w-4xl mx-auto">
+          A carefully curated collection of tools, books, courses, conferences, and communities 
+          that have been instrumental in my platform engineering journey. Updated regularly 
+          with the latest and most valuable resources for cloud architects and platform engineers.
+        </p>
+      </div>
+    </section>
+
+    <!-- Quick Access Categories -->
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold text-glow mb-8 text-center">Browse by Category</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+        {Object.entries(categoryMeta).map(([key, meta]) => (
+          <a 
+            href={`#${key}`}
+            class={`card p-6 text-center hover:border-accent transition-all duration-300 bg-gradient-to-br ${meta.color} border-accent/20 group`}
+          >
+            <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">{meta.icon}</div>
+            <h3 class="font-semibold text-accent mb-2">{meta.title}</h3>
+            <p class="text-xs text-synth-text-muted leading-relaxed">
+              {meta.description}
+            </p>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Featured Tools -->
+    <section class="mb-16" id="featured-tools">
+      <h2 class="text-2xl font-bold text-glow mb-8 flex items-center gap-3">
+        <span class="w-1 h-6 bg-accent rounded-full"></span>
+        Essential Platform Tools
+      </h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {featuredTools.map((tool) => (
+          <article class="card p-6 hover:border-accent transition-all duration-300 group">
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-2 py-1 text-xs rounded-full bg-accent/20 text-accent border border-accent/30">
+                {tool.category}
+              </span>
+              <div class="w-2 h-2 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </div>
+            
+            <h3 class="font-bold text-glow mb-2 group-hover:text-accent transition-colors">
+              <a href={tool.url} target="_blank" rel="noopener noreferrer">
+                {tool.name}
+              </a>
+            </h3>
+            
+            <p class="text-synth-text text-sm mb-4 leading-relaxed">
+              {tool.description}
+            </p>
+            
+            <a 
+              href={tool.url} 
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+            >
+              Explore tool
+              <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+              </svg>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Featured Reading -->
+    <section class="mb-16" id="featured-reading">
+      <h2 class="text-2xl font-bold text-glow mb-8 flex items-center gap-3">
+        <span class="w-1 h-6 bg-accent rounded-full"></span>
+        Must-Read Resources
+      </h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {featuredReading.map((book) => (
+          <article class="card p-6 hover:border-accent transition-all duration-300">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-10 h-10 rounded bg-gradient-to-br from-accent/20 to-accent-dark/20 border border-accent/30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-glow text-lg hover:text-accent transition-colors">
+                  {book.url !== "#" ? (
+                    <a href={book.url} target="_blank" rel="noopener noreferrer">
+                      {book.title}
+                    </a>
+                  ) : (
+                    book.title
+                  )}
+                </h3>
+                <p class="text-sm text-synth-text-muted">by {book.author}</p>
+              </div>
+            </div>
+            
+            <p class="text-synth-text text-sm mb-4 leading-relaxed">
+              {book.description}
+            </p>
+            
+            {book.url !== "#" && (
+              <a 
+                href={book.url} 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+              >
+                Learn more
+                <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+
+    {/* Resource Categories */}
+    {allResources.length > 0 ? (
+      Object.entries(resourcesByCategory).map(([category, resources]) => {
+        const meta = categoryMeta[category as keyof typeof categoryMeta];
+        return (
+          <section class="mb-16" id={category}>
+            <div class="flex items-center gap-4 mb-8">
+              <span class="text-3xl">{meta?.icon || '📁'}</span>
+              <div>
+                <h2 class="text-2xl font-bold text-accent">
+                  {meta?.title || category.replace('-', ' ')}
+                </h2>
+                <p class="text-synth-text-muted">
+                  {meta?.description || `${resources.length} resources in this category`}
+                </p>
+              </div>
+              <div class="ml-auto">
+                <span class="px-3 py-1 text-sm rounded-full bg-accent/10 text-accent border border-accent/20">
+                  {resources.length} {resources.length === 1 ? 'resource' : 'resources'}
+                </span>
+              </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {resources.map((resource) => (
+                <article class="card p-6 hover:border-accent transition-all duration-300">
+                  <h3 class="font-bold text-glow mb-2 hover:text-accent transition-colors">
+                    <a href={resource.data.url} target="_blank" rel="noopener noreferrer">
+                      {resource.data.title}
+                    </a>
+                  </h3>
+                  
+                  <p class="text-synth-text text-sm mb-4 leading-relaxed">
+                    {resource.data.description}
+                  </p>
+                  
+                  {resource.data.tags && (
+                    <div class="flex flex-wrap gap-2 mb-4">
+                      {resource.data.tags.slice(0, 3).map((tag: string) => (
+                        <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <a 
+                    href={resource.data.url} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+                  >
+                    Visit resource
+                    <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </a>
+                </article>
+              ))}
+            </div>
+          </section>
+        );
+      })
+    ) : (
+      <!-- Empty state for dynamic resources -->
+      <section class="mb-16">
+        <div class="card p-8 text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-accent/20 to-accent-dark/20 border border-accent/30 flex items-center justify-center">
+            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-glow mb-4">Resource Database Growing</h3>
+          <p class="text-synth-text-muted mb-6">
+            I'm building a comprehensive database of curated resources. The featured tools and 
+            reading list above provide a solid starting point, with more categories coming soon.
+          </p>
+        </div>
+      </section>
+    )}
+
+    <!-- Newsletter/Updates Section -->
+    <section class="mt-16">
+      <div class="card p-8 text-center bg-gradient-to-r from-accent/5 to-accent-dark/5 border-accent/20">
+        <h2 class="text-2xl font-bold text-glow mb-4">Stay Updated</h2>
+        <p class="text-synth-text-muted mb-6 max-w-2xl mx-auto">
+          This resource collection is continuously updated as I discover new tools, 
+          read valuable content, and attend industry events. Get notified about new 
+          additions and curated recommendations.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto mb-4">
+          <input 
+            type="email" 
+            placeholder="your@email.com" 
+            class="flex-1 px-4 py-2 rounded-lg bg-synth-card-bg border border-synth-border text-synth-text focus:border-accent focus:outline-none"
+          />
+          <button class="btn-primary whitespace-nowrap">
+            Subscribe
+          </button>
+        </div>
+        <p class="text-xs text-synth-text-muted">
+          Newsletter functionality coming soon
+        </p>
+      </div>
+    </section>
+
+    <!-- Contribute Section -->
+    <section class="mt-12">
+      <div class="card p-6 border-accent/20">
+        <h3 class="font-semibold text-glow mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+          </svg>
+          Know a Great Resource?
+        </h3>
+        <p class="text-synth-text text-sm mb-4">
+          If you know of tools, books, courses, or communities that would be valuable 
+          for platform engineers and cloud architects, I'd love to hear about them.
+        </p>
+        <a href="/contact" class="btn-secondary text-sm">
+          Suggest a Resource
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.1);
+  }
+  
+  .group:hover .group-hover\:opacity-100 {
+    opacity: 1;
+  }
+  
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Offset for fixed header when using anchor links */
+  section[id] {
+    scroll-margin-top: 2rem;
+  }
+</style>

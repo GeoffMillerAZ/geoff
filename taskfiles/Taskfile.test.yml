@@ -189,8 +189,8 @@ tasks:
     deps: [coverage, performance, accessibility, seo]
     cmds:
       - echo "Checking quality gate requirements..."
-      - echo " Test coverage meets minimum threshold"
-      - echo " Performance budget within limits"
-      - echo " Accessibility standards met"
-      - echo " SEO requirements satisfied"
-      - echo "Quality gate: PASSED"
+      - echo "Test coverage meets minimum threshold"
+      - echo "Performance budget within limits"
+      - echo "Accessibility standards met"
+      - echo "SEO requirements satisfied"
+      - echo "Quality gate - PASSED"

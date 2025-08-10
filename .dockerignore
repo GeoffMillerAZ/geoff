@@ -1,0 +1,194 @@
+# Dockerignore for Geoff Miller Platform
+# Excludes files and directories that shouldn't be included in Docker build context
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+.astro/
+.next/
+.nuxt/
+.output/
+.vercel/
+.netlify/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Docker files (to avoid recursive copying)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Testing and coverage
+coverage/
+.coverage
+.nyc_output
+test-results/
+playwright-report/
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Cache directories
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
+
+# Temporary files
+tmp/
+temp/
+
+# Documentation that doesn't need to be in container
+docs/
+*.md
+!README.md
+
+# Development tools and configuration that aren't needed in container
+.devbox/
+.guidance/
+.versioning/
+lefthook.yml
+.lhci/
+
+# Taskfiles (keep main Taskfile.yml for reference)
+taskfiles/
+
+# Test files
+tests/
+**/*.test.*
+**/*.spec.*
+
+# Backup files
+*.bak
+*.backup
+
+# Package manager files that can be regenerated
+yarn.lock
+pnpm-lock.yaml
+
+# Local development files
+.local/
+.tmp/
+
+# Vendor directories
+vendor/
+
+# Archives
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+
+# Development certificates
+*.pem
+*.key
+*.crt
+
+# Local configuration overrides
+config.local.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor directories and files
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# IntelliJ
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Vim
+*.swp
+*.swo
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Build tools
+.gradle/
+build/
+target/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Ruby
+*.gem
+*.rbc
+/.config
+/coverage/
+/InstalledFiles
+/pkg/
+/spec/reports/
+/spec/examples.txt
+/test/tmp/
+/test/version_tmp/
+/tmp/
+
+# Keep essential files
+!package.json
+!tsconfig.json
+!astro.config.mjs
+!tailwind.config.mjs

@@ -90,6 +90,191 @@ tasks:
     cmds:
       - npm run analyze
 
+  # Container development tasks
+  dev:container:
+    desc: Start containerized development server and open browser
+    deps: [dev:container:build]
+    cmds:
+      - echo "Starting containerized development environment..."
+      - docker-compose up -d dev
+      - echo "Waiting for development server to be ready..."
+      - task: dev:container:wait-ready
+      - task: dev:container:open-browser
+      - echo "[OK] Development environment ready!"
+      - echo "View logs with - task dev:container:logs"
+      - echo "Debug shell - task dev:container:shell"
+      - echo "Stop with - task dev:container:stop"
+
+  dev:container:build:
+    desc: Build development Docker image
+    cmds:
+      - echo "Building development Docker image..."
+      - docker-compose build dev
+    sources:
+      - "Dockerfile"
+      - "package.json"
+      - "package-lock.json"
+      - "astro.config.mjs"
+      - "tailwind.config.mjs"
+      - "tsconfig.json"
+
+  dev:container:wait-ready:
+    desc: Wait for development server to be healthy
+    cmds:
+      - |
+        echo "Waiting for development server to be ready..."
+        for i in {1..30}; do
+          if docker-compose exec -T dev wget --no-verbose --tries=1 --spider http://localhost:4321/ 2>/dev/null; then
+            echo "Development server is ready!"
+            break
+          fi
+          echo "Waiting... ($i/30)"
+          sleep 2
+        done
+    silent: true
+
+  dev:container:open-browser:
+    desc: Open browser to development server
+    cmds:
+      - |
+        echo "Opening browser..."
+        case "{{OS}}" in
+          darwin)
+            open http://localhost:4321
+            ;;
+          linux)
+            if command -v xdg-open > /dev/null; then
+              xdg-open http://localhost:4321
+            elif command -v gnome-open > /dev/null; then
+              gnome-open http://localhost:4321
+            else
+              echo "Please open http://localhost:4321 in your browser"
+            fi
+            ;;
+          windows)
+            start http://localhost:4321
+            ;;
+          *)
+            echo "Please open http://localhost:4321 in your browser"
+            ;;
+        esac
+    silent: true
+
+  dev:container:logs:
+    desc: View development container logs
+    cmds:
+      - docker-compose logs -f dev
+
+  dev:container:shell:
+    desc: Open interactive shell in development container
+    cmds:
+      - docker-compose exec dev /bin/sh
+
+  dev:container:stop:
+    desc: Stop and clean up development containers
+    cmds:
+      - echo "Stopping development containers..."
+      - docker-compose down
+      - echo "[OK] Development containers stopped"
+
+  dev:container:restart:
+    desc: Restart development container
+    cmds:
+      - echo "Restarting development container..."
+      - docker-compose restart dev
+      - task: dev:container:wait-ready
+      - echo "[OK] Development container restarted"
+
+  dev:container:clean:
+    desc: Clean up development containers and images
+    cmds:
+      - echo "Cleaning up containers and images..."
+      - docker-compose down --rmi local --volumes --remove-orphans
+      - docker system prune -f
+      - echo "[OK] Cleanup complete"
+
+  # Production container tasks
+  prod:container:
+    desc: Start production container and open browser
+    deps: [prod:container:build]
+    cmds:
+      - echo "Starting production container..."
+      - docker-compose --profile production up -d prod
+      - echo "Waiting for production server to be ready..."
+      - task: prod:container:wait-ready
+      - task: prod:container:open-browser
+      - echo "[OK] Production container ready!"
+      - echo "View logs with - task prod:container:logs"
+      - echo "Stop with - task prod:container:stop"
+
+  prod:container:build:
+    desc: Build production Docker image
+    cmds:
+      - echo "Building production Docker image..."
+      - docker-compose --profile production build prod
+    sources:
+      - "Dockerfile"
+      - "src/**/*"
+      - "public/**/*"
+      - "package.json"
+      - "astro.config.mjs"
+      - "tailwind.config.mjs"
+      - "tsconfig.json"
+
+  prod:container:wait-ready:
+    desc: Wait for production server to be healthy
+    cmds:
+      - |
+        echo "Waiting for production server to be ready..."
+        for i in {1..30}; do
+          if curl -f http://localhost:8080/health 2>/dev/null; then
+            echo "Production server is ready!"
+            break
+          fi
+          echo "Waiting... ($i/30)"
+          sleep 2
+        done
+    silent: true
+
+  prod:container:open-browser:
+    desc: Open browser to production server
+    cmds:
+      - |
+        echo "Opening browser to production site..."
+        case "{{OS}}" in
+          darwin)
+            open http://localhost:8080
+            ;;
+          linux)
+            if command -v xdg-open > /dev/null; then
+              xdg-open http://localhost:8080
+            elif command -v gnome-open > /dev/null; then
+              gnome-open http://localhost:8080
+            else
+              echo "Please open http://localhost:8080 in your browser"
+            fi
+            ;;
+          windows)
+            start http://localhost:8080
+            ;;
+          *)
+            echo "Please open http://localhost:8080 in your browser"
+            ;;
+        esac
+    silent: true
+
+  prod:container:logs:
+    desc: View production container logs
+    cmds:
+      - docker-compose --profile production logs -f prod
+
+  prod:container:stop:
+    desc: Stop production container
+    cmds:
+      - echo "Stopping production container..."
+      - docker-compose --profile production down
+      - echo "[OK] Production container stopped"
+
   # Git and version control
   commit:
     desc: Interactive commit with conventional commits

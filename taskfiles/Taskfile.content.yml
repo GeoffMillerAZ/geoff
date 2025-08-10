@@ -2,291 +2,165 @@ version: '3'
 
 vars:
   CONTENT_DIR: src/content
-  BLOG_DIR: "{{.CONTENT_DIR}}/blog"
-  PROJECTS_DIR: "{{.CONTENT_DIR}}/projects"
-  GUIDES_DIR: "{{.CONTENT_DIR}}/guides"
-  RESOURCES_DIR: "{{.CONTENT_DIR}}/resources"
+  BLOG_DIR: src/content/blog
+  PROJECTS_DIR: src/content/projects
+  GUIDES_DIR: src/content/guides
+  RESOURCES_DIR: src/content/resources
 
 tasks:
-  # Create new content
+  # Create new blog post
   new-blog:
-    desc: Create new blog post
+    desc: Create a new blog post
     cmds:
-      - |
-        if [ -z "{{.CLI_ARGS}}" ]; then
-          echo "Usage: task content:new-blog -- \"Post Title\""
-          exit 1
-        fi
-        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-        DATE=$(date +%Y-%m-%d)
-        mkdir -p {{.BLOG_DIR}}/platform-engineering
-        cat > {{.BLOG_DIR}}/platform-engineering/$SLUG.mdx << EOF
-        ---
-        title: "{{.CLI_ARGS}}"
-        description: "Brief description of the blog post"
-        publishDate: ${DATE}
-        tags: ["platform-engineering"]
-        category: "platform-engineering"
-        difficulty: "intermediate"
-        estimatedReadTime: 5
-        aiSummary: "Brief summary for AI consumption"
-        toc: true
-        draft: true
-        featured: false
-        ---
+      - node scripts/new-blog.mjs "{{.CLI_ARGS}}"
+    preconditions:
+      - sh: test -d {{.BLOG_DIR}}
+        msg: "Blog directory not found"
 
-        # {{.CLI_ARGS}}
-
-        Write your content here...
-        EOF
-        echo "Created blog post: {{.BLOG_DIR}}/platform-engineering/$SLUG.mdx"
-
+  # Create new project
   new-project:
-    desc: Create new project showcase
+    desc: Create a new project showcase
     cmds:
-      - |
-        if [ -z "{{.CLI_ARGS}}" ]; then
-          echo "Usage: task content:new-project -- \"Project Name\""
-          exit 1
-        fi
-        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-        DATE=$(date +%Y-%m-%d)
-        mkdir -p {{.PROJECTS_DIR}}/platform-projects
-        cat > {{.PROJECTS_DIR}}/platform-projects/$SLUG.mdx << EOF
-        ---
-        title: "{{.CLI_ARGS}}"
-        description: "Brief description of the project"
-        startDate: ${DATE}
-        status: "active"
-        technologies: ["technology1", "technology2"]
-        category: "platform-projects"
-        featured: false
-        metrics:
-          impact: "Describe the impact"
-        ---
+      - node scripts/new-project.mjs "{{.CLI_ARGS}}"
+    preconditions:
+      - sh: test -d {{.PROJECTS_DIR}}
+        msg: "Projects directory not found"
 
-        # {{.CLI_ARGS}}
-
-        ## Overview
-
-        Describe your project here...
-
-        ## Technologies Used
-
-        - Technology 1
-        - Technology 2
-
-        ## Outcomes
-
-        - Outcome 1
-        - Outcome 2
-        EOF
-        echo "Created project: {{.PROJECTS_DIR}}/platform-projects/$SLUG.mdx"
-
+  # Create new guide
   new-guide:
-    desc: Create new platform engineering guide
+    desc: Create a new guide
     cmds:
-      - |
-        if [ -z "{{.CLI_ARGS}}" ]; then
-          echo "Usage: task content:new-guide -- \"Guide Title\""
-          exit 1
-        fi
-        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-        DATE=$(date +%Y-%m-%d)
-        mkdir -p {{.GUIDES_DIR}}/platform-engineering
-        cat > {{.GUIDES_DIR}}/platform-engineering/$SLUG.mdx << EOF
-        ---
-        title: "{{.CLI_ARGS}}"
-        description: "Comprehensive guide for platform engineering"
-        publishDate: ${DATE}
-        tags: ["platform-engineering", "guide"]
-        category: "platform-engineering"
-        difficulty: "intermediate"
-        estimatedReadTime: 15
-        aiSummary: "Platform engineering guide covering best practices"
-        toc: true
-        draft: true
-        featured: false
-        ---
+      - node scripts/new-guide.mjs "{{.CLI_ARGS}}"
+    preconditions:
+      - sh: test -d {{.GUIDES_DIR}}
+        msg: "Guides directory not found"
 
-        # {{.CLI_ARGS}}
-
-        ## Overview
-
-        This guide covers...
-
-        ## Prerequisites
-
-        - Prerequisite 1
-        - Prerequisite 2
-
-        ## Implementation
-
-        Step-by-step implementation...
-
-        ## Best Practices
-
-        - Best practice 1
-        - Best practice 2
-
-        ## Conclusion
-
-        Summary of key takeaways...
-        EOF
-        echo "Created guide: {{.GUIDES_DIR}}/platform-engineering/$SLUG.mdx"
-
+  # Create new resource
   new-resource:
-    desc: Create new resource entry
+    desc: Create a new resource entry
     cmds:
-      - |
-        if [ -z "{{.CLI_ARGS}}" ]; then
-          echo "Usage: task content:new-resource -- \"Resource Name\""
-          exit 1
-        fi
-        SLUG=$(echo "{{.CLI_ARGS}}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g')
-        DATE=$(date +%Y-%m-%d)
-        mkdir -p {{.RESOURCES_DIR}}/tools
-        cat > {{.RESOURCES_DIR}}/tools/$SLUG.mdx << EOF
-        ---
-        title: "{{.CLI_ARGS}}"
-        description: "Resource description"
-        publishDate: ${DATE}
-        tags: ["tools"]
-        category: "tools"
-        url: "https://example.com"
-        rating: 4
-        aiSummary: "Brief description of the resource"
-        ---
+      - node scripts/new-resource.mjs "{{.CLI_ARGS}}"
+    preconditions:
+      - sh: test -d {{.RESOURCES_DIR}}
+        msg: "Resources directory not found"
 
-        # {{.CLI_ARGS}}
-
-        ## Description
-
-        Describe the resource...
-
-        ## Key Features
-
-        - Feature 1
-        - Feature 2
-
-        ## Use Cases
-
-        - Use case 1
-        - Use case 2
-
-        ## Rating: ⭐⭐⭐⭐☆
-
-        Explain the rating...
-        EOF
-        echo "Created resource: {{.RESOURCES_DIR}}/tools/$SLUG.mdx"
-
-  # Content validation
+  # Validate all content
   validate:
     desc: Validate all content schemas and structure
     cmds:
       - echo "Validating content schemas..."
       - npm run validate:content
-      - echo "Checking for broken links..."
-      - npm run check:links
-      - echo "Validating images and alt text..."
-      - npm run check:images
+      - echo "Content validation complete"
 
-  # Content processing
-  process:
-    desc: Process and optimize all content
+  # Generate content
+  generate:
+    desc: Generate content collections and types
     cmds:
-      - echo "Processing content collections..."
-      - npm run process:content
-      - echo "Generating content indexes..."
-      - npm run generate:indexes
-      - echo "Creating content relationships..."
-      - npm run generate:relationships
+      - echo "Generating content collections..."
+      - npm run generate:content
+    sources:
+      - "{{.CONTENT_DIR}}/config.ts"
+    generates:
+      - ".astro/types.d.ts"
+
+  # Check content quality
+  quality:
+    desc: Check content quality and consistency
+    cmds:
+      - echo "Checking content quality..."
+      - npm run lint:content
+      - npm run check:links
+      - echo "Content quality check complete"
 
   # Content statistics
   stats:
-    desc: Generate content statistics
+    desc: Show content statistics
     cmds:
-      - echo "Content Statistics:"
+      - echo "Content Statistics"
       - echo "=================="
-      - echo "Blog posts: $(find {{.BLOG_DIR}} -name '*.mdx' | wc -l)"
-      - echo "Projects: $(find {{.PROJECTS_DIR}} -name '*.mdx' | wc -l)"
-      - echo "Guides: $(find {{.GUIDES_DIR}} -name '*.mdx' | wc -l)"
-      - echo "Resources: $(find {{.RESOURCES_DIR}} -name '*.mdx' | wc -l)"
-      - echo ""
-      - echo "Content by category:"
-      - find {{.CONTENT_DIR}} -name '*.mdx' -exec grep -l 'category:' {} \; | xargs grep 'category:' | cut -d':' -f3 | tr -d '"' | sort | uniq -c
+      - echo "Blog posts - $(find {{.BLOG_DIR}} -name '*.mdx' | wc -l)"
+      - echo "Projects - $(find {{.PROJECTS_DIR}} -name '*.mdx' | wc -l)"
+      - echo "Guides - $(find {{.GUIDES_DIR}} -name '*.mdx' | wc -l)"
+      - echo "Resources - $(find {{.RESOURCES_DIR}} -name '*.mdx' | wc -l)"
+
+  # Build content index
+  index:
+    desc: Build content search index
+    cmds:
+      - echo "Building content search index..."
+      - npm run build:index
+    sources:
+      - "{{.CONTENT_DIR}}/**/*.{md,mdx}"
+    generates:
+      - "public/search-index.json"
 
   # Export content
   export:
-    desc: Export content for AI consumption
+    desc: Export content for external use
     cmds:
-      - echo "Exporting content for AI consumption..."
-      - npm run export:ai
-      - echo "Content exported to dist/ai-export.json"
+      - echo "Exporting content..."
+      - npm run export:content
+    generates:
+      - "exports/content.json"
 
-  # Content search index
-  index:
-    desc: Generate search index
+  # Import content
+  import:
+    desc: Import content from external sources
     cmds:
-      - echo "Generating search index..."
-      - npm run generate:search-index
-      - echo "Search index generated"
+      - echo "Importing content..."
+      - npm run import:content
 
-  # Draft management
-  list-drafts:
-    desc: List all draft content
+  # Clean content cache
+  clean:
+    desc: Clean content processing cache
     cmds:
-      - echo "Draft Content:"
-      - echo "=============="
-      - find {{.CONTENT_DIR}} -name '*.mdx' -exec grep -l 'draft: true' {} \;
+      - echo "Cleaning content cache..."
+      - rm -rf .astro/content/
+      - echo "Content cache cleaned"
 
-  publish-draft:
-    desc: Publish a draft (remove draft flag)
+  # Preview content
+  preview:
+    desc: Preview content in development mode
     cmds:
-      - |
-        if [ -z "{{.CLI_ARGS}}" ]; then
-          echo "Usage: task content:publish-draft -- path/to/file.mdx"
-          exit 1
-        fi
-        FILE="{{.CLI_ARGS}}"
-        if [ ! -f "$FILE" ]; then
-          echo "File not found: $FILE"
-          exit 1
-        fi
-        sed -i 's/draft: true/draft: false/' "$FILE"
-        echo "Published: $FILE"
-
-  # Content maintenance
-  update-dates:
-    desc: Update modification dates for changed content
-    cmds:
-      - echo "Updating modification dates..."
-      - npm run update:dates
-
-  check-quality:
-    desc: Check content quality and readability
-    cmds:
-      - echo "Checking content quality..."
-      - npm run check:readability
-      - npm run check:spelling
-      - npm run check:grammar
-
-  # Bulk operations
-  bulk-tag:
-    desc: Add tags to multiple content files
-    cmds:
-      - |
-        if [ -z "{{.CLI_ARGS}}" ]; then
-          echo "Usage: task content:bulk-tag -- \"tag1,tag2\" \"pattern\""
-          exit 1
-        fi
-        echo "Bulk tagging not implemented yet"
+      - echo "Starting content preview..."
+      - npm run dev -- --experimental-content-preview
 
   # Content backup
   backup:
-    desc: Create backup of all content
+    desc: Backup all content
     cmds:
       - echo "Creating content backup..."
-      - DATE=$(date +%Y%m%d_%H%M%S)
-      - tar -czf "content_backup_$DATE.tar.gz" {{.CONTENT_DIR}}
-      - echo "Backup created: content_backup_$DATE.tar.gz"
+      - tar -czf "backups/content-$(date +%Y%m%d-%H%M%S).tar.gz" {{.CONTENT_DIR}}
+      - echo "Content backup complete"
+
+  # Restore content
+  restore:
+    desc: Restore content from backup
+    cmds:
+      - echo "Restoring content from backup..."
+      - tar -xzf "{{.CLI_ARGS}}" -C .
+      - echo "Content restore complete"
+
+  # Check content freshness
+  freshness:
+    desc: Check content freshness and update dates
+    cmds:
+      - echo "Checking content freshness..."
+      - find {{.CONTENT_DIR}} -name "*.mdx" -mtime +30 | head -10
+      - echo "Content freshness check complete"
+
+  # Tag management
+  tags:
+    desc: Analyze and manage content tags
+    cmds:
+      - echo "Analyzing content tags..."
+      - npm run analyze:tags
+      - echo "Tag analysis complete"
+
+  # Content migration
+  migrate:
+    desc: Migrate content to new schema
+    cmds:
+      - echo "Migrating content schemas..."
+      - npm run migrate:content
+      - echo "Content migration complete"
