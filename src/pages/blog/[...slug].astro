@@ -48,50 +48,50 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
   <main class="container mx-auto px-4 py-8 max-w-4xl">
     <!-- Breadcrumbs -->
     <nav class="mb-8">
-      <ol class="flex items-center space-x-2 text-sm text-synth-text-muted">
-        <li><a href="/" class="hover:text-accent transition-colors">Home</a></li>
-        <li class="before:content-['/'] before:mx-2">
-          <a href="/blog" class="hover:text-accent transition-colors">Blog</a>
-        </li>
-        <li class="before:content-['/'] before:mx-2 text-synth-text truncate">
-          {entry.data.title}
-        </li>
-      </ol>
+      <div class="breadcrumbs text-sm">
+        <ul>
+          <li><a href="/" class="link link-hover">Home</a></li>
+          <li><a href="/blog" class="link link-hover">Blog</a></li>
+          <li class="opacity-70">{entry.data.title}</li>
+        </ul>
+      </div>
     </nav>
 
     <!-- Article Header -->
     <header class="mb-12">
-      <div class="card p-8">
-        <!-- Category and Meta -->
-        <div class="flex flex-wrap items-center gap-4 mb-6">
-          <span class="px-3 py-1 text-sm font-medium rounded-full bg-accent/20 text-accent border border-accent/30 capitalize">
-            {entry.data.category.replace('-', ' ')}
-          </span>
-          <time class="text-sm text-synth-text-muted">
-            {formatDate(publishDate)}
-          </time>
-          <span class="text-sm text-synth-text-muted">
-            {readingTime} min read
-          </span>
-        </div>
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <!-- Category and Meta -->
+          <div class="flex flex-wrap items-center gap-4 mb-6">
+            <div class="badge badge-primary badge-lg capitalize">
+              {entry.data.category.replace('-', ' ')}
+            </div>
+            <time class="text-sm text-base-content/70">
+              {formatDate(publishDate)}
+            </time>
+            <div class="badge badge-outline badge-sm">
+              {readingTime} min read
+            </div>
+          </div>
 
-        <!-- Title -->
-        <h1 class="text-4xl md:text-5xl font-bold text-glow mb-6 leading-tight">
-          {entry.data.title}
-        </h1>
+          <!-- Title -->
+          <h1 class="card-title text-3xl md:text-4xl lg:text-5xl font-bold text-glow mb-6 leading-tight">
+            {entry.data.title}
+          </h1>
 
-        <!-- Description -->
-        <p class="text-xl text-synth-text-muted leading-relaxed mb-6">
-          {entry.data.description}
-        </p>
+          <!-- Description -->
+          <p class="text-lg text-base-content/80 leading-relaxed mb-6">
+            {entry.data.description}
+          </p>
 
-        <!-- Tags -->
-        <div class="flex flex-wrap gap-2">
-          {entry.data.tags.map((tag: string) => (
-            <span class="px-3 py-1 text-sm rounded-full bg-synth-card-bg text-synth-text border border-synth-border">
-              #{tag}
-            </span>
-          ))}
+          <!-- Tags -->
+          <div class="flex flex-wrap gap-2">
+            {entry.data.tags.map((tag: string) => (
+              <div class="badge badge-outline badge-sm">
+                #{tag}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </header>
@@ -111,19 +111,15 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
     <!-- AI Summary Section (if available) -->
     {entry.data.aiSummary && (
       <section class="mt-12">
-        <div class="card p-6 bg-gradient-to-r from-accent/5 to-accent-dark/5 border-accent/20">
-          <div class="flex items-start gap-3">
-            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center mt-1">
-              <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-accent mb-2">AI Summary</h3>
-              <p class="text-synth-text text-sm leading-relaxed">
-                {entry.data.aiSummary}
-              </p>
-            </div>
+        <div class="alert alert-info">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h3 class="font-semibold mb-2">AI Summary</h3>
+            <p class="text-sm leading-relaxed">
+              {entry.data.aiSummary}
+            </p>
           </div>
         </div>
       </section>
@@ -131,31 +127,42 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
 
     <!-- Share Section -->
     <section class="mt-12">
-      <div class="card p-6">
-        <h3 class="font-semibold text-glow mb-4">Share this article</h3>
-        <div class="flex flex-wrap gap-3">
-          <a 
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(entry.data.title)}&url=${encodeURIComponent(`https://geoffmiller.dev/blog/${entry.slug}`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-secondary text-sm"
-          >
-            Share on Twitter
-          </a>
-          <a 
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://geoffmiller.dev/blog/${entry.slug}`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-secondary text-sm"
-          >
-            Share on LinkedIn
-          </a>
-          <button 
-            onclick={`navigator.clipboard.writeText('https://geoffmiller.dev/blog/${entry.slug}')`}
-            class="btn-secondary text-sm"
-          >
-            Copy Link
-          </button>
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h3 class="card-title text-glow mb-4">Share this article</h3>
+          <div class="card-actions flex-wrap gap-3">
+            <a 
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(entry.data.title)}&url=${encodeURIComponent(`https://geoffmiller.dev/blog/${entry.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary btn-sm gap-2"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+              </svg>
+              Share on Twitter
+            </a>
+            <a 
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://geoffmiller.dev/blog/${entry.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary btn-sm gap-2"
+            >
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              Share on LinkedIn
+            </a>
+            <button 
+              onclick={`navigator.clipboard.writeText('https://geoffmiller.dev/blog/${entry.slug}'); this.textContent = 'Copied!'; setTimeout(() => this.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy Link', 2000)`}
+              class="btn btn-secondary btn-sm gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+              Copy Link
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -166,12 +173,13 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
         <h2 class="text-2xl font-bold text-glow mb-8">Related Articles</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {relatedPosts.map((post) => (
-            <article class="card p-6 hover:border-accent transition-colors">
+            <article class="card card-compact bg-base-100 shadow-xl hover:shadow-2xl transition-all">
+              <div class="card-body">
               <div class="flex items-center gap-3 mb-4">
-                <span class="px-2 py-1 text-xs font-medium rounded bg-accent/20 text-accent">
+                <div class="badge badge-accent badge-sm">
                   {post.data.category}
-                </span>
-                <time class="text-xs text-synth-text-muted">
+                </div>
+                <time class="text-xs text-base-content/70">
                   {formatDate(new Date(post.data.publishDate))}
                 </time>
               </div>
@@ -182,13 +190,13 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
                 </a>
               </h3>
               
-              <p class="text-synth-text-muted text-sm mb-4 leading-relaxed line-clamp-3">
+              <p class="text-base-content/70 text-sm mb-4 leading-relaxed line-clamp-3">
                 {post.data.description}
               </p>
               
               <a 
                 href={`/blog/${post.slug}`} 
-                class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+                class="inline-flex items-center text-accent hover:brightness-125 transition-all text-sm font-medium"
               >
                 Read more 
                 <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -204,8 +212,11 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
     <!-- Back to Blog -->
     <section class="mt-16">
       <div class="text-center">
-        <a href="/blog" class="btn-secondary">
-          ← Back to All Posts
+        <a href="/blog" class="btn btn-secondary btn-wide gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to All Posts
         </a>
       </div>
     </section>
@@ -244,11 +255,11 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
   }
   
   .prose a {
-    @apply text-accent hover:text-accent-light transition-colors;
+    @apply text-accent hover:brightness-125 transition-all;
   }
   
   .prose blockquote {
-    @apply border-l-4 border-accent pl-4 italic text-synth-text-muted;
+    @apply border-l-4 border-accent pl-4 italic opacity-70;
   }
   
   .prose code {

@@ -66,7 +66,7 @@ export default {
           "primary-content": "#ffffff",
           "secondary": "#25b0bc",
           "secondary-content": "#ffffff",
-          "accent": "#f92aad",
+          "accent": "#ff6b9d", // Slightly softer pink for accents
           "accent-content": "#ffffff",
           "neutral": "#2a2139",
           "neutral-content": "#e5e5e5",
@@ -88,6 +88,9 @@ export default {
       "synthwave",
     ],
     darkTheme: "synthwave",
+    base: true,
+    styled: true,
+    utils: true,
   },
   plugins: [typography, daisyui],
 };

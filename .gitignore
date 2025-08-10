@@ -190,3 +190,6 @@ tramp
 # Analytics and tracking
 analytics.json
 tracking.json
+
+# mcp_screenshot
+.mcp_screenshot/

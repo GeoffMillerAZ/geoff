@@ -2,40 +2,40 @@
 // Footer component with social links and site information
 ---
 
-<footer class="footer footer-center bg-base-200/50 backdrop-blur-sm text-base-content rounded-t-2xl mt-12 border-t border-primary/20">
-  <div class="container mx-auto p-10">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl">
+<footer class="footer footer-center bg-base-200/50 backdrop-blur-sm text-base-content rounded-t-2xl mt-8 sm:mt-12 border-t border-primary/20">
+  <div class="container mx-auto p-6 sm:p-8 md:p-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl">
       
       <!-- Brand Section -->
-      <div class="space-y-4">
-        <div class="text-lg font-bold text-primary">Geoffrey Miller</div>
-        <p class="text-sm opacity-70 leading-relaxed">
+      <div class="space-y-3 sm:space-y-4">
+        <div class="text-base sm:text-lg font-bold text-primary">Geoffrey Miller</div>
+        <p class="text-sm sm:text-base opacity-70 leading-relaxed">
           Infrastructure Director & Principal Cloud Architect specializing in platform engineering, 
           cloud architecture, and AI-driven development workflows.
         </p>
       </div>
 
       <!-- Quick Links -->
-      <div class="space-y-4">
-        <div class="footer-title text-accent opacity-100">Quick Links</div>
-        <nav class="flex flex-col space-y-2">
-          <a href="/blog" class="link link-hover text-sm">Blog</a>
-          <a href="/projects" class="link link-hover text-sm">Projects</a>
-          <a href="/guides" class="link link-hover text-sm">Guides</a>
-          <a href="/resources" class="link link-hover text-sm">Resources</a>
-          <a href="/contact" class="link link-hover text-sm">Contact</a>
+      <div class="space-y-3 sm:space-y-4">
+        <div class="footer-title text-accent opacity-100 text-sm sm:text-base">Quick Links</div>
+        <nav class="flex flex-col space-y-1 sm:space-y-2">
+          <a href="/blog" class="link link-hover text-sm sm:text-base py-3 min-h-[44px] flex items-center touch-manipulation hover:text-accent transition-colors">Blog</a>
+          <a href="/projects" class="link link-hover text-sm sm:text-base py-3 min-h-[44px] flex items-center touch-manipulation hover:text-accent transition-colors">Projects</a>
+          <a href="/guides" class="link link-hover text-sm sm:text-base py-3 min-h-[44px] flex items-center touch-manipulation hover:text-accent transition-colors">Guides</a>
+          <a href="/resources" class="link link-hover text-sm sm:text-base py-3 min-h-[44px] flex items-center touch-manipulation hover:text-accent transition-colors">Resources</a>
+          <a href="/contact" class="link link-hover text-sm sm:text-base py-3 min-h-[44px] flex items-center touch-manipulation hover:text-accent transition-colors">Contact</a>
         </nav>
       </div>
 
       <!-- Social Links -->
-      <div class="space-y-4">
-        <div class="footer-title text-accent opacity-100">Connect</div>
-        <div class="flex justify-start space-x-4">
+      <div class="space-y-3 sm:space-y-4">
+        <div class="footer-title text-accent opacity-100 text-sm sm:text-base">Connect</div>
+        <div class="flex justify-center md:justify-start space-x-3 sm:space-x-4">
           <a 
             href="https://github.com/GeoffMillerAZ" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm btn-square hover:text-accent"
+            class="btn btn-ghost btn-md btn-square hover:text-accent hover:bg-accent/10 min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-200"
             aria-label="GitHub Profile"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -46,7 +46,7 @@
             href="https://linkedin.com/in/geoff-e-miller" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm btn-square hover:text-accent"
+            class="btn btn-ghost btn-md btn-square hover:text-accent hover:bg-accent/10 min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-200"
             aria-label="LinkedIn Profile"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -54,15 +54,15 @@
             </svg>
           </a>
         </div>
-        <div class="text-sm opacity-70">
+        <div class="text-sm sm:text-base opacity-70 text-center md:text-left">
           <p>Phoenix, AZ</p>
-          <p class="mt-1">
+          <p class="mt-1 sm:mt-2">
             Contact via 
             <a 
               href="https://linkedin.com/in/geoff-e-miller" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="link link-accent font-medium"
+              class="link link-accent font-medium py-2 px-1 min-h-[44px] inline-flex items-center touch-manipulation hover:text-accent transition-colors"
             >
               LinkedIn
             </a>
@@ -72,28 +72,28 @@
     </div>
 
     <!-- Bottom Section -->
-    <div class="divider my-8"></div>
+    <div class="divider my-6 sm:my-8"></div>
     <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-      <div class="text-xs opacity-60 text-center md:text-left">
-        <p>
+      <div class="text-xs sm:text-sm opacity-60 text-center md:text-left max-w-md">
+        <p class="leading-relaxed">
           © {new Date().getFullYear()} Geoffrey Miller. Built with 
-          <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="link link-accent">Astro</a>
+          <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-accent transition-colors">Astro</a>
           and hosted on 
-          <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="link link-accent">Vercel</a>.
+          <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-accent transition-colors">Vercel</a>.
         </p>
-        <p class="mt-1">
+        <p class="mt-1 sm:mt-2 leading-relaxed">
           This site is open source on 
           <a 
             href="https://github.com/GeoffMillerAZ/geoff" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="link link-accent"
+            class="link link-accent hover:text-accent transition-colors"
           >
             GitHub
           </a>.
         </p>
       </div>
-      <div class="badge badge-outline badge-sm opacity-60">
+      <div class="badge badge-outline badge-sm sm:badge-md opacity-60 shrink-0">
         Version 2025.01.{new Date().getDate().toString().padStart(2, '0')}.1
       </div>
     </div>

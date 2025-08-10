@@ -1,9 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/main/.schema/devbox.schema.json",
   "packages": [
-    "nodejs",
     "git",
-    "gh"
+    "gh",
+    "nodejs_22@latest"
   ],
   "shell": {
     "init_hook": [
@@ -71,10 +71,10 @@
     }
   },
   "env": {
-    "NODE_ENV": "development",
-    "ASTRO_TELEMETRY_DISABLED": "1",
+    "NODE_ENV":                   "development",
+    "ASTRO_TELEMETRY_DISABLED":   "1",
     "NPM_CONFIG_UPDATE_NOTIFIER": "false",
-    "TF_PLUGIN_CACHE_DIR": "$HOME/.terraform.d/plugin-cache"
+    "TF_PLUGIN_CACHE_DIR":        "$HOME/.terraform.d/plugin-cache"
   },
   "nixpkgs": {
     "commit": "af9e00071d0971eb292fd5abef334e66eda3cb69"

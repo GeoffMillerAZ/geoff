@@ -34,12 +34,16 @@ function formatDate(date: Date) {
   <main class="container mx-auto px-4 py-8 max-w-7xl">
     <!-- Hero Section -->
     <section class="mb-12">
-      <div class="card bg-base-100 shadow-xl p-8 text-center">
-        <h1 class="text-4xl font-bold text-glow mb-4">Technical Blog</h1>
-        <p class="text-xl text-base-content opacity-70 max-w-3xl mx-auto">
-          Deep dives into platform engineering, cloud architecture, and the evolving landscape 
-          of infrastructure at scale. Practical insights from building and operating production systems.
-        </p>
+      <div class="hero bg-base-100 shadow-xl rounded-2xl">
+        <div class="hero-content text-center py-12">
+          <div class="max-w-3xl">
+            <h1 class="text-4xl font-bold text-glow mb-4">Technical Blog</h1>
+            <p class="text-xl text-base-content opacity-70">
+              Deep dives into platform engineering, cloud architecture, and the evolving landscape 
+              of infrastructure at scale. Practical insights from building and operating production systems.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -47,117 +51,134 @@ function formatDate(date: Date) {
       <div class="grid lg:grid-cols-4 gap-8">
         <!-- Filters Sidebar -->
         <aside class="lg:col-span-1">
-          <div class="card bg-base-100 shadow-xl p-6 sticky top-24">
-            <h2 class="text-xl font-bold text-glow mb-4">Filters</h2>
-            
-            <!-- Category Filter -->
-            <div class="form-control mb-6">
-              <h3 class="font-medium text-base-content mb-3">Categories</h3>
-              <div class="space-y-2">
-                <label class="label cursor-pointer justify-start gap-2">
-                  <input type="checkbox" value="all" checked class="checkbox checkbox-primary category-filter" data-filter-type="category" />
-                  <span class="label-text text-sm">All Categories</span>
+          <div class="card bg-base-100 shadow-xl sticky top-24">
+            <div class="card-body">
+              <h2 class="card-title text-glow mb-4">Filters</h2>
+              
+              <!-- Category Filter -->
+              <div class="form-control mb-6">
+                <label class="label">
+                  <span class="label-text font-medium">Categories</span>
                 </label>
-                {categories.map(category => (
+                <div class="space-y-2">
                   <label class="label cursor-pointer justify-start gap-2">
-                    <input type="checkbox" value={category} class="checkbox checkbox-primary category-filter" data-filter-type="category" />
-                    <span class="label-text text-sm capitalize">{category.replace('-', ' ')}</span>
+                    <input type="checkbox" value="all" checked class="checkbox checkbox-primary category-filter" data-filter-type="category" />
+                    <span class="label-text text-sm">All Categories</span>
                   </label>
-                ))}
+                  {categories.map(category => (
+                    <label class="label cursor-pointer justify-start gap-2">
+                      <input type="checkbox" value={category} class="checkbox checkbox-primary category-filter" data-filter-type="category" />
+                      <span class="label-text text-sm capitalize">{category.replace('-', ' ')}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <!-- Tag Filter -->
+              <div class="form-control mb-6">
+                <label class="label">
+                  <span class="label-text font-medium">Tags</span>
+                </label>
+                <div class="max-h-64 overflow-y-auto space-y-2">
+                  {allTags.map(tag => (
+                    <label class="label cursor-pointer justify-start gap-2">
+                      <input type="checkbox" value={tag} class="checkbox checkbox-primary tag-filter" data-filter-type="tag" />
+                      <span class="label-text text-sm">{tag}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
+              <!-- Clear Filters -->
+              <div class="card-actions">
+                <button id="clear-filters" class="btn btn-secondary btn-sm w-full">
+                  Clear All Filters
+                </button>
               </div>
             </div>
-            
-            <!-- Tag Filter -->
-            <div class="form-control">
-              <h3 class="font-medium text-base-content mb-3">Tags</h3>
-              <div class="max-h-64 overflow-y-auto space-y-2">
-                {allTags.map(tag => (
-                  <label class="label cursor-pointer justify-start gap-2">
-                    <input type="checkbox" value={tag} class="checkbox checkbox-primary tag-filter" data-filter-type="tag" />
-                    <span class="label-text text-sm">{tag}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            
-            <!-- Clear Filters -->
-            <button id="clear-filters" class="btn btn-secondary btn-sm w-full mt-6">
-              Clear All Filters
-            </button>
           </div>
         </aside>
 
         <!-- Blog Posts Grid -->
         <section class="lg:col-span-3">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-glow">
-              All Posts <span id="post-count" class="text-lg font-normal text-base-content opacity-70">({sortedPosts.length})</span>
-            </h2>
-            <select id="sort-order" class="select select-bordered select-sm focus:select-primary">
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="title">Title (A-Z)</option>
-            </select>
+          <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <div class="stat">
+              <div class="stat-title">All Posts</div>
+              <div class="stat-value text-primary" id="post-count">{sortedPosts.length}</div>
+              <div class="stat-desc">Technical articles and insights</div>
+            </div>
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-sm font-medium">Sort by</span>
+              </label>
+              <select id="sort-order" class="select select-bordered select-primary">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="title">Title (A-Z)</option>
+              </select>
+            </div>
           </div>
           
           <div id="blog-posts" class="grid gap-6">
             {sortedPosts.map((post) => (
               <article 
-                class="blog-post card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 p-6" 
+                class="blog-post card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300" 
                 data-category={post.data.category}
                 data-tags={JSON.stringify(post.data.tags)}
                 data-date={post.data.publishDate.toISOString()}
                 data-title={post.data.title}
               >
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                  <div class="flex items-center gap-4">
-                    <div class="badge badge-primary">
-                      {post.data.category.replace('-', ' ')}
-                    </div>
-                    <time class="text-sm text-base-content opacity-70">
-                      {formatDate(new Date(post.data.publishDate))}
-                    </time>
-                  </div>
-                  {post.data.series && (
-                    <div class="badge badge-outline badge-sm">
-                      {post.data.series.name} - Part {post.data.series.order}
-                    </div>
-                  )}
-                </div>
-                
-                <h3 class="card-title text-xl text-glow mb-3 hover:text-primary transition-colors">
-                  <a href={`/blog/${post.slug}`}>
-                    {post.data.title}
-                  </a>
-                </h3>
-                
-                <p class="text-base-content mb-4 leading-relaxed">
-                  {post.data.description}
-                </p>
-                
-                <div class="card-actions justify-between items-center">
-                  <div class="flex flex-wrap gap-2">
-                    {post.data.tags.slice(0, 3).map((tag: string) => (
-                      <div class="badge badge-ghost badge-sm">
-                        {tag}
+                <div class="card-body">
+                  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                    <div class="flex items-center gap-4">
+                      <div class="badge badge-primary">
+                        {post.data.category.replace('-', ' ')}
                       </div>
-                    ))}
-                    {post.data.tags.length > 3 && (
-                      <div class="badge badge-ghost badge-sm">
-                        +{post.data.tags.length - 3} more
+                      <time class="text-sm text-base-content opacity-70">
+                        {formatDate(new Date(post.data.publishDate))}
+                      </time>
+                    </div>
+                    {post.data.series && (
+                      <div class="badge badge-outline badge-sm">
+                        {post.data.series.name} - Part {post.data.series.order}
                       </div>
                     )}
                   </div>
                   
-                  <a 
-                    href={`/blog/${post.slug}`} 
-                    class="btn btn-primary btn-sm btn-outline"
-                  >
-                    Read post
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </a>
+                  <h3 class="card-title text-xl text-glow mb-3 hover:text-primary transition-colors">
+                    <a href={`/blog/${post.slug}`} class="link-hover">
+                      {post.data.title}
+                    </a>
+                  </h3>
+                  
+                  <p class="text-base-content mb-6 leading-relaxed">
+                    {post.data.description}
+                  </p>
+                  
+                  <div class="card-actions justify-between items-center">
+                    <div class="flex flex-wrap gap-1.5 max-w-full">
+                      {post.data.tags.slice(0, 2).map((tag: string) => (
+                        <div class="badge badge-outline badge-sm flex-shrink-0">
+                          {tag}
+                        </div>
+                      ))}
+                      {post.data.tags.length > 2 && (
+                        <div class="badge badge-ghost badge-sm flex-shrink-0">
+                          +{post.data.tags.length - 2}
+                        </div>
+                      )}
+                    </div>
+                    
+                    <a 
+                      href={`/blog/${post.slug}`} 
+                      class="btn btn-primary btn-sm gap-2"
+                    >
+                      Read post
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
+                    </a>
+                  </div>
                 </div>
               </article>
             ))}
@@ -172,20 +193,24 @@ function formatDate(date: Date) {
     ) : (
       <!-- Empty state -->
       <section class="text-center py-16">
-        <div class="card bg-base-100 shadow-xl p-12">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-base-200 flex items-center justify-center">
-            <svg class="w-8 h-8 text-base-content opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-            </svg>
+        <div class="hero bg-base-100 shadow-xl rounded-2xl">
+          <div class="hero-content text-center">
+            <div class="max-w-md">
+              <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-base-200 flex items-center justify-center">
+                <svg class="w-8 h-8 text-base-content opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                </svg>
+              </div>
+              <h2 class="text-2xl font-bold text-glow mb-4">Coming Soon</h2>
+              <p class="text-base-content opacity-70 mb-6">
+                I'm working on creating valuable content about platform engineering, cloud architecture, 
+                and technical leadership. Check back soon for in-depth articles and insights.
+              </p>
+              <a href="/" class="btn btn-primary">
+                Back to Home
+              </a>
+            </div>
           </div>
-          <h2 class="text-2xl font-bold text-glow mb-4">Coming Soon</h2>
-          <p class="text-base-content opacity-70 mb-6 max-w-md mx-auto">
-            I'm working on creating valuable content about platform engineering, cloud architecture, 
-            and technical leadership. Check back soon for in-depth articles and insights.
-          </p>
-          <a href="/" class="btn btn-primary">
-            Back to Home
-          </a>
         </div>
       </section>
     )}
@@ -243,7 +268,7 @@ function formatDate(date: Date) {
     
     // Update post count
     if (postCount) {
-      postCount.textContent = `(${visibleCount})`;
+      postCount.textContent = visibleCount.toString();
     }
     
     // Show/hide no results message

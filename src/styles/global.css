@@ -30,10 +30,34 @@
     background-size: 40px 40px;
   }
 
-  /* Headings */
-  h1, h2, h3, h4, h5, h6 {
+  /* Typography Hierarchy */
+  h1 {
+    color: var(--synth-glow-text);
+    font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4rem); /* 3-4rem responsive */
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
     color: var(--synth-glow-text);
     font-weight: 700;
+    font-size: clamp(1.75rem, 4vw, 2.5rem); /* 2-2.5rem responsive */
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    color: var(--synth-glow-text);
+    font-weight: 600;
+    font-size: clamp(1.25rem, 3vw, 1.875rem); /* 1.5-1.875rem responsive */
+    line-height: 1.3;
+  }
+
+  h4, h5, h6 {
+    color: var(--synth-glow-text);
+    font-weight: 600;
+    line-height: 1.4;
   }
 
   /* Links */
@@ -49,6 +73,86 @@
   *:focus {
     outline: 2px solid var(--synth-cyan);
     outline-offset: 2px;
+  }
+
+  /* Enhanced focus styles for interactive elements */
+  button:focus,
+  input:focus,
+  textarea:focus,
+  select:focus,
+  .btn:focus,
+  .menu a:focus,
+  .card:focus,
+  .dropdown summary:focus {
+    outline: 3px solid var(--synth-cyan);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 1px var(--synth-pink);
+  }
+
+  /* Focus styles for links */
+  a:focus:not(.btn) {
+    outline: 2px solid var(--synth-cyan);
+    outline-offset: 2px;
+    background-color: rgba(37, 176, 188, 0.1);
+    border-radius: 2px;
+  }
+
+  /* Skip to content link accessibility */
+  .skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--synth-bg);
+    color: var(--synth-glow-text);
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: top 0.3s ease;
+    border: 2px solid var(--synth-pink);
+  }
+
+  .skip-to-content:focus {
+    top: 6px;
+    outline: 3px solid var(--synth-cyan);
+    outline-offset: 2px;
+  }
+
+  /* Loading states for dynamic content */
+  .loading-skeleton {
+    background: linear-gradient(90deg, 
+      rgba(37, 176, 188, 0.1) 25%, 
+      rgba(37, 176, 188, 0.2) 50%, 
+      rgba(37, 176, 188, 0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+  }
+
+  @keyframes loading {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --synth-text: #ffffff;
+      --synth-bg: #000000;
+      --synth-pink: #ff69b4;
+      --synth-cyan: #00ffff;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 
   /* Selection styles */
@@ -95,14 +199,39 @@
     }
   }
 
-  /* Custom card styles - now using DaisyUI card component with custom backdrop */
-  .card:not([class*="card-"]) {
+  /* DaisyUI card enhancement for synthwave theme */
+  .card {
     background-color: var(--synth-card-bg);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--synth-border);
-    border-radius: 1rem;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+  }
+
+  .card:hover {
+    border-color: rgba(37, 176, 188, 0.5);
+    box-shadow: 0 0 30px rgba(37, 176, 188, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(249, 42, 173, 0.05) 0%, rgba(37, 176, 188, 0.05) 100%);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .card:hover::before {
+    opacity: 1;
   }
 
   .text-glow {
@@ -110,150 +239,83 @@
     text-shadow: 0 0 7px var(--synth-pink);
   }
 
+  /* Synthwave accent colors */
   .text-accent {
     color: var(--synth-pink);
-  }
-
-  .text-accent-light {
-    color: rgba(249, 42, 173, 0.8);
-  }
-
-  .text-accent-dark {
-    color: rgba(249, 42, 173, 1.2);
-  }
-
-  .hover\:text-accent-light:hover {
-    color: rgba(249, 42, 173, 0.8);
   }
 
   .bg-accent {
     background-color: var(--synth-pink);
   }
 
-  .bg-accent-dark {
-    background-color: rgba(249, 42, 173, 1.2);
-  }
-
-  .bg-synth-card-bg {
-    background-color: var(--synth-card-bg);
-  }
-
-  .bg-synth-bg {
-    background-color: var(--synth-bg);
-  }
-
-  .text-synth-text {
-    color: var(--synth-text);
-  }
-
-  .text-synth-text-muted {
-    color: rgba(229, 229, 229, 0.7);
-  }
-
-  .border-synth-border {
-    border-color: var(--synth-border);
-  }
-
   .border-accent {
     border-color: var(--synth-pink);
   }
 
-  .border-accent-dark {
-    border-color: rgba(249, 42, 173, 1.2);
+  /* Enhanced badge hover effects */
+  .badge {
+    transition: all 0.2s ease-in-out;
+    cursor: default;
   }
 
-  .accent-dark {
-    color: rgba(249, 42, 173, 1.2);
-  }
-
-  .from-accent {
-    --tw-gradient-from: var(--synth-pink);
-    --tw-gradient-to: rgba(249, 42, 173, 0);
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-  }
-
-  .to-accent-dark {
-    --tw-gradient-to: rgba(249, 42, 173, 1.2);
-  }
-
-  /* Skill badges are now using DaisyUI badge component */
-  /* Custom hover effects for badges */
   .badge:hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease-in-out;
+    transform: translateY(-1px);
+    box-shadow: 0 0 10px rgba(37, 176, 188, 0.3);
   }
 
+  .badge-primary:hover {
+    box-shadow: 0 0 10px rgba(249, 42, 173, 0.4);
+  }
+
+  .badge-secondary:hover {
+    box-shadow: 0 0 10px rgba(37, 176, 188, 0.4);
+  }
+
+  .badge-accent:hover {
+    box-shadow: 0 0 10px rgba(255, 107, 157, 0.4);
+  }
+
+  /* Legacy timeline styles (DaisyUI timeline component handles most styling) */
   .timeline {
-    position: relative;
     border-left: 2px solid var(--synth-border);
   }
 
-  .job-entry::before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 8px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: var(--synth-pink);
-    border: 2px solid var(--synth-bg);
-    box-shadow: 0 0 8px var(--synth-pink);
-  }
-
-  .details-section {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.7s ease-in-out;
-  }
-
-  .details-section.open {
-    max-height: 1500px;
-  }
-
-  .toggle-button {
-    background: none;
-    border: none;
-    color: var(--synth-cyan);
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    margin-top: 0.75rem;
-    padding: 0.25rem 0;
-    transition: color 0.2s ease;
-  }
-
-  .toggle-button:hover {
-    color: #fff;
-  }
-
-  .toggle-button .arrow {
-    transition: transform 0.3s ease;
-    margin-left: 0.25rem;
-  }
-
-  .toggle-button.open .arrow {
-    transform: rotate(180deg);
-  }
-
-  /* Navigation is now using DaisyUI navbar and menu components */
-  /* Custom nav styles for synthwave theme are handled by DaisyUI theme variables */
-
-  /* Buttons are now using DaisyUI btn component */
-  /* Custom button hover effects for synthwave theme */
-  .btn:hover {
-    box-shadow: 0 0 10px rgba(249, 42, 173, 0.3);
-    transform: translateY(-1px);
+  /* Enhanced button hover effects for synthwave theme */
+  .btn {
     transition: all 0.2s ease-in-out;
+    border-width: 1px;
+  }
+
+  .btn:hover {
+    box-shadow: 0 0 20px rgba(249, 42, 173, 0.4);
+    transform: translateY(-2px);
+    border-color: rgba(249, 42, 173, 0.5);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 25px rgba(249, 42, 173, 0.6);
+    background-color: #fa4fb6;
   }
 
   .btn-accent:hover {
-    box-shadow: 0 0 15px var(--synth-pink);
+    box-shadow: 0 0 25px rgba(255, 107, 157, 0.6);
+    background-color: #ff7ba6;
   }
 
   .btn-secondary:hover {
-    box-shadow: 0 0 15px var(--synth-cyan);
+    box-shadow: 0 0 25px rgba(37, 176, 188, 0.6);
+    background-color: #2bc4d1;
+  }
+
+  .btn-ghost:hover {
+    box-shadow: 0 0 15px rgba(37, 176, 188, 0.3);
+    background-color: rgba(37, 176, 188, 0.1);
+    border-color: rgba(37, 176, 188, 0.3);
+  }
+
+  /* Active states */
+  .btn:active {
+    transform: translateY(0px);
   }
 
   /* Code syntax highlighting adjustments */
@@ -301,6 +363,30 @@
     text-wrap: balance;
   }
 
+  /* Touch-friendly interaction improvements */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Enhanced touch targets for mobile */
+  @media (max-width: 768px) {
+    .btn, 
+    .link,
+    button,
+    [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Ensure clickable areas are properly sized */
+    .btn:not(.btn-xs):not(.btn-sm) {
+      padding: 0.75rem 1.5rem;
+    }
+  }
+
   .animate-glow {
     animation: glow 2s ease-in-out infinite alternate;
   }
@@ -321,7 +407,7 @@
     background-clip: text;
   }
 
-  /* Legacy utility classes - most functionality now handled by DaisyUI */
+  /* Synthwave utility classes */
   .bg-synth-card-bg {
     background-color: var(--synth-card-bg);
   }
@@ -334,29 +420,51 @@
     color: var(--synth-text);
   }
 
-  .text-synth-text-muted {
-    color: rgba(229, 229, 229, 0.7);
-  }
-
-  /* DaisyUI component customizations for synthwave theme */
-  .navbar {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+  /* DaisyUI component backdrop blur effects */
+  .navbar,
+  .dropdown-content {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(37, 176, 188, 0.2);
   }
 
   .footer {
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
-  .card {
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-  }
-
-  .dropdown-content {
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Enhanced alert styling */
+  .alert {
+    border-width: 1px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .alert:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Enhanced menu items */
+  .menu a {
+    transition: all 0.2s ease-in-out;
+    border-radius: 0.5rem;
+  }
+
+  .menu a:hover {
+    transform: translateX(4px);
+    background-color: rgba(37, 176, 188, 0.1);
+    border-color: rgba(37, 176, 188, 0.3);
+  }
+
+  /* Timeline enhancements */
+  .timeline-middle {
+    transition: all 0.3s ease-in-out;
+  }
+
+  .timeline:hover .timeline-middle {
+    transform: scale(1.1);
   }
 }
 

@@ -25,74 +25,72 @@ const previousPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null;
 const nextPost = currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null;
 ---
 
-<div class="series-navigation card p-6 mb-8">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-bold text-glow">
-      {series.name}
-    </h3>
-    <span class="text-sm text-synth-text-muted">
-      Part {series.order} of {seriesPosts.length}
-    </span>
-  </div>
-  
-  <!-- Series Overview -->
-  <div class="mb-6">
-    <h4 class="text-sm font-medium text-synth-text mb-3">Series Contents:</h4>
-    <ol class="space-y-2">
-      {seriesPosts.map((post, index) => (
-        <li class="flex items-start gap-2">
-          <span class="text-xs text-synth-text-muted mt-0.5">{index + 1}.</span>
-          {post.slug === currentSlug ? (
-            <span class="text-sm font-medium text-accent">
-              {post.data.title} (Current)
-            </span>
-          ) : (
-            <a 
-              href={`/blog/${post.slug}`}
-              class="text-sm text-synth-text hover:text-accent transition-colors"
-            >
-              {post.data.title}
-            </a>
-          )}
-        </li>
-      ))}
-    </ol>
-  </div>
-  
-  <!-- Navigation Links -->
-  <div class="flex justify-between items-center pt-4 border-t border-synth-border">
-    {previousPost ? (
-      <a 
-        href={`/blog/${previousPost.slug}`}
-        class="flex items-center gap-2 text-sm text-synth-text hover:text-accent transition-colors group"
-      >
-        <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-        <span>Previous: {previousPost.data.title}</span>
-      </a>
-    ) : (
-      <div></div>
-    )}
+<div class="card bg-base-100 shadow-xl p-6 mb-8 border border-accent/30">
+  <div class="card-body p-0">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="card-title text-lg text-glow">
+        <span class="badge badge-accent badge-sm mr-2">Series</span>
+        {series.name}
+      </h3>
+      <div class="badge badge-outline">
+        Part {series.order} of {seriesPosts.length}
+      </div>
+    </div>
     
-    {nextPost ? (
-      <a 
-        href={`/blog/${nextPost.slug}`}
-        class="flex items-center gap-2 text-sm text-synth-text hover:text-accent transition-colors group"
-      >
-        <span>Next: {nextPost.data.title}</span>
-        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </a>
-    ) : (
-      <div></div>
-    )}
+    <!-- Series Overview -->
+    <div class="mb-6">
+      <h4 class="text-sm font-medium text-base-content mb-3">Series Contents:</h4>
+      <div class="steps steps-vertical">
+        {seriesPosts.map((post, index) => (
+          <div class={`step ${index + 1 <= series.order ? 'step-primary' : ''}`}>
+            {post.slug === currentSlug ? (
+              <span class="text-sm font-medium text-primary">
+                {post.data.title}
+                <div class="badge badge-primary badge-xs ml-2">Current</div>
+              </span>
+            ) : (
+              <a 
+                href={`/blog/${post.slug}`}
+                class="link link-hover text-sm hover:text-primary transition-colors"
+              >
+                {post.data.title}
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+    
+    <!-- Navigation Links -->
+    <div class="card-actions justify-between pt-4 border-t border-base-300">
+      {previousPost ? (
+        <a 
+          href={`/blog/${previousPost.slug}`}
+          class="btn btn-outline btn-sm gap-2 group"
+        >
+          <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Previous
+        </a>
+      ) : (
+        <div></div>
+      )}
+      
+      {nextPost ? (
+        <a 
+          href={`/blog/${nextPost.slug}`}
+          class="btn btn-primary btn-sm gap-2 group"
+        >
+          Next
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      ) : (
+        <div></div>
+      )}
+    </div>
   </div>
 </div>
 
-<style>
-  .series-navigation {
-    background: linear-gradient(135deg, rgba(249, 42, 173, 0.05) 0%, rgba(37, 176, 188, 0.05) 100%);
-  }
-</style>

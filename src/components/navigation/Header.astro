@@ -13,26 +13,32 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 mx-4 mt-4 max-w-10xl 3xl:mx-auto">
-  <div class="navbar bg-base-200/80 backdrop-blur-md border border-primary/30 rounded-2xl shadow-lg">
+<header class="sticky top-0 z-50 mx-4 mt-4 max-w-10xl 3xl:mx-auto" role="banner">
+  <nav class="navbar bg-base-200/90 backdrop-blur-md border border-secondary/30 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300" role="navigation" aria-label="Primary navigation">
+    <!-- Skip to content link -->
+    <a href="#main-content" class="skip-to-content">
+      Skip to main content
+    </a>
+    
     <!-- Logo/Brand -->
     <div class="navbar-start">
-      <a href="/" class="btn btn-ghost text-xl font-bold text-primary hover:text-accent">
-        Geoffrey Miller
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary hover:text-accent hover:bg-primary/10 transition-all duration-300" aria-label="Geoffrey Miller - Go to homepage">
+        <span class="gradient-text">Geoffrey Miller</span>
       </a>
     </div>
 
     <!-- Desktop Navigation -->
     <div class="navbar-center hidden lg:flex">
-      <ul class="menu menu-horizontal px-1">
+      <ul class="menu menu-horizontal px-1" role="menubar">
         {navItems.map(item => (
-          <li>
+          <li role="none">
             <a 
               href={item.href}
-              class={`font-medium transition-colors ${
+              role="menuitem"
+              class={`font-medium transition-all duration-300 rounded-lg px-4 py-2 ${
                 item.current 
-                  ? 'text-accent bg-accent/10' 
-                  : 'text-base-content hover:text-accent hover:bg-accent/5'
+                  ? 'text-accent bg-accent/15 border border-accent/30 shadow-lg' 
+                  : 'text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md'
               }`}
             >
               {item.name}
@@ -45,7 +51,7 @@ const navItems = [
     <!-- Mobile Menu -->
     <div class="navbar-end lg:hidden">
       <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" aria-label="Toggle mobile menu">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden hover:bg-secondary/10 hover:text-secondary transition-all duration-300" aria-label="Toggle mobile menu">
           <svg 
             class="w-6 h-6" 
             fill="none" 
@@ -57,16 +63,16 @@ const navItems = [
         </div>
         <ul 
           tabindex="0" 
-          class="menu menu-sm dropdown-content bg-base-200/95 backdrop-blur-sm rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-primary/20"
+          class="menu menu-sm dropdown-content bg-base-200/95 backdrop-blur-md rounded-box z-50 mt-3 w-56 p-3 shadow-xl border border-secondary/30"
         >
           {navItems.map(item => (
             <li>
               <a 
                 href={item.href}
-                class={`font-medium transition-colors ${
+                class={`font-medium transition-all duration-300 rounded-lg py-3 px-4 ${
                   item.current 
-                    ? 'text-accent bg-accent/10' 
-                    : 'text-base-content hover:text-accent hover:bg-accent/5'
+                    ? 'text-accent bg-accent/15 border border-accent/30 shadow-md' 
+                    : 'text-base-content hover:text-accent hover:bg-accent/10 hover:transform hover:translateX(2px) hover:shadow-md'
                 }`}
               >
                 {item.name}
@@ -76,7 +82,7 @@ const navItems = [
         </ul>
       </div>
     </div>
-  </div>
+  </nav>
 </header>
 
 <script>
