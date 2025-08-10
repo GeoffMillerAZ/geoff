@@ -13,17 +13,19 @@ import Footer from '../components/navigation/Footer.astro';
   <main class="container mx-auto px-4 py-8 max-w-4xl">
     <!-- Hero Section -->
     <section class="mb-12">
-      <div class="card p-8">
+      <div class="card bg-base-100 shadow-xl p-8">
         <div class="flex flex-col md:flex-row items-center gap-8">
           <div class="flex-shrink-0">
-            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-accent to-accent-dark border-2 border-synth-border flex items-center justify-center">
-              <span class="text-4xl font-bold text-white">GM</span>
+            <div class="avatar">
+              <div class="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-primary-focus border-2 border-base-300 flex items-center justify-center">
+                <span class="text-4xl font-bold text-primary-content">GM</span>
+              </div>
             </div>
           </div>
           <div class="text-center md:text-left">
             <h1 class="text-4xl font-bold text-glow mb-4">Geoffrey Miller</h1>
-            <p class="text-xl text-synth-text-muted mb-4">Infrastructure Director & Principal Cloud Architect</p>
-            <p class="text-synth-text leading-relaxed">
+            <p class="text-xl text-base-content opacity-70 mb-4">Infrastructure Director & Principal Cloud Architect</p>
+            <p class="text-base-content leading-relaxed">
               With over 12 years of experience in cloud architecture and platform engineering, 
               I specialize in designing, building, and operating scalable cloud platforms that 
               enable engineering teams to deliver value faster and more reliably.
@@ -35,20 +37,20 @@ import Footer from '../components/navigation/Footer.astro';
 
     <!-- Bio Section -->
     <section class="mb-12">
-      <div class="card p-8">
+      <div class="card bg-base-100 shadow-xl p-8">
         <h2 class="text-2xl font-bold text-glow mb-6">About Me</h2>
-        <div class="prose prose-lg text-synth-text">
-          <p class="mb-4">
+        <div class="prose prose-lg max-w-none">
+          <p class="text-base-content mb-4 leading-relaxed">
             I'm passionate about building platforms that empower developers and accelerate innovation. 
             Currently serving as Infrastructure Director at First Citizens Bank, I lead teams that 
             design and operate cloud-native platforms serving thousands of engineers and millions of customers.
           </p>
-          <p class="mb-4">
+          <p class="text-base-content mb-4 leading-relaxed">
             My expertise spans the full spectrum of platform engineering - from Kubernetes orchestration 
             and service mesh architecture to developer experience and organizational transformation. 
             I believe in the power of automation, observability, and treating infrastructure as a product.
           </p>
-          <p>
+          <p class="text-base-content leading-relaxed">
             When I'm not architecting the next generation of cloud platforms, you'll find me contributing 
             to open source projects, mentoring fellow engineers, and sharing knowledge through writing 
             and speaking at industry conferences.
@@ -59,57 +61,57 @@ import Footer from '../components/navigation/Footer.astro';
 
     <!-- Expertise Section -->
     <section class="mb-12">
-      <div class="card p-8">
+      <div class="card bg-base-100 shadow-xl p-8">
         <h2 class="text-2xl font-bold text-glow mb-6">Core Expertise</h2>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="skill-category">
-            <h3 class="font-semibold text-accent mb-3">Cloud Platforms</h3>
-            <ul class="text-synth-text space-y-1">
+          <div class="card bg-base-200 shadow p-4">
+            <h3 class="font-semibold text-primary mb-3">Cloud Platforms</h3>
+            <ul class="text-base-content space-y-1 text-sm">
               <li>AWS Architecture & Services</li>
               <li>Multi-cloud Strategy</li>
               <li>Cloud Cost Optimization</li>
               <li>Migration & Modernization</li>
             </ul>
           </div>
-          <div class="skill-category">
-            <h3 class="font-semibold text-accent mb-3">Platform Engineering</h3>
-            <ul class="text-synth-text space-y-1">
+          <div class="card bg-base-200 shadow p-4">
+            <h3 class="font-semibold text-primary mb-3">Platform Engineering</h3>
+            <ul class="text-base-content space-y-1 text-sm">
               <li>Kubernetes & Container Orchestration</li>
               <li>Service Mesh (Istio/Consul)</li>
               <li>Developer Experience Platforms</li>
               <li>Internal Platform Design</li>
             </ul>
           </div>
-          <div class="skill-category">
-            <h3 class="font-semibold text-accent mb-3">DevOps & SRE</h3>
-            <ul class="text-synth-text space-y-1">
+          <div class="card bg-base-200 shadow p-4">
+            <h3 class="font-semibold text-primary mb-3">DevOps & SRE</h3>
+            <ul class="text-base-content space-y-1 text-sm">
               <li>CI/CD Pipeline Architecture</li>
               <li>Infrastructure as Code</li>
               <li>Observability & Monitoring</li>
               <li>Incident Response & SLOs</li>
             </ul>
           </div>
-          <div class="skill-category">
-            <h3 class="font-semibold text-accent mb-3">Leadership</h3>
-            <ul class="text-synth-text space-y-1">
+          <div class="card bg-base-200 shadow p-4">
+            <h3 class="font-semibold text-primary mb-3">Leadership</h3>
+            <ul class="text-base-content space-y-1 text-sm">
               <li>Technical Team Leadership</li>
               <li>Engineering Culture & Practices</li>
               <li>Strategic Technology Planning</li>
               <li>Cross-functional Collaboration</li>
             </ul>
           </div>
-          <div class="skill-category">
-            <h3 class="font-semibold text-accent mb-3">Technologies</h3>
-            <ul class="text-synth-text space-y-1">
+          <div class="card bg-base-200 shadow p-4">
+            <h3 class="font-semibold text-primary mb-3">Technologies</h3>
+            <ul class="text-base-content space-y-1 text-sm">
               <li>Go, Python, TypeScript</li>
               <li>Terraform, Pulumi, CDK</li>
               <li>Prometheus, Grafana, Jaeger</li>
               <li>ArgoCD, Flux, Helm</li>
             </ul>
           </div>
-          <div class="skill-category">
-            <h3 class="font-semibold text-accent mb-3">Specializations</h3>
-            <ul class="text-synth-text space-y-1">
+          <div class="card bg-base-200 shadow p-4">
+            <h3 class="font-semibold text-primary mb-3">Specializations</h3>
+            <ul class="text-base-content space-y-1 text-sm">
               <li>Platform Product Management</li>
               <li>API Gateway Architecture</li>
               <li>Security & Compliance</li>
@@ -122,30 +124,30 @@ import Footer from '../components/navigation/Footer.astro';
 
     <!-- Experience Highlights -->
     <section class="mb-12">
-      <div class="card p-8">
+      <div class="card bg-base-100 shadow-xl p-8">
         <h2 class="text-2xl font-bold text-glow mb-6">Career Highlights</h2>
         <div class="space-y-6">
-          <div class="border-l-4 border-accent pl-6">
-            <h3 class="font-semibold text-accent mb-2">Infrastructure Director - First Citizens Bank</h3>
-            <p class="text-synth-text-muted mb-2">2020 - Present</p>
-            <p class="text-synth-text">
+          <div class="border-l-4 border-primary pl-6">
+            <h3 class="font-semibold text-primary mb-2">Infrastructure Director - First Citizens Bank</h3>
+            <div class="badge badge-outline badge-sm mb-2">2020 - Present</div>
+            <p class="text-base-content leading-relaxed">
               Leading cloud platform strategy and engineering teams supporting 50+ applications 
               and millions of banking customers. Spearheaded migration to cloud-native architecture 
               resulting in 40% cost reduction and 3x faster deployment cycles.
             </p>
           </div>
-          <div class="border-l-4 border-accent pl-6">
-            <h3 class="font-semibold text-accent mb-2">Principal Cloud Architect</h3>
-            <p class="text-synth-text-muted mb-2">2018 - 2020</p>
-            <p class="text-synth-text">
+          <div class="border-l-4 border-primary pl-6">
+            <h3 class="font-semibold text-primary mb-2">Principal Cloud Architect</h3>
+            <div class="badge badge-outline badge-sm mb-2">2018 - 2020</div>
+            <p class="text-base-content leading-relaxed">
               Designed and implemented enterprise Kubernetes platform serving 200+ microservices. 
               Established SRE practices and observability stack, achieving 99.9% uptime SLA.
             </p>
           </div>
-          <div class="border-l-4 border-accent pl-6">
-            <h3 class="font-semibold text-accent mb-2">Senior DevOps Engineer</h3>
-            <p class="text-synth-text-muted mb-2">2015 - 2018</p>
-            <p class="text-synth-text">
+          <div class="border-l-4 border-primary pl-6">
+            <h3 class="font-semibold text-primary mb-2">Senior DevOps Engineer</h3>
+            <div class="badge badge-outline badge-sm mb-2">2015 - 2018</div>
+            <p class="text-base-content leading-relaxed">
               Built CI/CD pipelines and infrastructure automation, reducing deployment time from 
               hours to minutes. Mentored engineering teams on cloud-native practices and tooling.
             </p>
@@ -156,9 +158,9 @@ import Footer from '../components/navigation/Footer.astro';
 
     <!-- Connect Section -->
     <section>
-      <div class="card p-8 text-center">
+      <div class="card bg-base-100 shadow-xl p-8 text-center">
         <h2 class="text-2xl font-bold text-glow mb-4">Let's Connect</h2>
-        <p class="text-synth-text mb-6 max-w-2xl mx-auto">
+        <p class="text-base-content opacity-70 mb-6 max-w-2xl mx-auto">
           I'm always interested in discussing platform engineering, cloud architecture, 
           and the future of developer experience. Feel free to reach out!
         </p>
@@ -167,7 +169,7 @@ import Footer from '../components/navigation/Footer.astro';
             href="https://linkedin.com/in/geoff-e-miller" 
             target="_blank"
             rel="noopener noreferrer"
-            class="btn-secondary"
+            class="btn btn-secondary"
           >
             LinkedIn
           </a>
@@ -175,13 +177,13 @@ import Footer from '../components/navigation/Footer.astro';
             href="https://github.com/GeoffMillerAZ" 
             target="_blank"
             rel="noopener noreferrer"
-            class="btn-secondary"
+            class="btn btn-secondary"
           >
             GitHub
           </a>
           <a 
             href="/contact" 
-            class="btn-primary"
+            class="btn btn-primary"
           >
             Contact Me
           </a>
@@ -194,15 +196,7 @@ import Footer from '../components/navigation/Footer.astro';
 </BaseLayout>
 
 <style>
-  .skill-category {
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background-color: var(--synth-card-bg);
-    border: 1px solid var(--synth-border);
-  }
-  
-  .prose p {
-    color: var(--synth-text);
-    line-height: 1.625;
+  .text-glow {
+    text-shadow: 0 0 10px #f92aad;
   }
 </style>

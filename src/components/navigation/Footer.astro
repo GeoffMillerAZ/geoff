@@ -2,14 +2,14 @@
 // Footer component with social links and site information
 ---
 
-<footer class="mt-12 py-8 border-t border-synth-border">
-  <div class="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer class="footer footer-center bg-base-200/50 backdrop-blur-sm text-base-content rounded-t-2xl mt-12 border-t border-primary/20">
+  <div class="container mx-auto p-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl">
       
       <!-- Brand Section -->
       <div class="space-y-4">
-        <h3 class="text-lg font-semibold text-glow">Geoffrey Miller</h3>
-        <p class="text-sm text-gray-400 leading-relaxed">
+        <div class="text-lg font-bold text-primary">Geoffrey Miller</div>
+        <p class="text-sm opacity-70 leading-relaxed">
           Infrastructure Director & Principal Cloud Architect specializing in platform engineering, 
           cloud architecture, and AI-driven development workflows.
         </p>
@@ -17,25 +17,25 @@
 
       <!-- Quick Links -->
       <div class="space-y-4">
-        <h4 class="text-sm font-semibold text-accent uppercase tracking-wider">Quick Links</h4>
-        <nav class="space-y-2">
-          <a href="/blog" class="block text-sm text-gray-300 hover:text-white transition-colors">Blog</a>
-          <a href="/projects" class="block text-sm text-gray-300 hover:text-white transition-colors">Projects</a>
-          <a href="/guides" class="block text-sm text-gray-300 hover:text-white transition-colors">Guides</a>
-          <a href="/resources" class="block text-sm text-gray-300 hover:text-white transition-colors">Resources</a>
-          <a href="/contact" class="block text-sm text-gray-300 hover:text-white transition-colors">Contact</a>
+        <div class="footer-title text-accent opacity-100">Quick Links</div>
+        <nav class="flex flex-col space-y-2">
+          <a href="/blog" class="link link-hover text-sm">Blog</a>
+          <a href="/projects" class="link link-hover text-sm">Projects</a>
+          <a href="/guides" class="link link-hover text-sm">Guides</a>
+          <a href="/resources" class="link link-hover text-sm">Resources</a>
+          <a href="/contact" class="link link-hover text-sm">Contact</a>
         </nav>
       </div>
 
       <!-- Social Links -->
       <div class="space-y-4">
-        <h4 class="text-sm font-semibold text-accent uppercase tracking-wider">Connect</h4>
-        <div class="flex space-x-4">
+        <div class="footer-title text-accent opacity-100">Connect</div>
+        <div class="flex justify-start space-x-4">
           <a 
             href="https://github.com/GeoffMillerAZ" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="text-gray-400 hover:text-accent transition-colors"
+            class="btn btn-ghost btn-sm btn-square hover:text-accent"
             aria-label="GitHub Profile"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -46,7 +46,7 @@
             href="https://linkedin.com/in/geoff-e-miller" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="text-gray-400 hover:text-accent transition-colors"
+            class="btn btn-ghost btn-sm btn-square hover:text-accent"
             aria-label="LinkedIn Profile"
           >
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@
             </svg>
           </a>
         </div>
-        <div class="text-sm text-gray-400">
+        <div class="text-sm opacity-70">
           <p>Phoenix, AZ</p>
           <p class="mt-1">
             Contact via 
@@ -62,7 +62,7 @@
               href="https://linkedin.com/in/geoff-e-miller" 
               target="_blank" 
               rel="noopener noreferrer"
-              class="text-accent hover:text-white font-medium transition-colors"
+              class="link link-accent font-medium"
             >
               LinkedIn
             </a>
@@ -72,30 +72,29 @@
     </div>
 
     <!-- Bottom Section -->
-    <div class="mt-8 pt-8 border-t border-synth-border">
-      <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <div class="text-xs text-gray-500 text-center md:text-left">
-          <p>
-            © {new Date().getFullYear()} Geoffrey Miller. Built with 
-            <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-white transition-colors">Astro</a>
-            and hosted on 
-            <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="text-accent hover:text-white transition-colors">Vercel</a>.
-          </p>
-          <p class="mt-1">
-            This site is open source on 
-            <a 
-              href="https://github.com/GeoffMillerAZ/geoff" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="text-accent hover:text-white transition-colors"
-            >
-              GitHub
-            </a>.
-          </p>
-        </div>
-        <div class="text-xs text-gray-500">
-          Version 2025.01.{new Date().getDate().toString().padStart(2, '0')}.1
-        </div>
+    <div class="divider my-8"></div>
+    <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+      <div class="text-xs opacity-60 text-center md:text-left">
+        <p>
+          © {new Date().getFullYear()} Geoffrey Miller. Built with 
+          <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="link link-accent">Astro</a>
+          and hosted on 
+          <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="link link-accent">Vercel</a>.
+        </p>
+        <p class="mt-1">
+          This site is open source on 
+          <a 
+            href="https://github.com/GeoffMillerAZ/geoff" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="link link-accent"
+          >
+            GitHub
+          </a>.
+        </p>
+      </div>
+      <div class="badge badge-outline badge-sm opacity-60">
+        Version 2025.01.{new Date().getDate().toString().padStart(2, '0')}.1
       </div>
     </div>
   </div>

@@ -115,9 +115,9 @@ const featuredReading = [
   <main class="container mx-auto px-4 py-8 max-w-6xl">
     <!-- Hero Section -->
     <section class="mb-12">
-      <div class="card p-8 text-center">
+      <div class="card bg-base-100 shadow-xl p-8 text-center">
         <h1 class="text-4xl font-bold text-glow mb-4">Curated Resources</h1>
-        <p class="text-xl text-synth-text-muted max-w-4xl mx-auto">
+        <p class="text-xl text-base-content opacity-70 max-w-4xl mx-auto">
           A carefully curated collection of tools, books, courses, conferences, and communities 
           that have been instrumental in my platform engineering journey. Updated regularly 
           with the latest and most valuable resources for cloud architects and platform engineers.
@@ -132,11 +132,11 @@ const featuredReading = [
         {Object.entries(categoryMeta).map(([key, meta]) => (
           <a 
             href={`#${key}`}
-            class={`card p-6 text-center hover:border-accent transition-all duration-300 bg-gradient-to-br ${meta.color} border-accent/20 group`}
+            class="card bg-base-100 shadow-xl hover:shadow-2xl p-6 text-center transition-all duration-300 group"
           >
             <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">{meta.icon}</div>
-            <h3 class="font-semibold text-accent mb-2">{meta.title}</h3>
-            <p class="text-xs text-synth-text-muted leading-relaxed">
+            <h3 class="font-semibold text-primary mb-2">{meta.title}</h3>
+            <p class="text-xs text-base-content opacity-70 leading-relaxed">
               {meta.description}
             </p>
           </a>
@@ -152,21 +152,21 @@ const featuredReading = [
       </h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {featuredTools.map((tool) => (
-          <article class="card p-6 hover:border-accent transition-all duration-300 group">
+          <article class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 group p-6">
             <div class="flex items-center justify-between mb-4">
-              <span class="px-2 py-1 text-xs rounded-full bg-accent/20 text-accent border border-accent/30">
+              <div class="badge badge-primary">
                 {tool.category}
-              </span>
+              </div>
               <div class="w-2 h-2 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </div>
             
-            <h3 class="font-bold text-glow mb-2 group-hover:text-accent transition-colors">
+            <h3 class="card-title font-bold text-glow mb-2 group-hover:text-primary transition-colors">
               <a href={tool.url} target="_blank" rel="noopener noreferrer">
                 {tool.name}
               </a>
             </h3>
             
-            <p class="text-synth-text text-sm mb-4 leading-relaxed">
+            <p class="text-base-content text-sm mb-4 leading-relaxed">
               {tool.description}
             </p>
             
@@ -174,7 +174,7 @@ const featuredReading = [
               href={tool.url} 
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+              class="btn btn-primary btn-sm btn-outline"
             >
               Explore tool
               <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,15 +194,15 @@ const featuredReading = [
       </h2>
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {featuredReading.map((book) => (
-          <article class="card p-6 hover:border-accent transition-all duration-300">
+          <article class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 p-6">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-10 h-10 rounded bg-gradient-to-br from-accent/20 to-accent-dark/20 border border-accent/30 flex items-center justify-center">
-                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 rounded bg-primary bg-opacity-20 border border-primary border-opacity-30 flex items-center justify-center">
+                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                 </svg>
               </div>
               <div>
-                <h3 class="font-bold text-glow text-lg hover:text-accent transition-colors">
+                <h3 class="card-title font-bold text-glow text-lg hover:text-primary transition-colors">
                   {book.url !== "#" ? (
                     <a href={book.url} target="_blank" rel="noopener noreferrer">
                       {book.title}
@@ -211,11 +211,11 @@ const featuredReading = [
                     book.title
                   )}
                 </h3>
-                <p class="text-sm text-synth-text-muted">by {book.author}</p>
+                <p class="text-sm text-base-content opacity-70">by {book.author}</p>
               </div>
             </div>
             
-            <p class="text-synth-text text-sm mb-4 leading-relaxed">
+            <p class="text-base-content text-sm mb-4 leading-relaxed">
               {book.description}
             </p>
             
@@ -224,7 +224,7 @@ const featuredReading = [
                 href={book.url} 
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
+                class="btn btn-primary btn-sm btn-outline"
               >
                 Learn more
                 <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,54 +246,54 @@ const featuredReading = [
             <div class="flex items-center gap-4 mb-8">
               <span class="text-3xl">{meta?.icon || '📁'}</span>
               <div>
-                <h2 class="text-2xl font-bold text-accent">
+                <h2 class="text-2xl font-bold text-primary">
                   {meta?.title || category.replace('-', ' ')}
                 </h2>
-                <p class="text-synth-text-muted">
+                <p class="text-base-content opacity-70">
                   {meta?.description || `${resources.length} resources in this category`}
                 </p>
               </div>
               <div class="ml-auto">
-                <span class="px-3 py-1 text-sm rounded-full bg-accent/10 text-accent border border-accent/20">
+                <div class="badge badge-primary">
                   {resources.length} {resources.length === 1 ? 'resource' : 'resources'}
-                </span>
+                </div>
               </div>
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {resources.map((resource) => (
-                <article class="card p-6 hover:border-accent transition-all duration-300">
-                  <h3 class="font-bold text-glow mb-2 hover:text-accent transition-colors">
-                    <a href={resource.data.url} target="_blank" rel="noopener noreferrer">
-                      {resource.data.title}
-                    </a>
-                  </h3>
-                  
-                  <p class="text-synth-text text-sm mb-4 leading-relaxed">
-                    {resource.data.description}
-                  </p>
-                  
-                  {resource.data.tags && (
-                    <div class="flex flex-wrap gap-2 mb-4">
-                      {resource.data.tags.slice(0, 3).map((tag: string) => (
-                        <span class="px-2 py-1 text-xs rounded bg-synth-card-bg text-synth-text-muted border border-synth-border">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                  
-                  <a 
-                    href={resource.data.url} 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-flex items-center text-accent hover:text-accent-light transition-colors text-sm font-medium"
-                  >
-                    Visit resource
-                    <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                    </svg>
-                  </a>
+                <article class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 p-6">
+                <h3 class="card-title font-bold text-glow mb-2 hover:text-primary transition-colors">
+                <a href={resource.data.url} target="_blank" rel="noopener noreferrer">
+                {resource.data.title}
+                </a>
+                </h3>
+                
+                <p class="text-base-content text-sm mb-4 leading-relaxed">
+                {resource.data.description}
+                </p>
+                
+                {resource.data.tags && (
+                <div class="flex flex-wrap gap-2 mb-4">
+                {resource.data.tags.slice(0, 3).map((tag: string) => (
+                <div class="badge badge-outline badge-sm">
+                {tag}
+                </div>
+                ))}
+                </div>
+                )}
+                
+                <a 
+                href={resource.data.url} 
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary btn-sm btn-outline"
+                >
+                Visit resource
+                <svg class="ml-1 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+                </a>
                 </article>
               ))}
             </div>
@@ -303,14 +303,14 @@ const featuredReading = [
     ) : (
       <!-- Empty state for dynamic resources -->
       <section class="mb-16">
-        <div class="card p-8 text-center">
-          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-accent/20 to-accent-dark/20 border border-accent/30 flex items-center justify-center">
-            <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="card bg-base-100 shadow-xl p-8 text-center">
+          <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-primary bg-opacity-20 border border-primary border-opacity-30 flex items-center justify-center">
+            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
             </svg>
           </div>
           <h3 class="text-xl font-bold text-glow mb-4">Resource Database Growing</h3>
-          <p class="text-synth-text-muted mb-6">
+          <p class="text-base-content opacity-70 mb-6">
             I'm building a comprehensive database of curated resources. The featured tools and 
             reading list above provide a solid starting point, with more categories coming soon.
           </p>
@@ -320,9 +320,9 @@ const featuredReading = [
 
     <!-- Newsletter/Updates Section -->
     <section class="mt-16">
-      <div class="card p-8 text-center bg-gradient-to-r from-accent/5 to-accent-dark/5 border-accent/20">
+      <div class="card bg-base-100 shadow-xl p-8 text-center">
         <h2 class="text-2xl font-bold text-glow mb-4">Stay Updated</h2>
-        <p class="text-synth-text-muted mb-6 max-w-2xl mx-auto">
+        <p class="text-base-content opacity-70 mb-6 max-w-2xl mx-auto">
           This resource collection is continuously updated as I discover new tools, 
           read valuable content, and attend industry events. Get notified about new 
           additions and curated recommendations.
@@ -331,13 +331,13 @@ const featuredReading = [
           <input 
             type="email" 
             placeholder="your@email.com" 
-            class="flex-1 px-4 py-2 rounded-lg bg-synth-card-bg border border-synth-border text-synth-text focus:border-accent focus:outline-none"
+            class="input input-bordered flex-1 focus:input-primary"
           />
-          <button class="btn-primary whitespace-nowrap">
+          <button class="btn btn-primary whitespace-nowrap">
             Subscribe
           </button>
         </div>
-        <p class="text-xs text-synth-text-muted">
+        <p class="text-xs text-base-content opacity-70">
           Newsletter functionality coming soon
         </p>
       </div>
@@ -345,18 +345,18 @@ const featuredReading = [
 
     <!-- Contribute Section -->
     <section class="mt-12">
-      <div class="card p-6 border-accent/20">
+      <div class="card bg-base-100 shadow-xl p-6">
         <h3 class="font-semibold text-glow mb-4 flex items-center gap-2">
-          <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
           </svg>
           Know a Great Resource?
         </h3>
-        <p class="text-synth-text text-sm mb-4">
+        <p class="text-base-content text-sm mb-4">
           If you know of tools, books, courses, or communities that would be valuable 
           for platform engineers and cloud architects, I'd love to hear about them.
         </p>
-        <a href="/contact" class="btn-secondary text-sm">
+        <a href="/contact" class="btn btn-secondary btn-sm">
           Suggest a Resource
         </a>
       </div>
@@ -367,13 +367,8 @@ const featuredReading = [
 </BaseLayout>
 
 <style>
-  .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.1);
-  }
-  
-  .group:hover .group-hover\:opacity-100 {
-    opacity: 1;
+  .text-glow {
+    text-shadow: 0 0 10px #f92aad;
   }
   
   /* Smooth scrolling for anchor links */

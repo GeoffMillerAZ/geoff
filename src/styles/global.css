@@ -95,7 +95,8 @@
     }
   }
 
-  .card {
+  /* Custom card styles - now using DaisyUI card component with custom backdrop */
+  .card:not([class*="card-"]) {
     background-color: var(--synth-card-bg);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
@@ -175,30 +176,11 @@
     --tw-gradient-to: rgba(249, 42, 173, 1.2);
   }
 
-  .skill-badge {
-    display: inline-block;
-    padding: 0.375rem 0.875rem;
-    border-radius: 9999px;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    background-color: rgba(37, 176, 188, 0.1);
-    color: var(--synth-cyan);
-    border: 1px solid rgba(37, 176, 188, 0.4);
-    transition: all 0.2s ease-in-out;
-  }
-  
-  @media (min-width: 1024px) {
-    .skill-badge {
-      padding: 0.375rem 1rem;
-      font-size: 0.875rem;
-    }
-  }
-
-  .skill-badge:hover {
-    background-color: var(--synth-cyan);
-    color: var(--synth-bg);
-    box-shadow: 0 0 10px var(--synth-cyan);
+  /* Skill badges are now using DaisyUI badge component */
+  /* Custom hover effects for badges */
+  .badge:hover {
     transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
   }
 
   .timeline {
@@ -255,72 +237,23 @@
     transform: rotate(180deg);
   }
 
-  /* Navigation styles */
-  .nav-link {
-    position: relative;
-    padding: 0.5rem 1rem;
-    color: var(--synth-text);
-    text-decoration: none;
-    transition: color 0.2s ease-in-out;
-  }
+  /* Navigation is now using DaisyUI navbar and menu components */
+  /* Custom nav styles for synthwave theme are handled by DaisyUI theme variables */
 
-  .nav-link:hover,
-  .nav-link.active {
-    color: var(--synth-pink);
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: var(--synth-pink);
-    transition: width 0.3s ease-in-out;
-  }
-
-  .nav-link:hover::after,
-  .nav-link.active::after {
-    width: 100%;
-  }
-
-  /* Button styles */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    text-decoration: none;
+  /* Buttons are now using DaisyUI btn component */
+  /* Custom button hover effects for synthwave theme */
+  .btn:hover {
+    box-shadow: 0 0 10px rgba(249, 42, 173, 0.3);
+    transform: translateY(-1px);
     transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    border: 1px solid transparent;
   }
 
-  .btn-primary {
-    background-color: var(--synth-pink);
-    color: var(--synth-bg);
-    border-color: var(--synth-pink);
-  }
-
-  .btn-primary:hover {
-    background-color: transparent;
-    color: var(--synth-pink);
-    box-shadow: 0 0 10px var(--synth-pink);
-  }
-
-  .btn-secondary {
-    background-color: transparent;
-    color: var(--synth-cyan);
-    border-color: var(--synth-cyan);
+  .btn-accent:hover {
+    box-shadow: 0 0 15px var(--synth-pink);
   }
 
   .btn-secondary:hover {
-    background-color: var(--synth-cyan);
-    color: var(--synth-bg);
-    box-shadow: 0 0 10px var(--synth-cyan);
+    box-shadow: 0 0 15px var(--synth-cyan);
   }
 
   /* Code syntax highlighting adjustments */
@@ -388,7 +321,7 @@
     background-clip: text;
   }
 
-  /* Additional utility classes for custom components */
+  /* Legacy utility classes - most functionality now handled by DaisyUI */
   .bg-synth-card-bg {
     background-color: var(--synth-card-bg);
   }
@@ -403,6 +336,27 @@
 
   .text-synth-text-muted {
     color: rgba(229, 229, 229, 0.7);
+  }
+
+  /* DaisyUI component customizations for synthwave theme */
+  .navbar {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .footer {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .card {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  .dropdown-content {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 }
 

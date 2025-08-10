@@ -13,72 +13,84 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 card mx-4 mt-4 max-w-10xl 3xl:mx-auto">
-  <nav class="flex items-center justify-between p-4 3xl:px-8">
+<header class="sticky top-0 z-50 mx-4 mt-4 max-w-10xl 3xl:mx-auto">
+  <div class="navbar bg-base-200/80 backdrop-blur-md border border-primary/30 rounded-2xl shadow-lg">
     <!-- Logo/Brand -->
-    <div class="flex items-center space-x-2">
-      <a href="/" class="text-xl font-bold text-glow hover:text-accent transition-colors">
+    <div class="navbar-start">
+      <a href="/" class="btn btn-ghost text-xl font-bold text-primary hover:text-accent">
         Geoffrey Miller
       </a>
     </div>
 
     <!-- Desktop Navigation -->
-    <div class="hidden md:flex items-center space-x-1">
-      {navItems.map(item => (
-        <a 
-          href={item.href}
-          class={`nav-link ${item.current ? 'active' : ''}`}
-        >
-          {item.name}
-        </a>
-      ))}
+    <div class="navbar-center hidden lg:flex">
+      <ul class="menu menu-horizontal px-1">
+        {navItems.map(item => (
+          <li>
+            <a 
+              href={item.href}
+              class={`font-medium transition-colors ${
+                item.current 
+                  ? 'text-accent bg-accent/10' 
+                  : 'text-base-content hover:text-accent hover:bg-accent/5'
+              }`}
+            >
+              {item.name}
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <button 
-      id="mobile-menu-button"
-      class="md:hidden p-2 text-synth-text hover:text-accent transition-colors"
-      aria-label="Toggle mobile menu"
-    >
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-      </svg>
-    </button>
-  </nav>
-
-  <!-- Mobile Menu -->
-  <div id="mobile-menu" class="hidden md:hidden border-t border-synth-border">
-    <div class="px-4 py-2 space-y-1">
-      {navItems.map(item => (
-        <a 
-          href={item.href}
-          class={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-            item.current 
-              ? 'text-accent bg-synth-card-bg' 
-              : 'text-synth-text hover:text-accent hover:bg-synth-card-bg'
-          }`}
+    <!-- Mobile Menu -->
+    <div class="navbar-end lg:hidden">
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost lg:hidden" aria-label="Toggle mobile menu">
+          <svg 
+            class="w-6 h-6" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </div>
+        <ul 
+          tabindex="0" 
+          class="menu menu-sm dropdown-content bg-base-200/95 backdrop-blur-sm rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-primary/20"
         >
-          {item.name}
-        </a>
-      ))}
+          {navItems.map(item => (
+            <li>
+              <a 
+                href={item.href}
+                class={`font-medium transition-colors ${
+                  item.current 
+                    ? 'text-accent bg-accent/10' 
+                    : 'text-base-content hover:text-accent hover:bg-accent/5'
+                }`}
+              >
+                {item.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </div>
 </header>
 
 <script>
-  // Mobile menu toggle functionality
-  const mobileMenuButton = document.getElementById('mobile-menu-button');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  mobileMenuButton?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('hidden');
-  });
-
-  // Close mobile menu when clicking outside
+  // DaisyUI dropdown handles mobile menu functionality automatically
+  // No additional JavaScript required for basic dropdown behavior
+  
+  // Optional: Close dropdown when clicking on menu items (for better UX)
   document.addEventListener('click', (event) => {
-    if (!mobileMenuButton?.contains(event.target as Node) && 
-        !mobileMenu?.contains(event.target as Node)) {
-      mobileMenu?.classList.add('hidden');
+    const target = event.target as HTMLElement;
+    if (target.closest('.menu a') && target.closest('.dropdown')) {
+      // Remove focus from dropdown to close it
+      const dropdown = target.closest('.dropdown');
+      const dropdownToggle = dropdown?.querySelector('[tabindex="0"]') as HTMLElement;
+      dropdownToggle?.blur();
     }
   });
 </script>

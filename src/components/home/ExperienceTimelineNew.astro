@@ -1,9 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 
-// Get all resume entries and filter for experience
-const allResume = await getCollection('resume');
-const allExperience = allResume.filter(item => item.data.type === 'experience');
+// Get experience entries only
+const allExperience = await getCollection('resume', ({ data }) => data.type === 'experience');
 const mainExperience = allExperience
   .filter(exp => exp.data.showInMainSection)
   .sort((a, b) => a.data.order - b.data.order);
@@ -19,202 +18,110 @@ function formatDate(date: Date | undefined, current: boolean = false): string {
 }
 ---
 
-<section id="experience" class="card p-6">
-  <h2 class="text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-6">Professional Experience</h2>
+<section id="experience" class="card bg-base-200/80 shadow-xl backdrop-blur-md">
+  <div class="card-body">
+    <h2 class="card-title text-2xl lg:text-3xl xl:text-4xl mb-6">Professional Experience</h2>
   
-  <div class="timeline pl-6 space-y-10">
-    {mainExperience.map((exp, index) => (
-      <div class="job-entry-container">
-        <div class="job-entry relative">
-          {exp.data.current && (
-            <p class="absolute -left-[78px] top-1 text-xs text-gray-400">Present</p>
-          )}
-          <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">{exp.data.position}</h3>
-          <p class="font-medium text-accent">
-            {exp.data.company} <span class="text-gray-500 font-normal">| {exp.data.location}</span>
-          </p>
-          <p class="text-sm text-gray-500 mb-3">
-            {formatDate(exp.data.startDate)} - {formatDate(exp.data.endDate, exp.data.current)}
-          </p>
-          
-          {exp.data.highlights && exp.data.highlights.length > 0 && (
-            <>
-              {/* Show first 3 highlights by default */}
-              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
-                {exp.data.highlights.slice(0, 3).map((highlight) => (
-                  <li>{highlight}</li>
-                ))}
-              </ul>
-              
-              {/* Show remaining highlights in expandable section */}
-              {exp.data.highlights.length > 3 && (
-                <>
-                  <div class="details-section">
-                    <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg mt-2">
-                      {exp.data.highlights.slice(3).map((highlight) => (
-                        <li>{highlight}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <button class="toggle-button" onclick="toggleDetails(this)">
-                    <span class="button-text">Show More</span>
-                    <svg class="arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-    ))}
-  </div>
-
-  {/* Additional Experience Section */}
-  {additionalExperience.length > 0 && (
-    <div class="mt-10 additional-experience-container">
-      <button 
-        class="toggle-button text-lg w-full justify-center p-2 rounded-lg" 
-        style="background-color: rgba(37, 176, 188, 0.1);" 
-        onclick="toggleAdditionalExperience(this)"
-      >
-        <span class="button-text">Show Additional Experience ({additionalExperience.length} positions)</span>
-        <svg class="arrow w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-        </svg>
-      </button>
-      
-      <div class="additional-details-section timeline pl-6 mt-6 space-y-10">
-        {additionalExperience.map((exp) => (
-          <div class="job-entry relative">
-            <h3 class="text-lg lg:text-xl xl:text-2xl font-semibold text-white">{exp.data.position}</h3>
-            <p class="font-medium text-accent">
-              {exp.data.company} <span class="text-gray-500 font-normal">| {exp.data.location}</span>
-            </p>
-            <p class="text-sm text-gray-500 mb-3">
+    <ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+      {mainExperience.map((exp, index) => (
+        <li>
+          <div class="timeline-middle">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-secondary">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="timeline-end mb-10">
+            <time class="font-mono italic text-sm opacity-50">
               {formatDate(exp.data.startDate)} - {formatDate(exp.data.endDate, exp.data.current)}
-            </p>
+            </time>
+            <div class="text-lg lg:text-xl xl:text-2xl font-bold">{exp.data.position}</div>
+            <div class="text-sm opacity-75">
+              <span class="badge badge-secondary badge-outline">{exp.data.company}</span>
+              <span class="ml-2 text-xs">{exp.data.location}</span>
+            </div>
+          
             {exp.data.highlights && exp.data.highlights.length > 0 && (
-              <ul class="list-disc list-outside space-y-2 pl-5 text-gray-300 text-sm lg:text-base xl:text-lg">
-                {exp.data.highlights.map((highlight) => (
-                  <li>{highlight}</li>
-                ))}
-              </ul>
+              <>
+                {/* Show first 3 highlights by default */}
+                <ul class="mt-3 space-y-1 text-sm lg:text-base">
+                  {exp.data.highlights.slice(0, 3).map((highlight) => (
+                    <li class="flex items-start gap-2">
+                      <span class="text-secondary mt-1">▸</span>
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                {/* Show remaining highlights in collapsible */}
+                {exp.data.highlights.length > 3 && (
+                  <div class="collapse collapse-arrow bg-base-300/50 mt-2">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-sm font-medium">
+                      Show {exp.data.highlights.length - 3} more achievements
+                    </div>
+                    <div class="collapse-content">
+                      <ul class="space-y-1 text-sm lg:text-base">
+                        {exp.data.highlights.slice(3).map((highlight) => (
+                          <li class="flex items-start gap-2">
+                            <span class="text-secondary mt-1">▸</span>
+                            <span>{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
-        ))}
+          <hr class="bg-base-300" />
+        </li>
+      ))}
+    </ul>
+
+    {/* Additional Experience Section */}
+    {additionalExperience.length > 0 && (
+      <div class="collapse collapse-plus bg-base-300/50 mt-6">
+        <input type="checkbox" />
+        <div class="collapse-title text-lg font-medium">
+          Additional Experience ({additionalExperience.length} positions)
+        </div>
+        <div class="collapse-content">
+          <ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+            {additionalExperience.map((exp) => (
+              <li>
+                <div class="timeline-middle">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-accent">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <div class="timeline-end mb-10">
+                  <time class="font-mono italic text-sm opacity-50">
+                    {formatDate(exp.data.startDate)} - {formatDate(exp.data.endDate, exp.data.current)}
+                  </time>
+                  <div class="text-lg lg:text-xl font-bold">{exp.data.position}</div>
+                  <div class="text-sm opacity-75">
+                    <span class="badge badge-accent badge-outline">{exp.data.company}</span>
+                    <span class="ml-2 text-xs">{exp.data.location}</span>
+                  </div>
+                  {exp.data.highlights && exp.data.highlights.length > 0 && (
+                    <ul class="mt-3 space-y-1 text-sm lg:text-base">
+                      {exp.data.highlights.map((highlight) => (
+                        <li class="flex items-start gap-2">
+                          <span class="text-accent mt-1">▸</span>
+                          <span>{highlight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <hr class="bg-base-300" />
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
-  )}
+    )}
+  </div>
 </section>
 
-<style>
-  .timeline {
-    border-left: 2px solid #25b0bc;
-    margin-left: 8px;
-  }
-
-  .job-entry {
-    position: relative;
-    padding-left: 24px;
-  }
-
-  .job-entry::before {
-    content: '';
-    position: absolute;
-    left: -10px;
-    top: 8px;
-    width: 16px;
-    height: 16px;
-    background: #25b0bc;
-    border-radius: 50%;
-    box-shadow: 0 0 0 4px rgba(37, 176, 188, 0.2);
-  }
-
-  .job-entry-container:first-child .job-entry::before {
-    background: #fff;
-    box-shadow: 0 0 0 4px #25b0bc;
-  }
-
-  .details-section,
-  .additional-details-section {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-  }
-
-  .details-section.open,
-  .additional-details-section.open {
-    max-height: 2000px;
-    transition: max-height 0.5s ease-in;
-  }
-
-  .toggle-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    color: #25b0bc;
-    font-weight: 500;
-    border: 1px solid transparent;
-    border-radius: 0.375rem;
-    transition: all 0.2s;
-  }
-
-  .toggle-button:hover {
-    background-color: rgba(37, 176, 188, 0.1);
-    border-color: rgba(37, 176, 188, 0.3);
-  }
-
-  .toggle-button .arrow {
-    transition: transform 0.2s;
-  }
-
-  .toggle-button.open .arrow {
-    transform: rotate(180deg);
-  }
-</style>
-
-<script>
-  function toggleDetails(button: HTMLElement) {
-    const container = button.parentElement;
-    const details = container?.querySelector('.details-section');
-    const buttonText = button.querySelector('.button-text');
-    
-    if (details && buttonText) {
-      button.classList.toggle('open');
-      details.classList.toggle('open');
-      
-      if (details.classList.contains('open')) {
-        buttonText.textContent = 'Show Less';
-      } else {
-        buttonText.textContent = 'Show More';
-      }
-    }
-  }
-
-  function toggleAdditionalExperience(button: HTMLElement) {
-    const container = button.parentElement;
-    const details = container?.querySelector('.additional-details-section');
-    const buttonText = button.querySelector('.button-text');
-    const count = details?.querySelectorAll('.job-entry').length || 0;
-    
-    if (details && buttonText) {
-      button.classList.toggle('open');
-      details.classList.toggle('open');
-      
-      if (details.classList.contains('open')) {
-        buttonText.textContent = 'Hide Additional Experience';
-      } else {
-        buttonText.textContent = `Show Additional Experience (${count} positions)`;
-      }
-    }
-  }
-
-  // Make functions globally available
-  (window as any).toggleDetails = toggleDetails;
-  (window as any).toggleAdditionalExperience = toggleAdditionalExperience;
-</script>

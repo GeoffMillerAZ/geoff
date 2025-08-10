@@ -1,4 +1,5 @@
 import typography from '@tailwindcss/typography';
+import daisyui from 'daisyui';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -57,5 +58,36 @@ export default {
       },
     },
   },
-  plugins: [typography],
+  daisyui: {
+    themes: [
+      {
+        synthwave: {
+          "primary": "#f92aad",
+          "primary-content": "#ffffff",
+          "secondary": "#25b0bc",
+          "secondary-content": "#ffffff",
+          "accent": "#f92aad",
+          "accent-content": "#ffffff",
+          "neutral": "#2a2139",
+          "neutral-content": "#e5e5e5",
+          "base-100": "#2a2139",
+          "base-200": "#1f1929",
+          "base-300": "#191322",
+          "base-content": "#e5e5e5",
+          "info": "#25b0bc",
+          "info-content": "#ffffff",
+          "success": "#00ff88",
+          "success-content": "#000000",
+          "warning": "#ffaa00",
+          "warning-content": "#000000",
+          "error": "#ff5555",
+          "error-content": "#ffffff",
+        },
+      },
+      "dark",
+      "synthwave",
+    ],
+    darkTheme: "synthwave",
+  },
+  plugins: [typography, daisyui],
 };
