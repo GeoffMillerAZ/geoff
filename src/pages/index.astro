@@ -6,12 +6,14 @@ import EducationSection from '../components/home/EducationSection.astro';
 import CertificationsSection from '../components/home/CertificationsSection.astro';
 import ExperienceTimelineNew from '../components/home/ExperienceTimelineNew.astro';
 import AchievementsSection from '../components/home/AchievementsSection.astro';
+import AwardsSection from '../components/home/AwardsSection.astro';
+import { getSiteConfig } from '@/utils/siteData';
 
-const pageTitle = 'Geoffrey Miller - Infrastructure Director & Principal Cloud Architect';
-const pageDescription = 'Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale.';
+const siteConfig = getSiteConfig();
+const { metadata, profile, resume } = siteConfig;
 ---
 
-<HomeLayout title={pageTitle} description={pageDescription}>
+<HomeLayout title={metadata.title} description={metadata.description}>
   <main id="main-content" role="main" aria-label="Main content">
     <div class="max-w-7xl min-[2560px]:max-w-[1600px] mx-auto px-6 sm:px-8 py-8 sm:py-10 md:py-16 lg:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-10 lg:gap-12 xl:gap-16 min-[2560px]:gap-20">
@@ -27,8 +29,8 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6">
                   <h2 class="card-title text-2xl sm:text-3xl lg:text-3xl text-glow-white">Professional Summary</h2>
                   <a 
-                    href="/resume/Geoffrey_Miller_Resume_cv20250723a.pdf" 
-                    download
+                    href={resume.downloadUrl} 
+                    download={resume.filename}
                     class="btn btn-primary btn-sm sm:btn-md gap-2 shrink-0"
                   >
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,20 +43,14 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
                 
                 <div class="prose prose-base max-w-none">
                   <p class="text-base leading-relaxed">
-                    Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms 
-                    (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on 
-                    developer efficiency and platform scale.
+                    {profile.summary.brief}
                   </p>
                   <div class="collapse collapse-arrow bg-base-300/30 mt-4">
                     <input type="checkbox" />
                     <div class="collapse-title text-sm font-medium min-h-[44px] flex items-center">Read more</div>
                     <div class="collapse-content">
                       <p class="text-base leading-relaxed">
-                        Designs platform services that unify tools into a single end-to-end experience 
-                        using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend 
-                        analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more. Advanced 
-                        leader in AI-driven agentic workflows, building organization-wide coding platforms that triple developer throughput 
-                        while maintaining security and compliance.
+                        {profile.summary.extended}
                       </p>
                     </div>
                   </div>
@@ -73,6 +69,11 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
           <!-- Achievements for mobile/tablet -->
           <div class="lg:hidden">
             <AchievementsSection />
+          </div>
+          
+          <!-- Awards for mobile/tablet -->
+          <div class="lg:hidden">
+            <AwardsSection />
           </div>
           
           <!-- Education & Certs for mobile/tablet -->
@@ -95,7 +96,7 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6">
                       <h2 class="card-title text-2xl sm:text-3xl lg:text-3xl text-glow-white">Career Summary</h2>
                       <a 
-                        href="/resume/Geoffrey_Miller_Resume_cv20250723a.pdf" 
+                        href={resume.downloadUrl} 
                         download
                         class="btn btn-primary btn-sm sm:btn-md gap-2 shrink-0"
                       >
@@ -141,6 +142,11 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
               <!-- Achievements - Hidden on mobile, shown on desktop -->
               <div class="hidden lg:block">
                 <AchievementsSection />
+              </div>
+              
+              <!-- Awards - Hidden on mobile, shown on desktop -->
+              <div class="hidden lg:block">
+                <AwardsSection />
               </div>
             </section>
 

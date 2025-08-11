@@ -1,0 +1,140 @@
+# Site configuration - Make this site yours by editing this file
+# This is the single source of truth for all site content
+
+# Personal Information
+profile:
+  name: "Geoffrey Miller"
+  title: "Infrastructure Director & Principal Cloud Architect"
+  initials: "GM"
+  showAvatar: true
+  location: "Phoenix, AZ"
+  email: "contact@geoffmiller.cloud"
+  
+  # Professional Summary
+  summary:
+    brief: "Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale."
+    
+    extended: "Designs platform services that unify tools into a single end-to-end experience using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more without impacting reliability. Known for solving complex challenges through simple repeatable engineering patterns, mentoring high-performing teams, and managing stakeholders across business and technology. Advanced leader in AI-driven agentic workflows who built organization-wide coding platforms that combine AI-assisted development with controlled agent execution, generating service catalogs and policy code that triple developer throughput and maintain security, compliance, and consistency. Ready to bring forward-thinking cloud strategy and hands-on engineering leadership to highly regulated enterprises."
+
+  # Social Links
+  social:
+    github: 
+      username: "GeoffMillerAZ"
+      url: "https://github.com/GeoffMillerAZ"
+    linkedin:
+      username: "geoff-e-miller"
+      url: "https://linkedin.com/in/geoff-e-miller"
+    twitter:
+      username: ""
+      url: ""
+
+# Skills Configuration
+skills:
+  core:
+    title: "Core Skills"
+    items:
+      - "Cloud Strategy"
+      - "Platform Engineering"
+      - "DevOps/DevSecOps"
+      - "FinOps"
+      - "SRE"
+      - "AI/Agentic Workflows"
+  
+  technical:
+    title: "Technical"
+    items:
+      - "Terraform"
+      - "Pulumi"
+      - "Kubernetes/EKS"
+      - "GitOps"
+      - "OPA"
+      - "CI/CD"
+  
+  compliance:
+    title: "Compliance & Security"
+    items:
+      - "FFIEC"
+      - "PCI-DSS"
+      - "SOC 2"
+      - "Policy-as-Code"
+      - "Zero Trust"
+  
+  leadership:
+    title: "Leadership"
+    items:
+      - "Team Leadership"
+      - "Mentoring"
+      - "Stakeholder Mgmt"
+      - "Developer Productivity"
+
+# Key Achievements/Metrics
+achievements:
+  - title: "Annual Savings"
+    value: "$2.8M"
+    description: "Through FinOps automation"
+    icon: "currency"
+    
+  - title: "Developer Productivity"
+    value: "3x Faster"
+    description: "With AI-driven workflows"
+    icon: "lightning"
+    
+  - title: "Cloud Spend Reduction"
+    value: "30% YoY"
+    description: "AWS optimization at scale"
+    icon: "shield"
+    
+  - title: "Team Scale"
+    value: "300+ Devs"
+    description: "Platform users at $215B bank"
+    icon: "team"
+
+# Navigation Configuration
+navigation:
+  - name: "Home"
+    href: "/"
+  - name: "About"
+    href: "/about"
+  - name: "Blog"
+    href: "/blog"
+  - name: "Projects"
+    href: "/projects"
+  - name: "Guides"
+    href: "/guides"
+  - name: "Resources"
+    href: "/resources"
+  - name: "Contact"
+    href: "/contact"
+
+# Site Metadata
+metadata:
+  title: "Geoffrey Miller - Infrastructure Director & Principal Cloud Architect"
+  description: "Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms. Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem."
+  keywords:
+    - "Cloud Architecture"
+    - "Platform Engineering"
+    - "AWS"
+    - "Kubernetes"
+    - "DevOps"
+    - "FinOps"
+    - "Infrastructure"
+  author: "Geoffrey Miller"
+  
+# Footer Configuration
+footer:
+  copyright: "Geoffrey Miller"
+  poweredBy:
+    - name: "Astro"
+      url: "https://astro.build"
+    - name: "DaisyUI"
+      url: "https://daisyui.com"
+  hosting:
+    name: "GitHub Pages"
+    url: "https://pages.github.com"
+  repository:
+    url: "https://github.com/GeoffMillerAZ/geoff"
+    
+# Resume Configuration
+resume:
+  downloadUrl: "/resume/Geoffrey_Miller_Resume_cv20250723a.pdf"
+  filename: "Geoffrey_Miller_Resume.pdf"

@@ -1,5 +1,9 @@
 ---
 // Skills section component for the homepage sidebar
+import { getSiteConfig } from '@/utils/siteData';
+
+const siteConfig = getSiteConfig();
+const { skills } = siteConfig;
 ---
 
 <div class="card bg-base-200/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300">
@@ -9,24 +13,21 @@
     <div class="space-y-4">
       <!-- Core Skills -->
       <div>
-        <h3 class="text-lg sm:text-xl lg:text-xl font-semibold text-glow-pink mb-3">Core Skills</h3>
-        <div class="flex gap-2 overflow-x-auto snap-x pb-2">
-          <span class="badge badge-primary badge-sm snap-start shrink-0 min-h-[32px]">Kubernetes</span>
-          <span class="badge badge-primary badge-sm snap-start shrink-0 min-h-[32px]">Platform Eng</span>
-          <span class="badge badge-primary badge-sm snap-start shrink-0 min-h-[32px]">Cloud Arch</span>
-          <span class="badge badge-primary badge-sm snap-start shrink-0 min-h-[32px]">DevOps</span>
-          <span class="badge badge-primary badge-sm snap-start shrink-0 min-h-[32px]">FinOps</span>
+        <h3 class="text-lg sm:text-xl lg:text-xl font-semibold text-glow-pink mb-3">{skills.core.title}</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.core.items.map((skill) => (
+            <span class="badge badge-primary badge-sm shrink-0 min-h-[32px]">{skill}</span>
+          ))}
         </div>
       </div>
       
-      <!-- Languages -->
+      <!-- Technical -->
       <div>
-        <h3 class="text-lg sm:text-xl lg:text-xl font-semibold text-glow-cyan mb-3">Languages</h3>
-        <div class="flex gap-2 overflow-x-auto snap-x pb-2">
-          <span class="badge badge-outline badge-sm snap-start shrink-0 min-h-[32px]">Go</span>
-          <span class="badge badge-outline badge-sm snap-start shrink-0 min-h-[32px]">Python</span>
-          <span class="badge badge-outline badge-sm snap-start shrink-0 min-h-[32px]">TypeScript</span>
-          <span class="badge badge-outline badge-sm snap-start shrink-0 min-h-[32px]">Bash</span>
+        <h3 class="text-lg sm:text-xl lg:text-xl font-semibold text-glow-cyan mb-3">{skills.technical.title}</h3>
+        <div class="flex flex-wrap gap-2">
+          {skills.technical.items.map((skill) => (
+            <span class="badge badge-outline badge-sm shrink-0 min-h-[32px]">{skill}</span>
+          ))}
         </div>
       </div>
       
@@ -37,13 +38,19 @@
         <div class="collapse-content">
           <div class="space-y-3">
             <div>
-              <span class="text-xs text-base-content/70">Infrastructure & Tools</span>
+              <span class="text-xs text-base-content/70">{skills.compliance.title}</span>
               <div class="flex flex-wrap gap-1.5 mt-1">
-                <span class="badge badge-outline badge-xs">AWS</span>
-                <span class="badge badge-outline badge-xs">Terraform</span>
-                <span class="badge badge-outline badge-xs">ArgoCD</span>
-                <span class="badge badge-outline badge-xs">Istio</span>
-                <span class="badge badge-outline badge-xs">Prometheus</span>
+                {skills.compliance.items.map((skill) => (
+                  <span class="badge badge-outline badge-xs">{skill}</span>
+                ))}
+              </div>
+            </div>
+            <div class="mt-3">
+              <span class="text-xs text-base-content/70">{skills.leadership.title}</span>
+              <div class="flex flex-wrap gap-1.5 mt-1">
+                {skills.leadership.items.map((skill) => (
+                  <span class="badge badge-outline badge-xs">{skill}</span>
+                ))}
               </div>
             </div>
           </div>

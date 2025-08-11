@@ -1,12 +1,32 @@
 ---
 import { getCollection } from 'astro:content';
 
-// Get experience entries only
-const allExperience = await getCollection('resume', ({ data }) => data.type === 'experience');
-const mainExperience = allExperience
+// Get experience entries only with proper type checking
+const allResume = await getCollection('resume');
+const allExperience = allResume.filter(item => item.data.type === 'experience');
+
+// Type assertion for experience entries
+type ExperienceEntry = {
+  data: {
+    type: 'experience';
+    position: string;
+    company: string;
+    location: string;
+    startDate: Date;
+    endDate?: Date;
+    current: boolean;
+    highlights?: string[];
+    technologies?: string[];
+    showInMainSection: boolean;
+    order: number;
+  };
+};
+
+const typedExperience = allExperience as unknown as ExperienceEntry[];
+const mainExperience = typedExperience
   .filter(exp => exp.data.showInMainSection)
   .sort((a, b) => a.data.order - b.data.order);
-const additionalExperience = allExperience
+const additionalExperience = typedExperience
   .filter(exp => !exp.data.showInMainSection)
   .sort((a, b) => a.data.order - b.data.order);
 

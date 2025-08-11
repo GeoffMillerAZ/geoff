@@ -132,7 +132,7 @@ const resumeCollection = defineCollection({
       name: z.string(),
       issuer: z.string(),
       issueDate: z.date(),
-      expiryDate: z.date().optional(),
+      expirationDate: z.date().optional(),
       credentialId: z.string().optional(),
       url: z.string().url().optional(),
       order: z.number(),
@@ -153,6 +153,15 @@ const resumeCollection = defineCollection({
       date: z.date().optional(),
       category: z.enum(['technical', 'leadership', 'business', 'community']),
       metrics: z.string().optional(),
+      order: z.number(),
+    }),
+    // Award entries
+    z.object({
+      type: z.literal('award'),
+      title: z.string(),
+      organization: z.string(),
+      description: z.string().optional(),
+      date: z.date().optional(),
       order: z.number(),
     }),
   ])

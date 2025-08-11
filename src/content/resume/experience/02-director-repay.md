@@ -8,13 +8,15 @@ endDate: 2021-07-01
 showInMainSection: true
 order: 2
 highlights:
-  - "Built a green-field AWS platform from scratch, achieving PCI compliance with zero criticals."
-  - "Grew the team from a single engineer to a 10-person SRE team and a 5-person operations team."
-  - "Delivered a multi-account Landing Zone with automated FinOps, saving 30% YoY."
-  - "Launched Backstage IDP and Documentation-as-Code, reducing documentation drift by 75%."
-  - "Engineered and deployed enterprise observability and monitoring solutions (Prometheus, Loki, Grafana)."
-  - "Architected reusable patterns, reducing cloud migration time from months to a single day."
-  - "Provided 24/7 on-call support and incident response with PagerDuty."
+  - "Built green-field AWS platform from scratch for fintech company, achieving PCI compliance with zero critical findings"
+  - "Grew team from single engineer to 10-person SRE team and 5-person operations team supporting 200+ developers"
+  - "Delivered multi-account Landing Zone with automated FinOps, reducing cloud costs by 30% YoY while scaling 10x"
+  - "Launched Backstage IDP and Documentation-as-Code initiative, reducing documentation drift by 75%"
+  - "Engineered enterprise observability solutions using Prometheus, Loki, and Grafana for 500+ microservices"
+  - "Architected reusable cloud migration patterns, reducing migration time from months to single day per application"
+  - "Established 24/7 on-call support and incident response framework with PagerDuty, achieving 99.95% uptime"
+  - "Implemented automated compliance scanning and remediation, maintaining continuous PCI-DSS compliance"
+  - "Led cloud strategy during acquisition integration, successfully merging infrastructure while maintaining zero downtime"
 technologies:
   - "AWS"
   - "Kubernetes"

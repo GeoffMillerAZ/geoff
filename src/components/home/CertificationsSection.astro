@@ -1,9 +1,26 @@
 ---
 import { getCollection } from 'astro:content';
 
-// Get certification entries only
-const allCertifications = await getCollection('resume', ({ data }) => data.type === 'certification');
-const sortedCertifications = allCertifications.sort((a, b) => a.data.order - b.data.order);
+// Get certification entries only with proper type checking
+const allResume = await getCollection('resume');
+const allCertifications = allResume.filter(item => item.data.type === 'certification');
+
+// Type assertion for certification entries
+type CertificationEntry = {
+  data: {
+    type: 'certification';
+    name: string;
+    issuer: string;
+    issueDate: Date;
+    expirationDate?: Date;
+    credentialId?: string;
+    url?: string;
+    order: number;
+  };
+};
+
+const sortedCertifications = (allCertifications as unknown as CertificationEntry[])
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <div class="card bg-base-200/80 shadow-xl backdrop-blur-md hover:shadow-2xl transition-all duration-300 h-full">

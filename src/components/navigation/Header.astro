@@ -1,24 +1,24 @@
 ---
 // Header component for main navigation
+import { getSiteConfig } from '@/utils/siteData';
+
+const siteConfig = getSiteConfig();
 const currentPath = Astro.url.pathname;
 
-const navItems = [
-  { name: 'Home', href: '/', current: currentPath === '/' },
-  { name: 'About', href: '/about', current: currentPath === '/about' },
-  { name: 'Blog', href: '/blog', current: currentPath.startsWith('/blog') },
-  { name: 'Projects', href: '/projects', current: currentPath.startsWith('/projects') },
-  { name: 'Guides', href: '/guides', current: currentPath.startsWith('/guides') },
-  { name: 'Resources', href: '/resources', current: currentPath.startsWith('/resources') },
-  { name: 'Contact', href: '/contact', current: currentPath === '/contact' },
-];
+const navItems = siteConfig.navigation.map(item => ({
+  ...item,
+  current: item.href === '/' 
+    ? currentPath === '/' 
+    : currentPath.startsWith(item.href)
+}));
 ---
 
 <header class="sticky top-0 z-50 mx-4 mt-4 pt-2 sm:pt-4 max-w-10xl 3xl:mx-auto" role="banner">
   <nav class="navbar bg-base-200/90 backdrop-blur-md border border-secondary/30 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300" role="navigation" aria-label="Primary navigation">
     <!-- Logo/Brand -->
     <div class="navbar-start">
-      <a href="/" class="btn btn-ghost text-xl font-bold hover:bg-primary/10 transition-all duration-300" aria-label="Geoffrey Miller - Go to homepage">
-        <span class="text-glow-white">Geoffrey Miller</span>
+      <a href="/" class="btn btn-ghost text-xl font-bold hover:bg-primary/10 transition-all duration-300" aria-label={`${siteConfig.profile.name} - Go to homepage`}>
+        <span class="text-glow-white">{siteConfig.profile.name}</span>
       </a>
     </div>
 
