@@ -13,11 +13,11 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
 
 <HomeLayout title={pageTitle} description={pageDescription}>
   <main id="main-content" role="main" aria-label="Main content">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 py-8 sm:py-10 md:py-16 lg:py-20">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 xl:gap-16">
+    <div class="max-w-7xl min-[2560px]:max-w-[2400px] mx-auto px-6 sm:px-8 py-8 sm:py-10 md:py-16 lg:py-20">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 xl:gap-16 min-[2560px]:gap-20">
         
         <!-- Left Column - Profile and Skills -->
-        <aside class="lg:col-span-4 xl:col-span-3 lg:sticky lg:top-8 lg:self-start space-y-8 sm:space-y-10" role="complementary" aria-label="Geoffrey Miller profile and technical skills">
+        <aside class="lg:col-span-4 xl:col-span-3 min-[2560px]:col-span-3 lg:sticky lg:top-8 lg:self-start space-y-8 sm:space-y-10" role="complementary" aria-label="Geoffrey Miller profile and technical skills">
           <ProfileCard />
           <SkillsSection />
           
@@ -29,39 +29,49 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
         </aside>
 
         <!-- Main Content Area -->
-        <div class="lg:col-span-8 xl:col-span-9">
-          <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 sm:gap-10 lg:gap-12">
+        <div class="lg:col-span-8 xl:col-span-9 min-[2560px]:col-span-9">
+          <div class="grid grid-cols-1 min-[2560px]:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 min-[2560px]:gap-16">
             
             <!-- Center Column - Main Content -->
-            <section class="xl:col-span-8 space-y-8 sm:space-y-10 lg:space-y-12" aria-label="Career summary and experience">
+            <section class="min-[2560px]:col-span-7 space-y-8 sm:space-y-10 lg:space-y-12" aria-label="Career summary and experience">
       <!-- Hero Section with Career Summary -->
-      <div class="hero bg-gradient-to-br from-base-200 via-base-200 to-base-300/50 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-2xl border border-base-300/20">
-        <div class="hero-content text-center py-10 px-8">
-          <div class="max-w-4xl">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 sm:gap-8 mb-8 sm:mb-10">
-              <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl text-primary font-bold leading-tight">Career Summary</h2>
-              <a 
-                href="/resume/Geoffrey_Miller_Resume_cv20250723a.pdf" 
-                download
-                class="btn btn-accent btn-sm sm:btn-md lg:btn-lg gap-2 shrink-0 hover:scale-105 transition-all duration-300 font-medium"
-              >
-                <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span class="hidden sm:inline">Download Resume</span>
-                <span class="sm:hidden">CV/Resume</span>
-              </a>
-            </div>
-            <div class="prose prose-lg lg:prose-xl max-w-none">
-              <p class="text-base-content/90 leading-relaxed text-base sm:text-lg lg:text-xl">
+      <div class="card bg-base-200 shadow-xl">
+        <div class="card-body">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6">
+            <h2 class="card-title text-xl sm:text-2xl lg:text-3xl text-primary">Career Summary</h2>
+            <a 
+              href="/resume/Geoffrey_Miller_Resume_cv20250723a.pdf" 
+              download
+              class="btn btn-primary btn-sm sm:btn-md gap-2 shrink-0"
+            >
+              <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span class="hidden sm:inline">Download Resume</span>
+              <span class="sm:hidden">Resume</span>
+            </a>
+          </div>
+          
+          <div class="collapse collapse-arrow bg-base-300/30">
+            <input type="checkbox" />
+            <div class="collapse-title text-lg font-semibold py-4">
+              <p class="text-base sm:text-lg leading-relaxed line-clamp-3">
                 Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms 
-                (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on 
-                developer efficiency and platform scale. Designs platform services that unify tools into a single end-to-end experience 
-                using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend 
-                analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more. Advanced 
-                leader in AI-driven agentic workflows, building organization-wide coding platforms that triple developer throughput 
-                while maintaining security and compliance.
+                (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem...
               </p>
+            </div>
+            <div class="collapse-content">
+              <div class="prose prose-base max-w-none">
+                <p class="text-base sm:text-lg leading-relaxed">
+                  Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms 
+                  (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on 
+                  developer efficiency and platform scale. Designs platform services that unify tools into a single end-to-end experience 
+                  using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend 
+                  analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more. Advanced 
+                  leader in AI-driven agentic workflows, building organization-wide coding platforms that triple developer throughput 
+                  while maintaining security and compliance.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -71,18 +81,20 @@ const pageDescription = 'Infrastructure Director & Principal Cloud Architect wit
               <AchievementsSection />
             </section>
 
-            <!-- Right Column - Education and Certifications (for desktop) -->
-            <aside class="hidden xl:block xl:col-span-4 xl:sticky xl:top-8 xl:self-start space-y-8 sm:space-y-10" role="complementary" aria-label="Professional education and industry certifications">
+            <!-- Right Column - Education and Certifications (only for ultra-wide 2560px+) -->
+            <aside class="hidden min-[2560px]:block min-[2560px]:col-span-5 min-[2560px]:sticky min-[2560px]:top-8 min-[2560px]:self-start space-y-10 lg:space-y-12" role="complementary" aria-label="Professional education and industry certifications">
               <EducationSection />
               <CertificationsSection />
             </aside>
           </div>
-        </div>
-        
-        <!-- Education & Certs for large screens without XL -->
-        <div class="hidden lg:block xl:hidden lg:col-span-12 space-y-6 sm:space-y-8">
-          <EducationSection />
-          <CertificationsSection />
+          
+          <!-- Education & Certs for large/wide screens (not ultra-wide) -->
+          <div class="hidden lg:block min-[2560px]:hidden space-y-8 sm:space-y-10 lg:space-y-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+              <EducationSection />
+              <CertificationsSection />
+            </div>
+          </div>
         </div>
       </div>
     </div>
