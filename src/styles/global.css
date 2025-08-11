@@ -2,14 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Synthwave '84 Theme Variables */
+/* Synthwave '84 Theme Variables - VS Code accurate colors */
 :root {
-  --synth-bg: #2a2139;
-  --synth-pink: #f92aad;
-  --synth-cyan: #25b0bc;
-  --synth-card-bg: rgba(20, 10, 30, 0.5);
-  --synth-border: rgba(37, 176, 188, 0.3);
-  --synth-text: #e5e5e5;
+  --synth-bg: #241b2f;  /* Dark purple background */
+  --synth-pink: #f92aad;  /* Hot pink */
+  --synth-cyan: #72f1b8;  /* Mint green/cyan */
+  --synth-yellow: #fede5d;  /* Yellow glow */
+  --synth-blue: #36f9f6;  /* Bright cyan */
+  --synth-purple: #ff7edb;  /* Light purple/magenta */
+  --synth-card-bg: rgba(36, 27, 47, 0.6);
+  --synth-border: rgba(114, 241, 184, 0.2);
+  --synth-text: #c7c7c7;
   --synth-glow-text: #ffffff;
 }
 
@@ -97,27 +100,6 @@
     border-radius: 2px;
   }
 
-  /* Skip to content link accessibility */
-  .skip-to-content {
-    position: absolute;
-    top: -40px;
-    left: 6px;
-    background: var(--synth-bg);
-    color: var(--synth-glow-text);
-    padding: 8px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 600;
-    z-index: 9999;
-    transition: top 0.3s ease;
-    border: 2px solid var(--synth-pink);
-  }
-
-  .skip-to-content:focus {
-    top: 6px;
-    outline: 3px solid var(--synth-cyan);
-    outline-offset: 2px;
-  }
 
   /* Loading states for dynamic content */
   .loading-skeleton {
@@ -387,24 +369,60 @@
     }
   }
 
+  /* Subtle pulse animation for Synthwave '84 */
   .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: subtlePulse 4s ease-in-out infinite;
   }
 
-  @keyframes glow {
-    from {
-      text-shadow: 0 0 7px var(--synth-pink);
+  @keyframes subtlePulse {
+    0%, 100% {
+      text-shadow: 
+        0 0 2px rgba(255, 255, 255, 0.9),
+        0 0 4px rgba(255, 255, 255, 0.4),
+        0 0 6px rgba(249, 42, 173, 0.3);
     }
-    to {
-      text-shadow: 0 0 10px var(--synth-pink), 0 0 15px var(--synth-pink);
+    50% {
+      text-shadow: 
+        0 0 3px rgba(255, 255, 255, 1),
+        0 0 6px rgba(255, 255, 255, 0.5),
+        0 0 8px rgba(249, 42, 173, 0.4);
     }
   }
 
+  /* White glow text like VS Code Synthwave '84 */
+  .text-glow-white {
+    color: #ffffff;
+    text-shadow: 
+      0 0 5px rgba(255, 255, 255, 0.9),
+      0 0 10px rgba(255, 255, 255, 0.5),
+      0 0 15px rgba(255, 255, 255, 0.3);
+  }
+
+  /* Pink glow for accents */
+  .text-glow-pink {
+    color: #f92aad;
+    text-shadow: 
+      0 0 5px rgba(249, 42, 173, 0.8),
+      0 0 10px rgba(249, 42, 173, 0.5),
+      0 0 15px rgba(249, 42, 173, 0.3);
+  }
+
+  /* Cyan glow for secondary elements */
+  .text-glow-cyan {
+    color: #72f1b8;
+    text-shadow: 
+      0 0 5px rgba(114, 241, 184, 0.8),
+      0 0 10px rgba(114, 241, 184, 0.5),
+      0 0 15px rgba(114, 241, 184, 0.3);
+  }
+
+  /* Remove gradient in favor of solid colors with glow */
   .gradient-text {
-    background: linear-gradient(45deg, var(--synth-pink), var(--synth-cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff;
+    text-shadow: 
+      0 0 3px rgba(255, 255, 255, 0.9),
+      0 0 6px rgba(255, 255, 255, 0.4),
+      0 0 9px rgba(249, 42, 173, 0.2);
   }
 
   /* Synthwave utility classes */

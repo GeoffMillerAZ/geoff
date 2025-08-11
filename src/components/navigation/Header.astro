@@ -13,17 +13,12 @@ const navItems = [
 ];
 ---
 
-<header class="sticky top-0 z-50 mx-4 mt-4 max-w-10xl 3xl:mx-auto" role="banner">
+<header class="sticky top-0 z-50 mx-4 mt-4 pt-2 sm:pt-4 max-w-10xl 3xl:mx-auto" role="banner">
   <nav class="navbar bg-base-200/90 backdrop-blur-md border border-secondary/30 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300" role="navigation" aria-label="Primary navigation">
-    <!-- Skip to content link -->
-    <a href="#main-content" class="skip-to-content">
-      Skip to main content
-    </a>
-    
     <!-- Logo/Brand -->
     <div class="navbar-start">
-      <a href="/" class="btn btn-ghost text-xl font-bold text-primary hover:text-accent hover:bg-primary/10 transition-all duration-300" aria-label="Geoffrey Miller - Go to homepage">
-        <span class="gradient-text">Geoffrey Miller</span>
+      <a href="/" class="btn btn-ghost text-xl font-bold hover:bg-primary/10 transition-all duration-300" aria-label="Geoffrey Miller - Go to homepage">
+        <span class="text-glow-white">Geoffrey Miller</span>
       </a>
     </div>
 
@@ -50,40 +45,101 @@ const navItems = [
 
     <!-- Mobile Menu -->
     <div class="navbar-end lg:hidden">
-      <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-square btn-ghost lg:hidden hover:bg-secondary/10 hover:text-secondary transition-all duration-300" aria-label="Toggle mobile menu">
-          <svg 
-            class="w-8 h-8" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
+      <!-- Menu Toggle Button -->
+      <button 
+        id="mobile-menu-toggle"
+        type="button"
+        class="btn btn-ghost btn-square lg:hidden transition-all duration-300 relative" 
+        aria-label="Toggle mobile menu"
+        aria-expanded="false"
+      >
+        <!-- Hamburger Icon with Synthwave glow -->
+        <div id="hamburger-icon" class="flex flex-col gap-1.5 transition-all duration-300">
+          <span class="block w-6 h-0.5 bg-white shadow-[0_0_8px_rgba(249,42,173,0.8),0_0_12px_rgba(249,42,173,0.4)]"></span>
+          <span class="block w-6 h-0.5 bg-white shadow-[0_0_8px_rgba(249,42,173,0.8),0_0_12px_rgba(249,42,173,0.4)]"></span>
+          <span class="block w-6 h-0.5 bg-white shadow-[0_0_8px_rgba(249,42,173,0.8),0_0_12px_rgba(249,42,173,0.4)]"></span>
         </div>
-        <ul 
-          tabindex="0" 
-          class="menu menu-sm dropdown-content bg-base-200/95 backdrop-blur-md rounded-box z-50 mt-3 w-56 p-3 shadow-xl border border-secondary/30"
+        <!-- X Icon (hidden by default) -->
+        <svg 
+          id="close-icon"
+          class="w-6 h-6 text-white hidden absolute inset-0 m-auto transition-all duration-300" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+          stroke-width="3"
+          style="filter: drop-shadow(0 0 8px rgba(249,42,173,0.8)) drop-shadow(0 0 12px rgba(249,42,173,0.4));"
         >
-          {navItems.map(item => (
-            <li>
-              <a 
-                href={item.href}
-                class={`font-medium transition-all duration-300 rounded-lg py-3 px-4 ${
-                  item.current 
-                    ? 'text-accent bg-accent/15 border border-accent/30 shadow-md' 
-                    : 'text-base-content hover:text-accent hover:bg-accent/10 hover:transform hover:translateX(2px) hover:shadow-md'
-                }`}
-              >
-                {item.name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
   </nav>
 </header>
+
+<!-- Full Screen Mobile Menu (Outside Header) -->
+<div 
+  id="mobile-menu"
+  class="fixed inset-0 hidden"
+  style="z-index: 999999 !important;"
+>
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/80" id="menu-backdrop" style="z-index: 999998 !important;"></div>
+  
+  <!-- Menu Panel -->
+  <div class="absolute right-0 top-0 h-full w-full sm:w-96 shadow-2xl transform transition-transform duration-300 translate-x-full overflow-y-auto" id="menu-panel" style="background-color: rgb(36, 27, 47) !important; z-index: 999999 !important;">
+    <!-- Menu Header -->
+    <div class="flex items-center justify-between p-6 border-b border-secondary/30 relative z-10" style="background-color: rgb(36, 27, 47) !important;">
+      <h2 class="text-2xl font-bold text-glow-white">Menu</h2>
+      <button 
+        id="mobile-menu-close"
+        type="button"
+        class="relative z-20 w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110"
+        style="background-color: rgba(249, 42, 173, 0.3) !important; border: 2px solid rgba(249, 42, 173, 0.8) !important;"
+        aria-label="Close menu"
+      >
+        <div class="flex flex-col gap-0 w-6 h-6 relative">
+          <span class="absolute top-1/2 left-0 w-full h-0.5 bg-white transform -translate-y-1/2 rotate-45" style="box-shadow: 0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(249,42,173,0.8);"></span>
+          <span class="absolute top-1/2 left-0 w-full h-0.5 bg-white transform -translate-y-1/2 -rotate-45" style="box-shadow: 0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(249,42,173,0.8);"></span>
+        </div>
+      </button>
+    </div>
+    
+    <!-- Menu Items -->
+    <nav class="p-6 space-y-2" style="background-color: rgb(36, 27, 47) !important;">
+      {navItems.map((item) => (
+        <a 
+          href={item.href}
+          class={`block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 ${
+            item.current 
+              ? 'bg-primary/20 text-white border-2 border-primary/50 shadow-lg shadow-primary/20' 
+              : 'text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent'
+          }`}
+        >
+          <span class="text-2xl">
+            {item.name === 'Home' && '🏠'}
+            {item.name === 'About' && '👤'}
+            {item.name === 'Blog' && '📝'}
+            {item.name === 'Projects' && '🚀'}
+            {item.name === 'Guides' && '📚'}
+            {item.name === 'Resources' && '🔧'}
+            {item.name === 'Contact' && '📧'}
+          </span>
+          <span class="flex-1 text-lg">{item.name}</span>
+          {item.current && (
+            <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          )}
+        </a>
+      ))}
+    </nav>
+    
+    <!-- Menu Footer -->
+    <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-secondary/30" style="background-color: rgb(36, 27, 47) !important;">
+      <p class="text-center text-sm text-base-content/50">© 2025 Geoffrey Miller</p>
+    </div>
+  </div>
+</div>
 
 <script>
   // DaisyUI dropdown handles mobile menu functionality automatically
@@ -98,5 +154,90 @@ const navItems = [
       const dropdownToggle = dropdown?.querySelector('[tabindex="0"]') as HTMLElement;
       dropdownToggle?.blur();
     }
+  });
+  
+  // Mobile menu toggle with hamburger to X animation
+  const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuPanel = document.getElementById('menu-panel');
+  const menuBackdrop = document.getElementById('menu-backdrop');
+  const mobileMenuClose = document.getElementById('mobile-menu-close');
+  const hamburgerIcon = document.getElementById('hamburger-icon');
+  const closeIcon = document.getElementById('close-icon');
+  
+  function openMenu() {
+    mobileMenu?.classList.remove('hidden');
+    setTimeout(() => {
+      menuPanel?.classList.remove('translate-x-full');
+      menuPanel?.classList.add('translate-x-0');
+    }, 10);
+    
+    // Animate hamburger to X
+    if (hamburgerIcon) {
+      hamburgerIcon.style.opacity = '0';
+      hamburgerIcon.style.transform = 'rotate(90deg)';
+    }
+    setTimeout(() => {
+      hamburgerIcon?.classList.add('hidden');
+      closeIcon?.classList.remove('hidden');
+      setTimeout(() => {
+        closeIcon?.classList.add('rotate-90');
+      }, 10);
+    }, 150);
+    
+    mobileMenuToggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  function closeMenu() {
+    menuPanel?.classList.remove('translate-x-0');
+    menuPanel?.classList.add('translate-x-full');
+    
+    // Animate X back to hamburger
+    closeIcon?.classList.remove('rotate-90');
+    setTimeout(() => {
+      closeIcon?.classList.add('hidden');
+      hamburgerIcon?.classList.remove('hidden');
+      setTimeout(() => {
+        if (hamburgerIcon) {
+          hamburgerIcon.style.opacity = '1';
+          hamburgerIcon.style.transform = 'rotate(0deg)';
+        }
+      }, 10);
+    }, 150);
+    
+    setTimeout(() => {
+      mobileMenu?.classList.add('hidden');
+    }, 300);
+    
+    mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  
+  mobileMenuToggle?.addEventListener('click', () => {
+    const isOpen = mobileMenu?.classList.contains('hidden') === false;
+    if (isOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+  
+  mobileMenuClose?.addEventListener('click', closeMenu);
+  menuBackdrop?.addEventListener('click', closeMenu);
+  
+  // Close menu on ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenu?.classList.contains('hidden') === false) {
+      closeMenu();
+    }
+  });
+  
+  // Close menu when clicking on a menu item
+  const menuLinks = document.querySelectorAll('#mobile-menu nav a');
+  menuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
   });
 </script>
