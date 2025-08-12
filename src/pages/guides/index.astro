@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/navigation/Header.astro';
 import Footer from '../../components/navigation/Footer.astro';
+import { getEnabledGuideSections } from '../../config/site.config';
 
 // Get all guides
 const allGuides = await getCollection('guides');
@@ -27,6 +28,9 @@ function formatDate(date: Date) {
   }).format(date);
 }
 
+// Get enabled guide sections from config
+const guideSections = getEnabledGuideSections();
+
 // Define category metadata
 const categoryMeta = {
   'platform-engineering': {
@@ -34,19 +38,59 @@ const categoryMeta = {
     description: 'Building internal developer platforms that scale',
     icon: '🏗️'
   },
-  'architectural-decisions': {
-    title: 'Architectural Decisions',
-    description: 'Framework for making sound technical choices',
-    icon: '🏛️'
+  'infrastructure': {
+    title: 'Infrastructure',
+    description: 'Cloud infrastructure and automation',
+    icon: '☁️'
   },
-  'best-practices': {
-    title: 'Best Practices',
-    description: 'Battle-tested approaches for production systems',
-    icon: '⭐'
+  'cloud-native': {
+    title: 'Cloud Native',
+    description: 'Kubernetes, containers, and microservices',
+    icon: '🚀'
   },
-  'frameworks': {
-    title: 'Frameworks',
-    description: 'Structured approaches to complex problems',
+  'devops': {
+    title: 'DevOps',
+    description: 'CI/CD, automation, and operational excellence',
+    icon: '♾️'
+  },
+  'context-engineering': {
+    title: 'Context Engineering',
+    description: 'AI-ready documentation and architecture',
+    icon: '🧠'
+  },
+  'ai-architecture': {
+    title: 'AI Architecture',
+    description: 'Building AI-consumable systems',
+    icon: '🤖'
+  },
+  'knowledge-management': {
+    title: 'Knowledge Management',
+    description: 'Structured information architecture',
+    icon: '📚'
+  },
+  'semantic-design': {
+    title: 'Semantic Design',
+    description: 'Meaningful, machine-readable structures',
+    icon: '🔮'
+  },
+  'mlops': {
+    title: 'MLOps',
+    description: 'Machine learning operations at scale',
+    icon: '⚙️'
+  },
+  'model-deployment': {
+    title: 'Model Deployment',
+    description: 'Deploying ML models to production',
+    icon: '🚀'
+  },
+  'ml-infrastructure': {
+    title: 'ML Infrastructure',
+    description: 'Infrastructure for machine learning workloads',
+    icon: '🏭'
+  },
+  'feature-engineering': {
+    title: 'Feature Engineering',
+    description: 'Building robust feature pipelines',
     icon: '🔧'
   }
 };
@@ -62,103 +106,66 @@ const categoryMeta = {
     <!-- Hero Section -->
     <section class="mb-12">
       <div class="card bg-base-100 shadow-xl p-8 text-center">
-        <h1 class="text-4xl font-bold text-glow mb-4">Platform Engineering Guides</h1>
-        <p class="text-xl text-base-content opacity-70 max-w-4xl mx-auto">
-          Comprehensive frameworks, best practices, and battle-tested approaches for building 
-          and operating cloud platforms at scale. Distilled from real-world experience across 
-          multiple organizations and industries.
+        <h1 class="text-4xl font-bold text-glow mb-4">Engineering Guides</h1>
+        <p class="text-xl text-base-content opacity-70 max-w-4xl mx-auto mb-8">
+          Comprehensive frameworks for platform engineering and context engineering. 
+          Battle-tested approaches for building scalable systems and AI-ready architectures.
         </p>
+        
+        <!-- Section Overview -->
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {Object.entries(guideSections).map(([key, section]) => (
+            <div class="card bg-base-200 shadow-lg p-6 text-left">
+              <div class="flex items-start gap-4">
+                <span class="text-3xl">{section.icon}</span>
+                <div class="flex-1">
+                  <h2 class="text-lg font-bold text-primary mb-2">{section.title}</h2>
+                  <p class="text-sm text-base-content opacity-70 leading-relaxed">
+                    {section.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
 
     {sortedGuides.length > 0 ? (
       <>
-        <!-- Featured Guide -->
-        {sortedGuides[0] && (
-          <section class="mb-16">
-            <h2 class="text-2xl font-bold text-glow mb-6">Featured Guide</h2>
-            <article class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 p-8">
-              <div class="flex flex-col lg:flex-row gap-8">
-                <div class="flex-1">
-                  <div class="flex items-center gap-4 mb-6">
-                    <span class="text-2xl">
-                      {categoryMeta[sortedGuides[0].data.category as keyof typeof categoryMeta]?.icon || '📖'}
-                    </span>
+        <!-- Guides by Section -->
+        <section>
+          {Object.entries(guideSections).map(([sectionKey, section]) => {
+            // Filter guides that belong to this section's categories
+            const sectionGuides = sortedGuides.filter(guide => 
+              section.categories.includes(guide.data.category)
+            );
+            
+            return (
+              <div class="mb-16">
+                <div class="divider divider-primary mb-8">
+                  <div class="flex items-center gap-4">
+                    <span class="text-4xl">{section.icon}</span>
                     <div>
-                      <div class="badge badge-primary">
-                      {categoryMeta[sortedGuides[0].data.category as keyof typeof categoryMeta]?.title || sortedGuides[0].data.category}
-                      </div>
-                      <time class="block text-sm text-base-content opacity-70 mt-1">
-                      {formatDate(new Date(sortedGuides[0].data.publishDate))}
-                      </time>
+                      <h2 class="text-2xl font-bold text-glow">{section.title}</h2>
+                      <p class="text-sm text-base-content opacity-70 mt-1">{section.description}</p>
                     </div>
                   </div>
-                  
-                  <h3 class="card-title text-3xl text-glow mb-4 hover:text-primary transition-colors">
-                    <a href={`/guides/${sortedGuides[0].slug}`}>
-                      {sortedGuides[0].data.title}
-                    </a>
-                  </h3>
-                  
-                  <p class="text-base-content mb-6 leading-relaxed text-lg">
-                    {sortedGuides[0].data.description}
-                  </p>
-                  
-                  <div class="flex flex-wrap gap-2 mb-6">
-                    {sortedGuides[0].data.tags.map((tag: string) => (
-                      <div class="badge badge-outline">
-                        #{tag}
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <a 
-                    href={`/guides/${sortedGuides[0].slug}`} 
-                    class="btn btn-primary inline-flex items-center"
-                  >
-                    Read Guide
-                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </article>
-          </section>
-        )}
-
-        <!-- Guides by Category -->
-        <section>
-          <h2 class="text-2xl font-bold text-glow mb-8">All Guides</h2>
-          
-          {Object.entries(guidesByCategory).map(([category, guides]) => {
-            const meta = categoryMeta[category as keyof typeof categoryMeta];
-            return (
-              <div class="mb-12">
-                <div class="flex items-center gap-4 mb-8">
-                <span class="text-3xl">{meta?.icon || '📖'}</span>
-                <div>
-                <h3 class="text-xl font-bold text-primary">
-                {meta?.title || category.replace('-', ' ')}
-                </h3>
-                <p class="text-base-content opacity-70 text-sm">
-                {meta?.description || `${guides.length} guides available`}
-                </p>
-                </div>
-                <div class="ml-auto">
-                <div class="badge badge-primary">
-                {guides.length} {guides.length === 1 ? 'guide' : 'guides'}
-                </div>
-                </div>
                 </div>
                 
-                <div class="grid md:grid-cols-2 gap-6">
-                  {guides.map((guide) => (
+                {sectionGuides.length > 0 ? (
+                  <div class="grid md:grid-cols-2 gap-6">
+                    {sectionGuides.map((guide) => (
                     <article class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 group p-6">
                       <div class="flex items-start justify-between mb-4">
-                        <time class="text-sm text-base-content opacity-70">
-                          {formatDate(new Date(guide.data.publishDate))}
-                        </time>
+                        <div class="flex items-center gap-2">
+                          <div class="badge badge-outline badge-sm">
+                            {categoryMeta[guide.data.category as keyof typeof categoryMeta]?.title || guide.data.category}
+                          </div>
+                          <time class="text-sm text-base-content opacity-70">
+                            {formatDate(new Date(guide.data.publishDate))}
+                          </time>
+                        </div>
                         <div class="w-2 h-2 rounded-full bg-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                       </div>
                       
@@ -198,7 +205,14 @@ const categoryMeta = {
                       </div>
                     </article>
                   ))}
-                </div>
+                  </div>
+                ) : (
+                  <div class="card bg-base-200 p-8 text-center">
+                    <p class="text-base-content opacity-70">
+                      {section.title} guides coming soon. These will cover {section.description.toLowerCase()}.
+                    </p>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -207,60 +221,127 @@ const categoryMeta = {
     ) : (
       <!-- Empty state -->
       <section class="text-center py-16">
-        <div class="card bg-base-100 shadow-xl p-12">
-          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-primary bg-opacity-20 border border-primary border-opacity-30 flex items-center justify-center">
-            <svg class="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-            </svg>
-          </div>
-          <h2 class="text-3xl font-bold text-glow mb-4">Comprehensive Guides Coming Soon</h2>
-          <p class="text-base-content opacity-70 mb-8 max-w-2xl mx-auto leading-relaxed">
-            I'm developing in-depth guides covering platform engineering frameworks, 
-            architectural decision-making processes, and best practices for building 
-            scalable cloud platforms. These will be comprehensive resources based on 
-            real-world experience and battle-tested approaches.
-          </p>
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {Object.entries(categoryMeta).map(([key, meta]) => (
-              <div class="card bg-base-200 shadow p-4 text-center">
-                <div class="text-2xl mb-2">{meta.icon}</div>
-                <h3 class="font-semibold text-primary mb-1 text-sm">{meta.title}</h3>
-                <p class="text-xs text-base-content opacity-70">{meta.description}</p>
+        <!-- What You'll Find Here (shown when no guides exist) -->
+        <div class="card bg-base-100 shadow-xl p-8 mb-8">
+          <h2 class="text-2xl font-bold text-glow mb-8 text-center">What's Coming Soon</h2>
+          
+          <!-- Platform Engineering Topics (if enabled) -->
+          {guideSections.platformEngineering && (
+            <div class="mb-8">
+              <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
+                <span class="text-3xl">{guideSections.platformEngineering.icon}</span>
+                <h3 class="text-xl font-bold text-primary">Platform Engineering Guides</h3>
               </div>
-            ))}
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Internal Developer Platforms</h4>
+                  <p class="text-sm text-base-content opacity-70">Building self-service platforms that empower development teams</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Infrastructure as Code</h4>
+                  <p class="text-sm text-base-content opacity-70">Terraform, Pulumi, and GitOps workflows at scale</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Kubernetes Patterns</h4>
+                  <p class="text-sm text-base-content opacity-70">Production-ready patterns for container orchestration</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">CI/CD Pipelines</h4>
+                  <p class="text-sm text-base-content opacity-70">Building reliable, fast deployment pipelines</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Observability Stack</h4>
+                  <p class="text-sm text-base-content opacity-70">Metrics, logs, and traces for production systems</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Cost Optimization</h4>
+                  <p class="text-sm text-base-content opacity-70">FinOps practices and cloud cost management</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <!-- Context Engineering Topics (if enabled) -->
+          {guideSections.contextEngineering && (
+            <div class="mb-8">
+              <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
+                <span class="text-3xl">{guideSections.contextEngineering.icon}</span>
+                <h3 class="text-xl font-bold text-primary">Context Engineering Guides</h3>
+              </div>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">AI-Ready Documentation</h4>
+                  <p class="text-sm text-base-content opacity-70">Structuring docs for LLM consumption and understanding</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Semantic Architecture</h4>
+                  <p class="text-sm text-base-content opacity-70">Building systems with meaningful, machine-readable structures</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Knowledge Graphs</h4>
+                  <p class="text-sm text-base-content opacity-70">Connecting information for better AI comprehension</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Context Windows</h4>
+                  <p class="text-sm text-base-content opacity-70">Optimizing information density for LLM interactions</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Prompt Engineering</h4>
+                  <p class="text-sm text-base-content opacity-70">System prompts and context management strategies</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">RAG Architectures</h4>
+                  <p class="text-sm text-base-content opacity-70">Retrieval-augmented generation patterns</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <!-- MLOps Topics (if enabled) -->
+          {guideSections.mlops && (
+            <div class="mb-8">
+              <div class="flex items-center gap-3 mb-4 justify-center md:justify-start">
+                <span class="text-3xl">{guideSections.mlops.icon}</span>
+                <h3 class="text-xl font-bold text-primary">MLOps Guides</h3>
+              </div>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Model Versioning</h4>
+                  <p class="text-sm text-base-content opacity-70">Managing ML model versions and reproducibility</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Training Pipelines</h4>
+                  <p class="text-sm text-base-content opacity-70">Building scalable, automated training workflows</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Model Serving</h4>
+                  <p class="text-sm text-base-content opacity-70">Deploying models with low latency and high availability</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Feature Stores</h4>
+                  <p class="text-sm text-base-content opacity-70">Centralized feature management and serving</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Model Monitoring</h4>
+                  <p class="text-sm text-base-content opacity-70">Detecting drift and maintaining model performance</p>
+                </div>
+                <div class="card bg-base-200 p-4 text-left">
+                  <h4 class="font-semibold mb-2">Experiment Tracking</h4>
+                  <p class="text-sm text-base-content opacity-70">Managing ML experiments and hyperparameters</p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          <div class="text-center">
+            <a href="/" class="btn btn-primary">
+              Back to Home
+            </a>
           </div>
-          <a href="/" class="btn btn-primary">
-            Back to Home
-          </a>
         </div>
       </section>
     )}
 
-    <!-- Guide Categories Overview -->
-    <section class="mt-16">
-      <div class="card bg-base-100 shadow-xl p-8">
-        <h2 class="text-2xl font-bold text-glow mb-6 text-center">What You'll Find Here</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {Object.entries(categoryMeta).map(([key, meta]) => (
-            <div class="text-center">
-              <div class="text-3xl mb-3">{meta.icon}</div>
-              <h3 class="font-semibold text-primary mb-2">{meta.title}</h3>
-              <p class="text-sm text-base-content opacity-70 leading-relaxed">
-                {meta.description}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div class="text-center mt-8">
-          <p class="text-base-content opacity-70 mb-4">
-            Each guide provides actionable frameworks, real-world examples, and practical implementation steps.
-          </p>
-          <a href="/blog" class="link link-primary font-medium">
-            Also check out the technical blog →
-          </a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <Footer />

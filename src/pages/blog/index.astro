@@ -60,15 +60,15 @@ function formatDate(date: Date) {
                 <label class="label">
                   <span class="label-text font-medium">Categories</span>
                 </label>
-                <div class="space-y-2">
-                  <label class="label cursor-pointer justify-start gap-2">
-                    <input type="checkbox" value="all" checked class="checkbox checkbox-primary category-filter" data-filter-type="category" />
+                <div class="flex flex-col space-y-2">
+                  <label class="label cursor-pointer justify-start gap-2 p-0">
+                    <input type="checkbox" value="all" checked class="checkbox checkbox-primary category-filter flex-shrink-0" data-filter-type="category" />
                     <span class="label-text text-sm">All Categories</span>
                   </label>
                   {categories.map(category => (
-                    <label class="label cursor-pointer justify-start gap-2">
-                      <input type="checkbox" value={category} class="checkbox checkbox-primary category-filter" data-filter-type="category" />
-                      <span class="label-text text-sm capitalize">{category.replace('-', ' ')}</span>
+                    <label class="label cursor-pointer justify-start gap-2 p-0">
+                      <input type="checkbox" value={category} class="checkbox checkbox-primary category-filter flex-shrink-0" data-filter-type="category" />
+                      <span class="label-text text-sm capitalize break-all">{category.replace('-', ' ')}</span>
                     </label>
                   ))}
                 </div>
@@ -79,13 +79,15 @@ function formatDate(date: Date) {
                 <label class="label">
                   <span class="label-text font-medium">Tags</span>
                 </label>
-                <div class="max-h-64 overflow-y-auto space-y-2">
-                  {allTags.map(tag => (
-                    <label class="label cursor-pointer justify-start gap-2">
-                      <input type="checkbox" value={tag} class="checkbox checkbox-primary tag-filter" data-filter-type="tag" />
-                      <span class="label-text text-sm">{tag}</span>
-                    </label>
-                  ))}
+                <div class="max-h-64 overflow-y-auto">
+                  <div class="flex flex-col space-y-2">
+                    {allTags.map(tag => (
+                      <label class="label cursor-pointer justify-start gap-2 p-0">
+                        <input type="checkbox" value={tag} class="checkbox checkbox-primary tag-filter flex-shrink-0" data-filter-type="tag" />
+                        <span class="label-text text-sm break-all">{tag}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
               </div>
               
