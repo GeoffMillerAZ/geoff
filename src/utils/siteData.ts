@@ -9,6 +9,12 @@ export interface SiteConfig {
     title: string;
     initials: string;
     showAvatar: boolean;
+    avatar?: {
+      small: string;
+      medium: string;
+      large: string;
+      fallback: string;
+    };
     location: string;
     email: string;
     summary: {

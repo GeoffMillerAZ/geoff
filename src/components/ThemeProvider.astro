@@ -1,0 +1,27 @@
+---
+import { getThemeConfig, generateThemeCSS } from '@/utils/themeData';
+
+const theme = getThemeConfig();
+const themeCSS = generateThemeCSS(theme);
+---
+
+<style set:html={themeCSS}></style>
+
+<!-- Apply theme classes to body -->
+<script define:vars={{ theme }}>
+  // Apply theme-based body classes
+  if (theme.effects.scanlines) {
+    document.body.classList.add('scanlines-effect');
+  }
+  
+  if (!theme.effects.animations) {
+    document.body.classList.add('no-animations');
+  }
+  
+  if (theme.effects.glassmorphism) {
+    document.body.classList.add('glass-effect');
+  }
+  
+  // Set theme preset as data attribute
+  document.documentElement.setAttribute('data-theme', theme.preset || 'custom');
+</script>

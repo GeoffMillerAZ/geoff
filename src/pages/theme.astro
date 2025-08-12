@@ -1,0 +1,725 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getThemeConfig } from '@/utils/themeData';
+import { themePresets } from '@/data/theme-presets';
+
+// This page is not indexed
+export const prerender = false;
+
+const currentTheme = getThemeConfig();
+const presetNames = Object.keys(themePresets);
+---
+
+<BaseLayout 
+  title="Theme Editor | Geoff Miller Platform"
+  description="Theme configuration editor for the platform"
+>
+  <style>
+    /* Custom styles for the theme editor */
+    .color-input-wrapper {
+      position: relative;
+    }
+    
+    .config-output {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      background: #1a1a1a;
+      color: #00ff00;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .preview-frame {
+      border: 2px solid var(--color-primary);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    /* Apply theme variables to preview */
+    .preview-frame {
+      --color-primary: var(--preview-primary);
+      --color-secondary: var(--preview-secondary);
+      --color-accent: var(--preview-accent);
+      --color-base-100: var(--preview-base100);
+      --color-base-200: var(--preview-base200);
+      --color-base-300: var(--preview-base300);
+    }
+  </style>
+
+  <div class="min-h-screen bg-base-100 p-4">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="navbar bg-base-200 rounded-lg mb-6">
+        <div class="flex-1">
+          <h1 class="text-2xl font-bold text-primary">Theme Editor</h1>
+        </div>
+        <div class="flex-none gap-2">
+          <button id="exportBtn" class="btn btn-primary btn-sm">Export Config</button>
+          <button id="importBtn" class="btn btn-secondary btn-sm">Import Config</button>
+          <a href="/" class="btn btn-ghost btn-sm">Back to Site</a>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <!-- Controls Panel -->
+        <div class="xl:col-span-1 space-y-4">
+          <!-- Preset Selector -->
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-lg">Theme Preset</h2>
+              <select id="presetSelect" class="select select-bordered w-full">
+                <option value="custom">Custom</option>
+                {presetNames.map(name => (
+                  <option value={name} selected={currentTheme.preset === name}>
+                    {name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}
+                  </option>
+                ))}
+              </select>
+              <p class="text-xs opacity-70 mt-2">
+                Select a preset to start with, then customize as needed
+              </p>
+            </div>
+          </div>
+
+          <!-- Color Scheme -->
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-lg">Color Scheme</h2>
+              <div class="space-y-3">
+                <div>
+                  <label class="label">
+                    <span class="label-text">Primary</span>
+                  </label>
+                  <div class="join w-full">
+                    <input 
+                      type="color" 
+                      id="color-primary-picker" 
+                      class="join-item w-12 h-12 cursor-pointer border border-base-300" 
+                      value={currentTheme.colors.primary}
+                    />
+                    <input 
+                      type="text" 
+                      id="color-primary" 
+                      class="join-item input input-bordered flex-1" 
+                      value={currentTheme.colors.primary}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="label">
+                    <span class="label-text">Secondary</span>
+                  </label>
+                  <div class="join w-full">
+                    <input 
+                      type="color" 
+                      id="color-secondary-picker" 
+                      class="join-item w-12 h-12 cursor-pointer border border-base-300" 
+                      value={currentTheme.colors.secondary}
+                    />
+                    <input 
+                      type="text" 
+                      id="color-secondary" 
+                      class="join-item input input-bordered flex-1" 
+                      value={currentTheme.colors.secondary}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="label">
+                    <span class="label-text">Accent</span>
+                  </label>
+                  <div class="join w-full">
+                    <input 
+                      type="color" 
+                      id="color-accent-picker" 
+                      class="join-item w-12 h-12 cursor-pointer border border-base-300" 
+                      value={currentTheme.colors.accent}
+                    />
+                    <input 
+                      type="text" 
+                      id="color-accent" 
+                      class="join-item input input-bordered flex-1" 
+                      value={currentTheme.colors.accent}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="label">
+                    <span class="label-text">Background</span>
+                  </label>
+                  <div class="join w-full">
+                    <input 
+                      type="color" 
+                      id="color-base100-picker" 
+                      class="join-item w-12 h-12 cursor-pointer border border-base-300" 
+                      value={currentTheme.colors.base100}
+                    />
+                    <input 
+                      type="text" 
+                      id="color-base100" 
+                      class="join-item input input-bordered flex-1" 
+                      value={currentTheme.colors.base100}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="label">
+                    <span class="label-text">Glow Intensity</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="glow-intensity" 
+                    class="input input-bordered w-full" 
+                    value={currentTheme.colors.glowIntensity}
+                    placeholder="e.g., 10px"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Visual Effects -->
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-lg">Visual Effects</h2>
+              <div class="space-y-2">
+                <label class="label cursor-pointer">
+                  <span class="label-text">Glow Effects</span>
+                  <input type="checkbox" id="effect-glow" class="checkbox checkbox-primary" 
+                         checked={currentTheme.effects.glowEffects} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Animations</span>
+                  <input type="checkbox" id="effect-animations" class="checkbox checkbox-primary" 
+                         checked={currentTheme.effects.animations} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Glassmorphism</span>
+                  <input type="checkbox" id="effect-glass" class="checkbox checkbox-primary" 
+                         checked={currentTheme.components.cards.glassmorphism} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Neon Borders</span>
+                  <input type="checkbox" id="effect-neon" class="checkbox checkbox-primary" 
+                         checked={currentTheme.effects.neonBorders} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Scanlines (CRT)</span>
+                  <input type="checkbox" id="effect-scanlines" class="checkbox checkbox-primary" 
+                         checked={currentTheme.effects.scanlines} />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Toggles -->
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-lg">Feature Toggles</h2>
+              <div class="space-y-2">
+                <label class="label cursor-pointer">
+                  <span class="label-text">Show Avatar</span>
+                  <input type="checkbox" id="feature-avatar" class="checkbox checkbox-primary" 
+                         checked={currentTheme.components.avatar.show} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Blog Page</span>
+                  <input type="checkbox" id="feature-blog" class="checkbox checkbox-primary" 
+                         checked={currentTheme.features.blog} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Projects Page</span>
+                  <input type="checkbox" id="feature-projects" class="checkbox checkbox-primary" 
+                         checked={currentTheme.features.projects} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Guides Page</span>
+                  <input type="checkbox" id="feature-guides" class="checkbox checkbox-primary" 
+                         checked={currentTheme.features.guides} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Awards Section</span>
+                  <input type="checkbox" id="feature-awards" class="checkbox checkbox-primary" 
+                         checked={currentTheme.features.awardsSection} />
+                </label>
+                <label class="label cursor-pointer">
+                  <span class="label-text">Achievements</span>
+                  <input type="checkbox" id="feature-achievements" class="checkbox checkbox-primary" 
+                         checked={currentTheme.features.achievementsSection} />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview & Export Panel -->
+        <div class="xl:col-span-2 space-y-4">
+          <!-- Live Preview -->
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <h2 class="card-title text-lg">Live Preview</h2>
+              <div class="preview-frame bg-base-100 p-6 min-h-[600px]" id="preview-frame">
+                <div id="preview-content">
+                  <!-- Enhanced preview content -->
+                  <div class="mb-6">
+                    <h1 class="text-3xl font-bold mb-3 text-glow-white">Main Heading with Glow</h1>
+                    <h2 class="text-2xl font-semibold mb-2 text-glow-pink">Secondary Heading Pink</h2>
+                    <h3 class="text-xl font-medium text-glow-cyan">Tertiary Heading Cyan</h3>
+                  </div>
+                  
+                  <div class="grid grid-cols-2 gap-4 mb-6">
+                    <button class="btn btn-primary">Primary Button</button>
+                    <button class="btn btn-secondary">Secondary Button</button>
+                    <button class="btn btn-accent">Accent Button</button>
+                    <button class="btn btn-ghost">Ghost Button</button>
+                  </div>
+                  
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div class="card bg-base-300">
+                      <div class="card-body">
+                        <h4 class="card-title text-glow-white">Card Title with Glow</h4>
+                        <p>This is a sample card to preview the theme colors and effects.</p>
+                        <div class="card-actions justify-end">
+                          <button class="btn btn-primary btn-sm">Action</button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="card bg-base-200 border border-primary">
+                      <div class="card-body">
+                        <h4 class="card-title">Bordered Card</h4>
+                        <p>Card with primary border color.</p>
+                        <div class="badge badge-primary">Primary</div>
+                        <div class="badge badge-secondary">Secondary</div>
+                        <div class="badge badge-accent">Accent</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="space-y-3 mb-6">
+                    <div class="alert alert-info">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <span>Info alert with theme colors</span>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <span>Success alert preview</span>
+                    </div>
+                  </div>
+                  
+                  <div class="mb-6">
+                    <h4 class="text-lg font-semibold mb-3">Form Elements</h4>
+                    <div class="space-y-3">
+                      <input type="text" placeholder="Text input" class="input input-bordered w-full" />
+                      <select class="select select-bordered w-full">
+                        <option>Select option</option>
+                        <option>Option 2</option>
+                      </select>
+                      <div class="form-control">
+                        <label class="label cursor-pointer">
+                          <span class="label-text">Toggle me</span> 
+                          <input type="checkbox" class="toggle toggle-primary" checked />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="stats shadow w-full">
+                    <div class="stat">
+                      <div class="stat-figure text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-8 h-8 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                      </div>
+                      <div class="stat-title">Performance</div>
+                      <div class="stat-value text-primary">98%</div>
+                      <div class="stat-desc">21% more than last month</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Configuration Output -->
+          <div class="card bg-base-200">
+            <div class="card-body">
+              <div class="flex justify-between items-center mb-4">
+                <h2 class="card-title text-lg">Configuration Output</h2>
+                <div class="btn-group">
+                  <button id="format-yaml" class="btn btn-sm btn-active">YAML</button>
+                  <button id="format-json" class="btn btn-sm">JSON</button>
+                </div>
+              </div>
+              <div class="relative">
+                <pre id="config-output" class="config-output"></pre>
+                <button id="copyBtn" class="btn btn-ghost btn-sm absolute top-2 right-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                  Copy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <dialog id="importModal" class="modal">
+    <div class="modal-box max-w-3xl">
+      <h3 class="font-bold text-lg mb-4">Import Theme Configuration</h3>
+      <textarea 
+        id="importTextarea" 
+        class="textarea textarea-bordered w-full h-64 font-mono text-sm"
+        placeholder="Paste your theme configuration here (YAML or JSON format)..."
+      ></textarea>
+      <div class="modal-action">
+        <button id="importConfirmBtn" class="btn btn-primary">Import</button>
+        <form method="dialog">
+          <button class="btn">Cancel</button>
+        </form>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <script define:vars={{ themePresets, currentTheme }}>
+    // Make variables available globally
+    window.themePresets = themePresets;
+    window.currentTheme = JSON.parse(JSON.stringify(currentTheme));
+  </script>
+
+  <script>
+    // Theme editor functionality
+    let outputFormat = 'yaml';
+    
+    // Elements
+    const presetSelect = document.getElementById('presetSelect');
+    const configOutput = document.getElementById('config-output');
+    const copyBtn = document.getElementById('copyBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const importBtn = document.getElementById('importBtn');
+    const importModal = document.getElementById('importModal');
+    const importTextarea = document.getElementById('importTextarea');
+    const importConfirmBtn = document.getElementById('importConfirmBtn');
+    const formatYamlBtn = document.getElementById('format-yaml');
+    const formatJsonBtn = document.getElementById('format-json');
+    const previewFrame = document.getElementById('preview-frame');
+    
+    // Color inputs and pickers
+    const colorInputs = {
+      primary: document.getElementById('color-primary'),
+      secondary: document.getElementById('color-secondary'),
+      accent: document.getElementById('color-accent'),
+      base100: document.getElementById('color-base100')
+    };
+    
+    const colorPickers = {
+      primary: document.getElementById('color-primary-picker'),
+      secondary: document.getElementById('color-secondary-picker'),
+      accent: document.getElementById('color-accent-picker'),
+      base100: document.getElementById('color-base100-picker')
+    };
+    
+    const glowIntensityInput = document.getElementById('glow-intensity');
+    
+    // Effect checkboxes
+    const effectInputs = {
+      glow: document.getElementById('effect-glow'),
+      animations: document.getElementById('effect-animations'),
+      glass: document.getElementById('effect-glass'),
+      neon: document.getElementById('effect-neon'),
+      scanlines: document.getElementById('effect-scanlines')
+    };
+    
+    // Feature checkboxes
+    const featureInputs = {
+      avatar: document.getElementById('feature-avatar'),
+      blog: document.getElementById('feature-blog'),
+      projects: document.getElementById('feature-projects'),
+      guides: document.getElementById('feature-guides'),
+      awards: document.getElementById('feature-awards'),
+      achievements: document.getElementById('feature-achievements')
+    };
+    
+    // Update theme from inputs
+    function updateThemeFromInputs() {
+      // Update colors
+      window.currentTheme.colors.primary = colorInputs.primary.value;
+      window.currentTheme.colors.secondary = colorInputs.secondary.value;
+      window.currentTheme.colors.accent = colorInputs.accent.value;
+      window.currentTheme.colors.base100 = colorInputs.base100.value;
+      window.currentTheme.colors.glowIntensity = glowIntensityInput.value;
+      
+      // Update glow colors to match primary colors
+      window.currentTheme.colors.glowPink = colorInputs.primary.value;
+      window.currentTheme.colors.glowCyan = colorInputs.secondary.value;
+      window.currentTheme.colors.glowWhite = '#ffffff';
+      
+      // Update effects
+      window.currentTheme.effects.glowEffects = effectInputs.glow.checked;
+      window.currentTheme.effects.animations = effectInputs.animations.checked;
+      window.currentTheme.components.cards.glassmorphism = effectInputs.glass.checked;
+      window.currentTheme.effects.neonBorders = effectInputs.neon.checked;
+      window.currentTheme.effects.scanlines = effectInputs.scanlines.checked;
+      
+      // Update features
+      window.currentTheme.components.avatar.show = featureInputs.avatar.checked;
+      window.currentTheme.features.blog = featureInputs.blog.checked;
+      window.currentTheme.features.projects = featureInputs.projects.checked;
+      window.currentTheme.features.guides = featureInputs.guides.checked;
+      window.currentTheme.features.awardsSection = featureInputs.awards.checked;
+      window.currentTheme.features.achievementsSection = featureInputs.achievements.checked;
+      
+      // Mark as custom if modified
+      if (presetSelect.value !== 'custom') {
+        const preset = window.themePresets[presetSelect.value];
+        if (JSON.stringify(window.currentTheme) !== JSON.stringify(preset)) {
+          window.currentTheme.preset = 'custom';
+          presetSelect.value = 'custom';
+        }
+      }
+      
+      updatePreview();
+      updateConfigOutput();
+    }
+    
+    // Update preview
+    function updatePreview() {
+      // Apply CSS variables to preview
+      previewFrame.style.setProperty('--preview-primary', window.currentTheme.colors.primary);
+      previewFrame.style.setProperty('--preview-secondary', window.currentTheme.colors.secondary);
+      previewFrame.style.setProperty('--preview-accent', window.currentTheme.colors.accent);
+      previewFrame.style.setProperty('--preview-base100', window.currentTheme.colors.base100);
+      
+      // Apply to elements directly
+      const previewContent = document.getElementById('preview-content');
+      
+      // Update text glow effects
+      const glowIntensity = window.currentTheme.colors.glowIntensity || '10px';
+      previewContent.querySelectorAll('.text-glow-white').forEach(el => {
+        if (window.currentTheme.effects.glowEffects) {
+          el.style.textShadow = `0 0 ${glowIntensity} ${window.currentTheme.colors.glowWhite}`;
+        } else {
+          el.style.textShadow = 'none';
+        }
+      });
+      
+      previewContent.querySelectorAll('.text-glow-pink').forEach(el => {
+        if (window.currentTheme.effects.glowEffects) {
+          el.style.textShadow = `0 0 ${glowIntensity} ${window.currentTheme.colors.glowPink}`;
+        } else {
+          el.style.textShadow = 'none';
+        }
+      });
+      
+      previewContent.querySelectorAll('.text-glow-cyan').forEach(el => {
+        if (window.currentTheme.effects.glowEffects) {
+          el.style.textShadow = `0 0 ${glowIntensity} ${window.currentTheme.colors.glowCyan}`;
+        } else {
+          el.style.textShadow = 'none';
+        }
+      });
+      
+      // Apply background colors
+      previewFrame.style.backgroundColor = window.currentTheme.colors.base100;
+      previewContent.querySelectorAll('.bg-base-200').forEach(el => {
+        el.style.backgroundColor = window.currentTheme.colors.base200 || window.currentTheme.colors.base100;
+      });
+      previewContent.querySelectorAll('.bg-base-300').forEach(el => {
+        el.style.backgroundColor = window.currentTheme.colors.base300 || window.currentTheme.colors.base200 || window.currentTheme.colors.base100;
+      });
+      
+      // Update button colors
+      previewContent.querySelectorAll('.btn-primary').forEach(el => {
+        el.style.backgroundColor = window.currentTheme.colors.primary;
+        el.style.borderColor = window.currentTheme.colors.primary;
+      });
+      
+      previewContent.querySelectorAll('.btn-secondary').forEach(el => {
+        el.style.backgroundColor = window.currentTheme.colors.secondary;
+        el.style.borderColor = window.currentTheme.colors.secondary;
+      });
+      
+      previewContent.querySelectorAll('.btn-accent').forEach(el => {
+        el.style.backgroundColor = window.currentTheme.colors.accent;
+        el.style.borderColor = window.currentTheme.colors.accent;
+      });
+    }
+    
+    // Update configuration output
+    function updateConfigOutput() {
+      let output;
+      if (outputFormat === 'yaml') {
+        // Simple YAML serialization
+        output = jsyaml.dump(window.currentTheme, { indent: 2 });
+      } else {
+        output = JSON.stringify(window.currentTheme, null, 2);
+      }
+      configOutput.textContent = output;
+    }
+    
+    // Load preset
+    function loadPreset(presetName) {
+      if (presetName === 'custom') return;
+      
+      const preset = window.themePresets[presetName];
+      if (!preset) return;
+      
+      window.currentTheme = JSON.parse(JSON.stringify(preset)); // Deep clone
+      
+      // Update all inputs
+      colorInputs.primary.value = preset.colors.primary;
+      colorInputs.secondary.value = preset.colors.secondary;
+      colorInputs.accent.value = preset.colors.accent;
+      colorInputs.base100.value = preset.colors.base100;
+      
+      colorPickers.primary.value = preset.colors.primary;
+      colorPickers.secondary.value = preset.colors.secondary;
+      colorPickers.accent.value = preset.colors.accent;
+      colorPickers.base100.value = preset.colors.base100;
+      
+      glowIntensityInput.value = preset.colors.glowIntensity;
+      
+      effectInputs.glow.checked = preset.effects.glowEffects;
+      effectInputs.animations.checked = preset.effects.animations;
+      effectInputs.glass.checked = preset.components.cards.glassmorphism;
+      effectInputs.neon.checked = preset.effects.neonBorders;
+      effectInputs.scanlines.checked = preset.effects.scanlines;
+      
+      featureInputs.avatar.checked = preset.components.avatar.show;
+      featureInputs.blog.checked = preset.features.blog;
+      featureInputs.projects.checked = preset.features.projects;
+      featureInputs.guides.checked = preset.features.guides;
+      featureInputs.awards.checked = preset.features.awardsSection;
+      featureInputs.achievements.checked = preset.features.achievementsSection;
+      
+      updatePreview();
+      updateConfigOutput();
+    }
+    
+    // Event listeners
+    presetSelect.addEventListener('change', (e) => {
+      loadPreset(e.target.value);
+    });
+    
+    // Sync color pickers with text inputs
+    Object.keys(colorPickers).forEach(key => {
+      colorPickers[key].addEventListener('input', (e) => {
+        colorInputs[key].value = e.target.value;
+        updateThemeFromInputs();
+      });
+      
+      colorInputs[key].addEventListener('input', (e) => {
+        colorPickers[key].value = e.target.value;
+        updateThemeFromInputs();
+      });
+    });
+    
+    glowIntensityInput.addEventListener('input', updateThemeFromInputs);
+    
+    Object.values(effectInputs).forEach(input => {
+      input.addEventListener('change', updateThemeFromInputs);
+    });
+    
+    Object.values(featureInputs).forEach(input => {
+      input.addEventListener('change', updateThemeFromInputs);
+    });
+    
+    // Copy button
+    copyBtn.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(configOutput.textContent);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+          </svg>
+          Copy
+        `;
+      }, 2000);
+    });
+    
+    // Export button
+    exportBtn.addEventListener('click', () => {
+      const dataStr = outputFormat === 'yaml' 
+        ? jsyaml.dump(window.currentTheme)
+        : JSON.stringify(window.currentTheme, null, 2);
+      const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataStr);
+      const exportFileDefaultName = `theme-config.${outputFormat}`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    });
+    
+    // Import button
+    importBtn.addEventListener('click', () => {
+      importModal.showModal();
+    });
+    
+    // Import confirm
+    importConfirmBtn.addEventListener('click', () => {
+      try {
+        const input = importTextarea.value.trim();
+        let imported;
+        
+        // Try to parse as JSON first
+        try {
+          imported = JSON.parse(input);
+        } catch {
+          // Try YAML
+          imported = jsyaml.load(input);
+        }
+        
+        // Validate and apply
+        if (imported && imported.colors && imported.features) {
+          window.currentTheme = imported;
+          loadPreset(window.currentTheme.preset || 'custom');
+          presetSelect.value = window.currentTheme.preset || 'custom';
+          importModal.close();
+          importTextarea.value = '';
+        } else {
+          alert('Invalid theme configuration format');
+        }
+      } catch (error) {
+        alert('Error parsing configuration: ' + error.message);
+      }
+    });
+    
+    // Format toggle
+    formatYamlBtn.addEventListener('click', () => {
+      outputFormat = 'yaml';
+      formatYamlBtn.classList.add('btn-active');
+      formatJsonBtn.classList.remove('btn-active');
+      updateConfigOutput();
+    });
+    
+    formatJsonBtn.addEventListener('click', () => {
+      outputFormat = 'json';
+      formatJsonBtn.classList.add('btn-active');
+      formatYamlBtn.classList.remove('btn-active');
+      updateConfigOutput();
+    });
+    
+    // Initialize
+    updatePreview();
+    updateConfigOutput();
+  </script>
+  
+  <!-- Load js-yaml for YAML parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+</BaseLayout>

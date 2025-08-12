@@ -1,9 +1,13 @@
 ---
 // Profile card component for the homepage sidebar
 import { getSiteConfig } from '@/utils/siteData';
+import { getThemeConfig } from '@/utils/themeData';
+import Avatar from '@/components/ui/Avatar.astro';
 
 const siteConfig = getSiteConfig();
+const themeConfig = getThemeConfig();
 const { profile, resume } = siteConfig;
+const showAvatar = themeConfig.components.avatar.show && profile.showAvatar;
 ---
 
 <div class="card bg-base-200/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300">
@@ -12,11 +16,9 @@ const { profile, resume } = siteConfig;
     <!-- Mobile: Horizontal layout with avatar and info side by side -->
     <div class="sm:hidden">
       <div class="flex gap-4 items-start">
-        {profile.showAvatar && (
+        {showAvatar && (
           <div class="shrink-0">
-            <div class="bg-primary text-primary-content w-16 h-16 rounded-full ring-2 ring-secondary hover:ring-accent transition-all duration-300 flex items-center justify-center">
-              <span class="text-xl font-bold">{profile.initials}</span>
-            </div>
+            <Avatar size="small" />
           </div>
         )}
         <div class="flex-1 min-w-0">
@@ -66,11 +68,9 @@ const { profile, resume } = siteConfig;
     <!-- Desktop/Tablet: Original centered layout -->
     <div class="hidden sm:block text-center">
       <div class="flex flex-col items-center">
-        {profile.showAvatar && (
+        {showAvatar && (
           <div class="mb-4">
-            <div class="bg-primary text-primary-content w-24 h-24 rounded-full ring ring-secondary ring-offset-base-100 ring-offset-2 hover:ring-accent transition-all duration-300 flex items-center justify-center mx-auto relative">
-              <span class="text-3xl font-bold absolute inset-0 flex items-center justify-center">{profile.initials}</span>
-            </div>
+            <Avatar size="medium" className="mx-auto" />
           </div>
         )}
         <h1 class="card-title text-2xl md:text-3xl lg:text-4xl font-bold justify-center text-glow-white animate-glow">{profile.name}</h1>

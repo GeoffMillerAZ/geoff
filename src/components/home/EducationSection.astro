@@ -42,22 +42,22 @@ const sortedEducation = (allEducation as unknown as EducationEntry[])
                 <p class="text-xs lg:text-sm opacity-70 mt-1">
                   {edu.data.location}
                 </p>
-                {edu.data.honors && edu.data.honors.length > 0 && (
+                {(edu.data.honors && edu.data.honors.length > 0) || edu.data.gpa ? (
                   <div class="flex flex-wrap gap-2 mt-2">
-                    {edu.data.honors.map((honor) => (
+                    {edu.data.honors?.map((honor) => (
                       <span class="badge badge-accent badge-xs">{honor}</span>
                     ))}
+                    {edu.data.gpa && (
+                      <span class="badge badge-secondary badge-xs">GPA: {edu.data.gpa}</span>
+                    )}
                   </div>
-                )}
+                ) : null}
               </div>
               <div class="flex-shrink-0 text-right">
                 {edu.data.graduationDate && (
                   <span class="text-xs lg:text-sm font-medium text-glow-white">
                     {edu.data.graduationDate.getFullYear()}
                   </span>
-                )}
-                {edu.data.gpa && (
-                  <div class="badge badge-secondary badge-sm mt-1">GPA: {edu.data.gpa}</div>
                 )}
               </div>
             </div>

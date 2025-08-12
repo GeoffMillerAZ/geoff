@@ -1,16 +1,30 @@
 ---
 // Header component for main navigation
 import { getSiteConfig } from '@/utils/siteData';
+import { getThemeConfig } from '@/utils/themeData';
 
 const siteConfig = getSiteConfig();
+const themeConfig = getThemeConfig();
 const currentPath = Astro.url.pathname;
 
-const navItems = siteConfig.navigation.map(item => ({
-  ...item,
-  current: item.href === '/' 
-    ? currentPath === '/' 
-    : currentPath.startsWith(item.href)
-}));
+// Filter navigation items based on feature toggles
+const navItems = siteConfig.navigation
+  .filter(item => {
+    // Check if the page is enabled in theme features
+    if (item.href === '/blog' && !themeConfig.features.blog) return false;
+    if (item.href === '/projects' && !themeConfig.features.projects) return false;
+    if (item.href === '/guides' && !themeConfig.features.guides) return false;
+    if (item.href === '/resources' && !themeConfig.features.resources) return false;
+    if (item.href === '/about' && !themeConfig.features.about) return false;
+    if (item.href === '/contact' && !themeConfig.features.contact) return false;
+    return true;
+  })
+  .map(item => ({
+    ...item,
+    current: item.href === '/' 
+      ? currentPath === '/' 
+      : currentPath.startsWith(item.href)
+  }));
 ---
 
 <header class="sticky top-0 z-50 mx-4 mt-4 pt-2 sm:pt-4 max-w-10xl 3xl:mx-auto" role="banner">

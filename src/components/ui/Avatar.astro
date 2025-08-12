@@ -1,0 +1,83 @@
+---
+export interface Props {
+  size?: 'small' | 'medium' | 'large';
+  className?: string;
+  showRing?: boolean;
+}
+
+import { getSiteConfig } from '@/utils/siteData';
+
+// Import images statically for Astro optimization
+import avatarSmallWebP from '@/assets/images/profile/geoff-miller-small.webp';
+import avatarMediumWebP from '@/assets/images/profile/geoff-miller-medium.webp';
+import avatarLargeWebP from '@/assets/images/profile/geoff-miller-large.webp';
+import avatarSmallJpg from '@/assets/images/profile/geoff-miller-small.jpg';
+import avatarMediumJpg from '@/assets/images/profile/geoff-miller-medium.jpg';
+import avatarLargeJpg from '@/assets/images/profile/geoff-miller-large.jpg';
+
+const { size = 'medium', className = '', showRing = true } = Astro.props;
+const siteConfig = getSiteConfig();
+const { profile } = siteConfig;
+
+// Map sizes to Tailwind classes and imported images
+const sizeMap = {
+  small: {
+    container: 'w-16 h-16',
+    text: 'text-xl',
+    webp: avatarSmallWebP,
+    jpg: avatarSmallJpg
+  },
+  medium: {
+    container: 'w-24 h-24 sm:w-32 sm:h-32',
+    text: 'text-2xl sm:text-3xl',
+    webp: avatarMediumWebP,
+    jpg: avatarMediumJpg
+  },
+  large: {
+    container: 'w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48',
+    text: 'text-3xl sm:text-4xl lg:text-5xl',
+    webp: avatarLargeWebP,
+    jpg: avatarLargeJpg
+  }
+};
+
+const { container, text, webp, jpg } = sizeMap[size];
+const ringClass = showRing ? 'ring-2 ring-secondary hover:ring-accent' : '';
+---
+
+<div class={`avatar ${className}`}>
+  <div class={`${container} rounded-full ${ringClass} transition-all duration-300 overflow-hidden bg-primary flex items-center justify-center`}>
+    {profile.showAvatar && profile.avatar ? (
+      <picture>
+        <source 
+          srcset={webp.src} 
+          type="image/webp"
+        />
+        <source 
+          srcset={jpg.src} 
+          type="image/jpeg"
+        />
+        <img 
+          src={jpg.src}
+          alt={`${profile.name} profile picture`}
+          class="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+          width={webp.width}
+          height={webp.height}
+        />
+      </picture>
+    ) : (
+      <span class={`${text} font-bold text-primary-content`}>
+        {profile.initials}
+      </span>
+    )}
+  </div>
+</div>
+
+<style>
+  .avatar img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+</style>

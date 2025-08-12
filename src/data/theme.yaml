@@ -1,0 +1,118 @@
+# Theme Configuration
+# This file controls the visual appearance and feature toggles for the site
+
+preset: "synthwave84"  # Current preset or "custom"
+
+# Color Scheme
+colors:
+  # Base colors (DaisyUI base colors)
+  primary: "#f92aad"       # Pink/Magenta
+  secondary: "#16fbff"     # Cyan
+  accent: "#fee77b"        # Yellow
+  neutral: "#2a2139"       # Dark purple
+  base100: "#241b2f"      # Darkest purple (background)
+  base200: "#262c49"      # Dark purple
+  base300: "#2a2139"      # Medium purple
+  info: "#00d9ff"          # Light blue
+  success: "#00ff88"       # Green
+  warning: "#ffaa00"       # Orange
+  error: "#ff0055"         # Red
+  
+  # Text colors
+  textPrimary: "#ffffff"
+  textSecondary: "#f72f84"
+  textAccent: "#16fbff"
+  
+  # Glow effects
+  glowPink: "#f92aad"
+  glowCyan: "#16fbff"
+  glowWhite: "#ffffff"
+  glowIntensity: "10px"    # Shadow blur radius
+
+# Typography
+typography:
+  fontFamily: "'JetBrains Mono', 'Fira Code', monospace"
+  fontSize:
+    base: "16px"
+    small: "14px"
+    large: "18px"
+  headingFamily: "'Orbitron', 'JetBrains Mono', monospace"
+  
+# Visual Effects
+effects:
+  animations: true
+  glowEffects: true
+  gradients: true
+  blur: true
+  transitions: true
+  neonBorders: true
+  scanlines: false         # CRT monitor effect
+  
+# Component Settings
+components:
+  avatar:
+    show: true
+    showRing: true
+    glowEffect: true
+  cards:
+    glassmorphism: true
+    borderGlow: true
+    hoverEffects: true
+  buttons:
+    glowOnHover: true
+    pulseAnimation: false
+  navigation:
+    sticky: true
+    blur: true
+    transparentOnScroll: false
+
+# Feature Toggles
+features:
+  # Pages
+  blog: true
+  projects: true
+  guides: true
+  resources: true
+  about: true
+  contact: true
+  
+  # Sections
+  profileSection: true
+  experienceSection: true
+  skillsSection: true
+  educationSection: true
+  certificationsSection: true
+  awardsSection: true
+  achievementsSection: true
+  
+  # Functionality
+  search: true
+  darkModeToggle: false    # Site is dark by default
+  analytics: true
+  newsletter: false
+  comments: false
+  
+# Layout Settings
+layout:
+  maxWidth: "1600px"
+  sidebarPosition: "left"  # left, right
+  contentLayout: "default" # default, centered, wide
+  spacing: "normal"        # compact, normal, spacious
+  
+# Animation Settings
+animations:
+  pageTransitions: true
+  scrollAnimations: true
+  hoverAnimations: true
+  loadingAnimations: true
+  duration: "300ms"
+  easing: "cubic-bezier(0.4, 0, 0.2, 1)"
+
+# Custom CSS Variables (advanced)
+customCSS:
+  variables:
+    "--gradient-1": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+    "--gradient-2": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+    "--border-radius": "0.5rem"
+    "--shadow-sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)"
+    "--shadow-lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)"

@@ -276,7 +276,8 @@
 
   .btn-primary:hover {
     box-shadow: 0 0 25px rgba(249, 42, 173, 0.6);
-    background-color: #fa4fb6;
+    background-color: #d91f8f;
+    border-color: #f92aad;
   }
 
   .btn-accent:hover {

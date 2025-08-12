@@ -71,13 +71,9 @@ const { metadata, profile, resume } = siteConfig;
             <AchievementsSection />
           </div>
           
-          <!-- Awards for mobile/tablet -->
-          <div class="lg:hidden">
+          <!-- Awards, Education & Certs for mobile/tablet -->
+          <div class="lg:hidden space-y-6 sm:space-y-8">
             <AwardsSection />
-          </div>
-          
-          <!-- Education & Certs for mobile/tablet -->
-          <div class="lg:hidden space-y-12 sm:space-y-10">
             <EducationSection />
             <CertificationsSection />
           </div>
@@ -144,22 +140,23 @@ const { metadata, profile, resume } = siteConfig;
                 <AchievementsSection />
               </div>
               
-              <!-- Awards - Hidden on mobile, shown on desktop -->
-              <div class="hidden lg:block">
-                <AwardsSection />
-              </div>
             </section>
 
             <!-- Right Column - Education and Certifications (only for ultra-wide 2560px+) -->
-            <aside class="hidden min-[2560px]:block min-[2560px]:col-span-5 min-[2560px]:sticky min-[2560px]:top-8 min-[2560px]:self-start space-y-10 lg:space-y-12" role="complementary" aria-label="Professional education and industry certifications">
+            <aside class="hidden min-[2560px]:block min-[2560px]:col-span-5 min-[2560px]:sticky min-[2560px]:top-8 min-[2560px]:self-start space-y-6 lg:space-y-8" role="complementary" aria-label="Professional education and industry certifications">
+              <AwardsSection />
               <EducationSection />
               <CertificationsSection />
             </aside>
           </div>
           
-          <!-- Education & Certs for large/wide screens (not ultra-wide) -->
-          <div class="hidden lg:block min-[2560px]:hidden space-y-12 sm:space-y-10 lg:space-y-12">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+          <!-- Awards, Education & Certs for large/wide screens (not ultra-wide) -->
+          <div class="hidden lg:block min-[2560px]:hidden space-y-6 lg:space-y-8">
+            <!-- Awards Section -->
+            <AwardsSection />
+            
+            <!-- Education & Certifications Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               <EducationSection />
               <CertificationsSection />
             </div>

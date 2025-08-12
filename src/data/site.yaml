@@ -7,6 +7,11 @@ profile:
   title: "Infrastructure Director & Principal Cloud Architect"
   initials: "GM"
   showAvatar: true
+  avatar:
+    small: "/src/assets/images/profile/geoff-miller-small.webp"
+    medium: "/src/assets/images/profile/geoff-miller-medium.webp"
+    large: "/src/assets/images/profile/geoff-miller-large.webp"
+    fallback: "/src/assets/images/profile/geoff-miller-medium.jpg"
   location: "Phoenix, AZ"
   email: "contact@geoffmiller.cloud"
   
