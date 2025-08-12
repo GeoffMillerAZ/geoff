@@ -1,13 +1,10 @@
 ---
 type: "education"
-degree: "Bachelor of Arts in Liberal Arts"
+degree: "Bachelor of Science (BS), Computer Science"
 institution: "Northern Illinois University"
 location: "DeKalb, IL"
-graduationDate: 2005-05-15
-gpa: "3.80"
-honors:
-  - "Magna Cum Laude"
+graduationDate: 2013-01-15
 order: 2
 ---
 
-Liberal arts education with focus on technology and business.
+Bachelor of Science in Computer Science from Northern Illinois University.

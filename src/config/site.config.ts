@@ -32,7 +32,7 @@ export function getEnabledGuideSections() {
   return Object.entries(siteConfig.guideSections)
     .filter(([_, section]) => section.enabled)
     .reduce((acc, [key, section]) => {
-      acc[key] = section;
+      (acc as any)[key] = section;
       return acc;
     }, {} as typeof siteConfig.guideSections);
 }

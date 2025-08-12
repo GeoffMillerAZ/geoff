@@ -1,13 +1,10 @@
 ---
 type: "education"
-degree: "Master of Science in Computer Science"
+degree: "Master of Science (MS), Computer Science"
 institution: "Northern Illinois University"
 location: "DeKalb, IL"
-graduationDate: 2015-05-15
-gpa: "3.94"
-honors:
-  - "Summa Cum Laude"
+graduationDate: 2015-01-15
 order: 1
 ---
 
-Advanced studies in computer science with focus on distributed systems and cloud computing.
+Master of Science in Computer Science from Northern Illinois University.

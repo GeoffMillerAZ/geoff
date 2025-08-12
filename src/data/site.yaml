@@ -17,9 +17,9 @@ profile:
   
   # Professional Summary
   summary:
-    brief: "Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS, Kubernetes, and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale."
+    brief: "Infrastructure Director & Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS Kubernetes and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale."
     
-    extended: "Designs platform services that unify tools into a single end-to-end experience using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30% or more without impacting reliability. Known for solving complex challenges through simple repeatable engineering patterns, mentoring high-performing teams, and managing stakeholders across business and technology. Advanced leader in AI-driven agentic workflows who built organization-wide coding platforms that combine AI-assisted development with controlled agent execution, generating service catalogs and policy code that triple developer throughput and maintain security, compliance, and consistency. Ready to bring forward-thinking cloud strategy and hands-on engineering leadership to highly regulated enterprises."
+    extended: "Designs platform services that unify tools into a single end-to-end experience using policy as code, mission control patterns, and fully automated CI/CD pipelines. FinOps specialist who pairs spend analytics with real-time event-driven automation to right-size resources and cut cloud costs by 30 percent or more without impacting reliability. Known for solving complex challenges through simple repeatable engineering patterns, mentoring high-performing teams, and managing stakeholders across business and technology. Advanced leader in AI-driven agentic workflows who built organization-wide coding platforms that combine AI-assisted development with controlled agent execution, generating service catalogs and policy code that triple developer throughput and maintain security, compliance, and consistency. Ready to bring forward-thinking cloud strategy and hands-on engineering leadership to highly regulated enterprises."
 
   # Social Links
   social:
@@ -39,38 +39,39 @@ skills:
     title: "Core Skills"
     items:
       - "Cloud Strategy"
+      - "Infrastructure Architecture"
       - "Platform Engineering"
       - "DevOps/DevSecOps"
-      - "FinOps"
-      - "SRE"
-      - "AI/Agentic Workflows"
+      - "Event-Driven Platform Services"
+      - "IaC & Policy-as-Code"
   
   technical:
     title: "Technical"
     items:
       - "Terraform"
       - "Pulumi"
-      - "Kubernetes/EKS"
-      - "GitOps"
       - "OPA"
-      - "CI/CD"
+      - "CI/CD & GitOps"
+      - "Security"
+      - "Compliance"
   
   compliance:
-    title: "Compliance & Security"
+    title: "Operations & Management"
     items:
-      - "FFIEC"
-      - "PCI-DSS"
-      - "SOC 2"
-      - "Policy-as-Code"
-      - "Zero Trust"
+      - "FinOps"
+      - "SRE"
+      - "Observability"
+      - "Incident Response"
+      - "Team Leadership"
+      - "Developer Productivity"
   
   leadership:
-    title: "Leadership"
+    title: "Advanced Capabilities"
     items:
-      - "Team Leadership"
-      - "Mentoring"
-      - "Stakeholder Mgmt"
-      - "Developer Productivity"
+      - "Agentic Workflow Integration"
+      - "Agentic Coding Automation"
+      - "Governance"
+      - "Stakeholder Management"
 
 # Key Achievements/Metrics
 achievements:

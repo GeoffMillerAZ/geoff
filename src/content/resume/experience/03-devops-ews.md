@@ -9,9 +9,9 @@ endDate: 2017-10-01
 showInMainSection: true
 order: 3
 highlights:
-  - "Launched and scaled a large-scale SaaS payments service to 25M users with zero downtime."
-  - "Built immutable CI/CD pipelines for containerized microservices, enabling daily releases."
-  - "Automated blue-green rollouts and A/B tests, reducing RTO to <5 min."
+  - "Launched Zellepay. Large-scale SaaS payments service; scaled to 25 M users with zero downtime"
+  - "Built immutable CI/CD pipelines and containerized microservices (daily releases)"
+  - "Automated blue-green rollouts and A/B tests, reducing RTO to under 5 min"
 technologies:
   - "AWS"
   - "Docker"

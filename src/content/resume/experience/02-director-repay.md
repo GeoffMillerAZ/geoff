@@ -9,15 +9,13 @@ endDate: 2021-07-01
 showInMainSection: true
 order: 2
 highlights:
-  - "Built green-field AWS platform from scratch for fintech company, achieving PCI compliance with zero critical findings"
-  - "Grew team from single engineer to 10-person SRE team and 5-person operations team supporting 200+ developers"
-  - "Delivered multi-account Landing Zone with automated FinOps, reducing cloud costs by 30% YoY while scaling 10x"
-  - "Launched Backstage IDP and Documentation-as-Code initiative, reducing documentation drift by 75%"
-  - "Engineered enterprise observability solutions using Prometheus, Loki, and Grafana for 500+ microservices"
-  - "Architected reusable cloud migration patterns, reducing migration time from months to single day per application"
-  - "Established 24/7 on-call support and incident response framework with PagerDuty, achieving 99.95% uptime"
-  - "Implemented automated compliance scanning and remediation, maintaining continuous PCI-DSS compliance"
-  - "Led cloud strategy during acquisition integration, successfully merging infrastructure while maintaining zero downtime"
+  - "Built green-field AWS platform (Terraform, Packer, Kubernetes); passed PCI with zero criticals"
+  - "Launched Backstage Internal Developer Platform and Documentation-as-Code, ensuring documentation updates accompanied code changes to drive consistency and coverage. This enabled version control for documentation, reduced internal documentation drift by 75%, and served as groundwork for further internal developer platform concepts"
+  - "Grew team from a single engineer to a 10-person SRE team and a 5-person operations team; led a 3-person team of full-stack developers building platform services (authentication, mutex locking, configuration, secrets management). Provided 24/7 on-call support and incident response with PagerDuty; managed enterprise-grade vendor support contracts"
+  - "Engineered and deployed enterprise observability and monitoring solutions (Prometheus, Loki, Grafana) to enhance system visibility and incident response"
+  - "Delivered multi-account Landing Zone with guardrails; automated FinOps saved 30% YoY"
+  - "Built a secure EKS platform with GitOps, admission control, and autoscaling"
+  - "Architected and implemented reusable patterns, enabling teams to rapidly onboard new applications, consume shared services, and integrate with the secure landing zone and edge networking, reducing cloud migration time from months to a single day while leveraging advanced scaling, security, and platform features"
 technologies:
   - "AWS"
   - "Kubernetes"
