@@ -5,6 +5,7 @@ issuer: "Google Cloud"
 issueDate: 2020-03-01
 expirationDate: 2026-03-01
 credentialId: "GCP-ACE-2020"
+icon: "gcp/gcp"
 order: 5
 ---
 

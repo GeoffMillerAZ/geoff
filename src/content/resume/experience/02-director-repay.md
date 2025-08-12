@@ -3,6 +3,7 @@ type: "experience"
 position: "Director of Cloud Infrastructure"
 company: "REPAY"
 location: "Tempe, AZ"
+workType: "hybrid"
 startDate: 2017-10-01
 endDate: 2021-07-01
 showInMainSection: true

@@ -3,6 +3,7 @@ type: "experience"
 position: "Undergraduate and Graduate Teaching Assistant"
 company: "Northern Illinois University"
 location: "DeKalb, IL"
+workType: "on-site"
 startDate: 2012-01-01
 endDate: 2015-05-01
 showInMainSection: false

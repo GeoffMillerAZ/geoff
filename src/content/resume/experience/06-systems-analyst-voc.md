@@ -3,6 +3,7 @@ type: "experience"
 position: "Systems Analyst"
 company: "Valley of the Sun United Way"
 location: "Phoenix, AZ"
+workType: "on-site"
 startDate: 2010-01-01
 endDate: 2012-03-01
 showInMainSection: false

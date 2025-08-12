@@ -3,6 +3,7 @@ type: "experience"
 position: "DevOps Engineer"
 company: "Early Warning Services (Zelle)"
 location: "Scottsdale, AZ"
+workType: "on-site"
 startDate: 2017-01-01
 endDate: 2017-10-01
 showInMainSection: true

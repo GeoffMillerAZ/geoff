@@ -15,12 +15,67 @@ type CertificationEntry = {
     expirationDate?: Date;
     credentialId?: string;
     url?: string;
+    icon?: string;
     order: number;
   };
 };
 
 const sortedCertifications = (allCertifications as unknown as CertificationEntry[])
   .sort((a, b) => a.data.order - b.data.order);
+
+// Import all certification icons
+const iconModules = import.meta.glob('/src/assets/icons/certifications/**/*.svg', { query: '?raw', import: 'default', eager: true });
+
+// Helper function to get icon with fallback
+function getCertificationIcon(cert: CertificationEntry): string | null {
+  // Try specified icon first
+  if (cert.data.icon) {
+    const iconPath = `/src/assets/icons/certifications/${cert.data.icon}.svg`;
+    if (iconModules[iconPath]) {
+      return iconModules[iconPath] as string;
+    }
+  }
+  
+  // Fallback to vendor icon based on issuer
+  const issuerLower = cert.data.issuer.toLowerCase();
+  const vendorMap: Record<string, string> = {
+    'aws': 'aws/aws',
+    'amazon': 'aws/aws',
+    'azure': 'azure/azure',
+    'microsoft': 'azure/azure',
+    'gcp': 'gcp/gcp',
+    'google': 'gcp/gcp',
+    'kubernetes': 'kubernetes/kubernetes',
+    'cloud native': 'kubernetes/kubernetes',
+    'cncf': 'kubernetes/kubernetes',
+    'hashicorp': 'hashicorp/hashicorp',
+    'terraform': 'hashicorp/hashicorp',
+    'vault': 'hashicorp/hashicorp',
+    'docker': 'docker/docker',
+    'vmware': 'vmware/vmware',
+    'redhat': 'redhat/redhat',
+    'red hat': 'redhat/redhat',
+    'linux': 'linux/linux',
+    'istio': 'istio/istio'
+  };
+  
+  for (const [key, value] of Object.entries(vendorMap)) {
+    if (issuerLower.includes(key)) {
+      const vendorIconPath = `/src/assets/icons/certifications/${value}.svg`;
+      if (iconModules[vendorIconPath]) {
+        return iconModules[vendorIconPath] as string;
+      }
+    }
+  }
+  
+  // Final fallback to generic certification icon
+  const genericPath = `/src/assets/icons/certifications/generic/certification.svg`;
+  if (iconModules[genericPath]) {
+    return iconModules[genericPath] as string;
+  }
+  
+  return null;
+}
 ---
 
 <div class="card bg-base-200/80 shadow-xl backdrop-blur-md hover:shadow-2xl transition-all duration-300 h-full">
@@ -29,34 +84,41 @@ const sortedCertifications = (allCertifications as unknown as CertificationEntry
     
     <div class="grid gap-3 grid-cols-1">
       {sortedCertifications.length > 0 ? (
-        sortedCertifications.map((cert, index) => (
-          <div class={`card ${index === 0 ? 'bg-success/10 border border-success/30 hover:border-success/50' : 'bg-base-300/30 border border-base-300/50 hover:bg-base-300/50'} transition-all duration-300`}>
-            <div class="card-body p-3 sm:p-4 lg:p-4">
-              <div class="flex items-start gap-2 lg:gap-3">
-                <div class="avatar placeholder shrink-0">
-                  <div class={`${index === 0 ? 'bg-success text-success-content' : 'bg-accent text-accent-content'} rounded-lg w-10 h-10 lg:w-11 lg:h-11`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 lg:w-6 lg:h-6 stroke-current">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
+        sortedCertifications.map((cert, index) => {
+          const icon = getCertificationIcon(cert);
+          return (
+            <div class={`card ${index === 0 ? 'bg-success/10 border border-success/30 hover:border-success/50' : 'bg-base-300/30 border border-base-300/50 hover:bg-base-300/50'} transition-all duration-300`}>
+              <div class="card-body p-3 sm:p-4 lg:p-4">
+                <div class="flex items-start gap-2 lg:gap-3">
+                  <div class="avatar placeholder shrink-0">
+                    <div class={`${index === 0 ? 'bg-success text-success-content' : 'bg-accent text-accent-content'} rounded-lg w-10 h-10 lg:w-11 lg:h-11 p-2 flex items-center justify-center`}>
+                      {icon ? (
+                        <div class="w-full h-full flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:fill-current" set:html={icon} />
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 lg:w-6 lg:h-6 stroke-current">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class={`text-sm lg:text-sm font-bold ${index === 0 ? 'text-success' : ''} line-clamp-2`}>
-                    {cert.data.name}
-                  </h3>
-                  <div class="flex flex-col gap-1 mt-1">
-                    <span class="badge badge-secondary badge-outline badge-xs">{cert.data.issuer}</span>
-                    {cert.data.issueDate && (
-                      <span class="text-xs opacity-70">
-                        {new Date(cert.data.issueDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                      </span>
-                    )}
+                  <div class="flex-1 min-w-0">
+                    <h3 class={`text-sm lg:text-sm font-bold ${index === 0 ? 'text-success' : ''} line-clamp-2`}>
+                      {cert.data.name}
+                    </h3>
+                    <div class="flex flex-col gap-1 mt-1">
+                      <span class="badge badge-secondary badge-outline badge-xs">{cert.data.issuer}</span>
+                      {cert.data.issueDate && (
+                        <span class="text-xs opacity-70">
+                          {new Date(cert.data.issueDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))
+          );
+        })
       ) : (
         /* Fallback to hardcoded certifications */
         <>

@@ -3,6 +3,7 @@ type: "experience"
 position: "Lead Network Engineer"
 company: "AZ Department of Emergency Management"
 location: "Phoenix, AZ"
+workType: "on-site"
 startDate: 2008-01-01
 endDate: 2009-01-01
 showInMainSection: false

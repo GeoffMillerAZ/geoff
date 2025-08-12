@@ -3,6 +3,7 @@ type: "experience"
 position: "IT Specialist"
 company: "NCR Corporation"
 location: "Phoenix, AZ"
+workType: "on-site"
 startDate: 2005-01-01
 endDate: 2008-01-01
 showInMainSection: false

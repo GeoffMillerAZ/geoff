@@ -3,6 +3,7 @@ type: "experience"
 position: "Director of Cloud Infrastructure"
 company: "First Citizens Bank"
 location: "Tempe, AZ"
+workType: "hybrid"
 startDate: 2021-07-01
 current: true
 showInMainSection: true

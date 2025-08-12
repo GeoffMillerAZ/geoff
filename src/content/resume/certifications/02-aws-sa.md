@@ -6,6 +6,7 @@ issueDate: 2022-09-20
 expiryDate: 2025-09-20
 credentialId: "AWS-PSA-2022-000456"
 url: "https://www.credly.com/badges/aws-sa-professional"
+icon: "aws/aws"
 order: 2
 ---
 

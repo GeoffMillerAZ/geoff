@@ -3,6 +3,7 @@ type: "experience"
 position: "Data Center / Virtualization Engineer"
 company: "First Citizens Bank"
 location: "Tempe, AZ"
+workType: "on-site"
 startDate: 2012-03-01
 endDate: 2013-10-01
 showInMainSection: false

@@ -107,6 +107,7 @@ const resumeCollection = defineCollection({
       position: z.string(),
       company: z.string(),
       location: z.string(),
+      workType: z.enum(['remote', 'on-site', 'hybrid']).optional(),
       startDate: z.date(),
       endDate: z.date().optional(),
       current: z.boolean().default(false),
@@ -135,6 +136,7 @@ const resumeCollection = defineCollection({
       expirationDate: z.date().optional(),
       credentialId: z.string().optional(),
       url: z.string().url().optional(),
+      icon: z.string().optional(), // Icon name from /src/assets/icons/certifications/
       order: z.number(),
     }),
     // Skill entries

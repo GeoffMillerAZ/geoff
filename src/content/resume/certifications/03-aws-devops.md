@@ -5,6 +5,7 @@ issuer: "Amazon Web Services"
 issueDate: 2019-06-01
 expirationDate: 2025-06-01
 credentialId: "DOP-P-2019"
+icon: "aws/aws"
 order: 3
 ---
 

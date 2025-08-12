@@ -3,6 +3,7 @@ type: "experience"
 position: "Senior Network Engineer"
 company: "Early Warning Services (ZELLE)"
 location: "Scottsdale, AZ"
+workType: "on-site"
 startDate: 2013-10-01
 endDate: 2016-03-01
 showInMainSection: true

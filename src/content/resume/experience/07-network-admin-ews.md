@@ -3,6 +3,7 @@ type: "experience"
 position: "Network Administrator"
 company: "Early Warning Services"
 location: "Scottsdale, AZ"
+workType: "hybrid"
 startDate: 2009-01-01
 endDate: 2010-01-01
 showInMainSection: false

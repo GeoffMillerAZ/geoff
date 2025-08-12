@@ -5,6 +5,7 @@ issuer: "HashiCorp"
 issueDate: 2020-09-01
 expirationDate: 2026-09-01
 credentialId: "HCT-A-2020"
+icon: "hashicorp/hashicorp"
 order: 4
 ---
 

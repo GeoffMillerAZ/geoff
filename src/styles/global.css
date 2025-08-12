@@ -193,7 +193,7 @@
 
   .card:hover {
     border-color: rgba(37, 176, 188, 0.5);
-    box-shadow: 0 0 30px rgba(37, 176, 188, 0.15);
+    box-shadow: 0 0 20px rgba(37, 176, 188, 0.1);
     transform: translateY(-2px);
   }
 
@@ -218,7 +218,7 @@
 
   .text-glow {
     color: var(--synth-glow-text);
-    text-shadow: 0 0 7px var(--synth-pink);
+    text-shadow: 0 0 4px rgba(249, 42, 173, 0.4);
   }
 
   /* Synthwave accent colors */
@@ -242,19 +242,19 @@
 
   .badge:hover {
     transform: translateY(-1px);
-    box-shadow: 0 0 10px rgba(37, 176, 188, 0.3);
+    box-shadow: 0 0 6px rgba(37, 176, 188, 0.2);
   }
 
   .badge-primary:hover {
-    box-shadow: 0 0 10px rgba(249, 42, 173, 0.4);
+    box-shadow: 0 0 6px rgba(249, 42, 173, 0.25);
   }
 
   .badge-secondary:hover {
-    box-shadow: 0 0 10px rgba(37, 176, 188, 0.4);
+    box-shadow: 0 0 6px rgba(37, 176, 188, 0.25);
   }
 
   .badge-accent:hover {
-    box-shadow: 0 0 10px rgba(255, 107, 157, 0.4);
+    box-shadow: 0 0 6px rgba(255, 107, 157, 0.25);
   }
 
   /* Legacy timeline styles (DaisyUI timeline component handles most styling) */
@@ -269,29 +269,29 @@
   }
 
   .btn:hover {
-    box-shadow: 0 0 20px rgba(249, 42, 173, 0.4);
+    box-shadow: 0 0 12px rgba(249, 42, 173, 0.3);
     transform: translateY(-2px);
     border-color: rgba(249, 42, 173, 0.5);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 0 25px rgba(249, 42, 173, 0.6);
+    box-shadow: 0 0 15px rgba(249, 42, 173, 0.4);
     background-color: #d91f8f;
     border-color: #f92aad;
   }
 
   .btn-accent:hover {
-    box-shadow: 0 0 25px rgba(255, 107, 157, 0.6);
+    box-shadow: 0 0 15px rgba(255, 107, 157, 0.4);
     background-color: #ff7ba6;
   }
 
   .btn-secondary:hover {
-    box-shadow: 0 0 25px rgba(37, 176, 188, 0.6);
+    box-shadow: 0 0 15px rgba(37, 176, 188, 0.4);
     background-color: #2bc4d1;
   }
 
   .btn-ghost:hover {
-    box-shadow: 0 0 15px rgba(37, 176, 188, 0.3);
+    box-shadow: 0 0 8px rgba(37, 176, 188, 0.2);
     background-color: rgba(37, 176, 188, 0.1);
     border-color: rgba(37, 176, 188, 0.3);
   }
@@ -378,15 +378,15 @@
   @keyframes subtlePulse {
     0%, 100% {
       text-shadow: 
-        0 0 2px rgba(255, 255, 255, 0.9),
-        0 0 4px rgba(255, 255, 255, 0.4),
-        0 0 6px rgba(249, 42, 173, 0.3);
+        0 0 1px rgba(255, 255, 255, 0.8),
+        0 0 2px rgba(255, 255, 255, 0.3),
+        0 0 3px rgba(249, 42, 173, 0.2);
     }
     50% {
       text-shadow: 
-        0 0 3px rgba(255, 255, 255, 1),
-        0 0 6px rgba(255, 255, 255, 0.5),
-        0 0 8px rgba(249, 42, 173, 0.4);
+        0 0 2px rgba(255, 255, 255, 0.9),
+        0 0 3px rgba(255, 255, 255, 0.4),
+        0 0 4px rgba(249, 42, 173, 0.3);
     }
   }
 
@@ -394,36 +394,71 @@
   .text-glow-white {
     color: #ffffff;
     text-shadow: 
-      0 0 5px rgba(255, 255, 255, 0.9),
-      0 0 10px rgba(255, 255, 255, 0.5),
-      0 0 15px rgba(255, 255, 255, 0.3);
+      0 0 3px rgba(255, 255, 255, 0.6),
+      0 0 6px rgba(255, 255, 255, 0.3),
+      0 0 9px rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Extra subtle glow for small text */
+  .text-sm.text-glow-white,
+  .text-xs.text-glow-white,
+  .badge .text-glow-white,
+  h3.text-glow-white,
+  h4.text-glow-white {
+    text-shadow: 
+      0 0 2px rgba(255, 255, 255, 0.4),
+      0 0 3px rgba(255, 255, 255, 0.2);
   }
 
   /* Pink glow for accents */
   .text-glow-pink {
     color: #f92aad;
     text-shadow: 
-      0 0 5px rgba(249, 42, 173, 0.8),
-      0 0 10px rgba(249, 42, 173, 0.5),
-      0 0 15px rgba(249, 42, 173, 0.3);
+      0 0 3px rgba(249, 42, 173, 0.5),
+      0 0 6px rgba(249, 42, 173, 0.3),
+      0 0 9px rgba(249, 42, 173, 0.15);
+  }
+  
+  /* Extra subtle glow for small text */
+  .text-sm.text-glow-pink,
+  .text-xs.text-glow-pink,
+  .badge .text-glow-pink,
+  h3.text-glow-pink,
+  h4.text-glow-pink {
+    text-shadow: 
+      0 0 2px rgba(249, 42, 173, 0.3),
+      0 0 3px rgba(249, 42, 173, 0.15);
   }
 
   /* Cyan glow for secondary elements */
   .text-glow-cyan {
     color: #72f1b8;
     text-shadow: 
-      0 0 5px rgba(114, 241, 184, 0.8),
-      0 0 10px rgba(114, 241, 184, 0.5),
-      0 0 15px rgba(114, 241, 184, 0.3);
+      0 0 3px rgba(114, 241, 184, 0.5),
+      0 0 6px rgba(114, 241, 184, 0.3),
+      0 0 9px rgba(114, 241, 184, 0.15);
+  }
+  
+  /* Extra subtle glow for small text */
+  .text-sm.text-glow-cyan,
+  .text-xs.text-glow-cyan,
+  .badge .text-glow-cyan,
+  h3.text-glow-cyan,
+  h4.text-glow-cyan,
+  .text-base.text-glow-cyan,
+  .footer-title.text-glow-cyan {
+    text-shadow: 
+      0 0 2px rgba(114, 241, 184, 0.3),
+      0 0 3px rgba(114, 241, 184, 0.15);
   }
 
   /* Remove gradient in favor of solid colors with glow */
   .gradient-text {
     color: #ffffff;
     text-shadow: 
-      0 0 3px rgba(255, 255, 255, 0.9),
-      0 0 6px rgba(255, 255, 255, 0.4),
-      0 0 9px rgba(249, 42, 173, 0.2);
+      0 0 2px rgba(255, 255, 255, 0.6),
+      0 0 4px rgba(255, 255, 255, 0.3),
+      0 0 6px rgba(249, 42, 173, 0.15);
   }
 
   /* Synthwave utility classes */
