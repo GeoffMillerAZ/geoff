@@ -36,6 +36,15 @@ function getCertificationIcon(cert: CertificationEntry): string | null {
     }
   }
   
+  // Try to match specific certification types
+  const certNameLower = cert.data.name.toLowerCase();
+  if (certNameLower.includes('terraform')) {
+    const terraformPath = `/src/assets/icons/certifications/hashicorp/terraform.svg`;
+    if (iconModules[terraformPath]) {
+      return iconModules[terraformPath] as string;
+    }
+  }
+  
   // Fallback to vendor icon based on issuer
   const issuerLower = cert.data.issuer.toLowerCase();
   const vendorMap: Record<string, string> = {
@@ -46,10 +55,10 @@ function getCertificationIcon(cert: CertificationEntry): string | null {
     'gcp': 'gcp/gcp',
     'google': 'gcp/gcp',
     'kubernetes': 'kubernetes/kubernetes',
-    'cloud native': 'kubernetes/kubernetes',
-    'cncf': 'kubernetes/kubernetes',
+    'cloud native': 'cncf/cncf',
+    'cncf': 'cncf/cncf',
     'hashicorp': 'hashicorp/hashicorp',
-    'terraform': 'hashicorp/hashicorp',
+    'terraform': 'hashicorp/terraform',
     'vault': 'hashicorp/hashicorp',
     'docker': 'docker/docker',
     'vmware': 'vmware/vmware',
