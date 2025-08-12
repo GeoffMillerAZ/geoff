@@ -2,6 +2,10 @@
 type: "experience"
 position: "Director of Cloud Infrastructure"
 company: "First Citizens Bank"
+companyTransition:
+  type: "formerly"
+  name: "Silicon Valley Bank"
+  location: "Tempe, AZ"
 location: "Tempe, AZ"
 workType: "hybrid"
 startDate: 2021-07-01

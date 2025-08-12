@@ -2,6 +2,9 @@
 type: "experience"
 position: "Principal Cloud Architect"
 company: "Thinkvine"
+companyTransition:
+  type: "now"
+  name: "Crossover"
 location: "Remote from Chandler, AZ"
 workType: "remote"
 startDate: 2016-04-01

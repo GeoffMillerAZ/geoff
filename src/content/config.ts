@@ -106,6 +106,11 @@ const resumeCollection = defineCollection({
       type: z.literal('experience'),
       position: z.string(),
       company: z.string(),
+      companyTransition: z.object({
+        type: z.enum(['formerly', 'now']),
+        name: z.string(),
+        location: z.string().optional(),
+      }).optional(),
       location: z.string(),
       workType: z.enum(['remote', 'on-site', 'hybrid']).optional(),
       startDate: z.date(),
