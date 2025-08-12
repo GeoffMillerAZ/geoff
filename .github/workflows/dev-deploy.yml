@@ -1,0 +1,134 @@
+# Dev Deploy Workflow
+# 
+# Triggers: Push or merge to 'dev' branch
+# Output: Static site deployed to 'main' branch of this repository
+# Domain: https://dev.geoffmiller.cloud
+# 
+# Rollback: Force push a previous commit to main branch or rerun a previous workflow
+# 
+# GitHub Pages Configuration Required:
+# - Source: Deploy from branch (main)
+# - Folder: / (root)
+# - Custom domain: dev.geoffmiller.cloud
+# - Enforce HTTPS: Enabled
+
+name: Deploy Dev Site
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci
+      
+      - name: Build Astro site
+        run: |
+          echo "🔨 Building Astro site for dev environment..."
+          npm run build
+          echo "✅ Build complete"
+      
+      - name: Prepare deployment files
+        run: |
+          echo "📝 Preparing deployment files..."
+          
+          # Create CNAME file for custom domain
+          echo "dev.geoffmiller.cloud" > dist/CNAME
+          echo "✅ Created CNAME file: dev.geoffmiller.cloud"
+          
+          # Create .nojekyll to support underscore paths
+          touch dist/.nojekyll
+          echo "✅ Created .nojekyll file"
+          
+          # List files to be deployed
+          echo "📋 Files to be deployed:"
+          find dist -type f | head -50
+          echo ""
+          echo "📊 Deployment statistics:"
+          echo "Total files: $(find dist -type f | wc -l)"
+          echo "Total size: $(du -sh dist | cut -f1)"
+      
+      - name: Deploy to GitHub Pages branch
+        run: |
+          echo "🚀 Deploying to main branch..."
+          
+          # Configure git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Create orphan branch for clean history
+          cd dist
+          git init
+          git checkout -b main
+          
+          # Add all files
+          git add -A
+          git commit -m "Deploy dev site from commit ${GITHUB_SHA::7} [skip ci]"
+          
+          # Force push to main branch
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" main:main
+          
+          echo "✅ Deployment complete!"
+      
+      - name: Verify deployment
+        run: |
+          echo "🔍 Deployment verification"
+          echo "=========================================="
+          echo "✅ Site deployed to: https://dev.geoffmiller.cloud"
+          echo ""
+          echo "⚠️  IMPORTANT: Verify GitHub Pages settings:"
+          echo "1. Go to: https://github.com/${{ github.repository }}/settings/pages"
+          echo "2. Ensure these settings:"
+          echo "   - Source: Deploy from a branch"
+          echo "   - Branch: main / (root)"
+          echo "   - Custom domain: dev.geoffmiller.cloud"
+          echo "   - Enforce HTTPS: ✓ Enabled"
+          echo ""
+          echo "🔄 To rollback: Re-run a previous successful workflow from the Actions tab"
+          echo "=========================================="
+      
+      - name: Check deployment status
+        if: always()
+        run: |
+          # Wait a moment for GitHub Pages to process
+          sleep 10
+          
+          echo "🌐 Checking deployment status..."
+          
+          # Check if CNAME is accessible
+          if curl -s -o /dev/null -w "%{http_code}" "https://raw.githubusercontent.com/${{ github.repository }}/main/CNAME" | grep -q "200"; then
+            echo "✅ CNAME file is accessible on main branch"
+          else
+            echo "⚠️  CNAME file may not be accessible yet"
+          fi
+          
+          # Check if index.html is accessible
+          if curl -s -o /dev/null -w "%{http_code}" "https://raw.githubusercontent.com/${{ github.repository }}/main/index.html" | grep -q "200"; then
+            echo "✅ index.html is accessible on main branch"
+          else
+            echo "⚠️  index.html may not be accessible yet"
+          fi

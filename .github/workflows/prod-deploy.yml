@@ -1,0 +1,242 @@
+# Production Deploy Workflow
+# 
+# Triggers: 
+#   - Version tags (v*) on main branch
+#   - Manual workflow dispatch
+# Output: Static site deployed to 'main' branch of GeoffMillerAZ/geoff-live repository
+# Domain: https://geoffmiller.cloud
+# 
+# Rollback: Re-run a previous successful workflow or manually push to geoff-live
+# 
+# GitHub Pages Configuration Required (on geoff-live repo):
+# - Source: Deploy from branch (main)
+# - Folder: / (root)
+# - Custom domain: geoffmiller.cloud
+# - Enforce HTTPS: Enabled
+#
+# Required Secrets:
+# - PROD_REPO_TOKEN: PAT with Contents read/write access to GeoffMillerAZ/geoff-live
+
+name: Deploy Production Site
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to deploy (optional, uses latest tag if empty)'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Determine deployment source
+        id: source
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.tag }}" ]; then
+            echo "tag=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+            echo "📌 Using manually specified tag: ${{ inputs.tag }}"
+          elif [ "${{ github.event_name }}" = "push" ] && [ -n "${{ github.ref_name }}" ]; then
+            echo "tag=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "📌 Using pushed tag: ${{ github.ref_name }}"
+          else
+            # Get latest tag
+            git ls-remote --tags --sort=-v:refname https://github.com/${{ github.repository }}.git | head -1 | sed 's/.*\///' | tr -d '\n' > latest_tag.txt
+            LATEST_TAG=$(cat latest_tag.txt)
+            echo "tag=${LATEST_TAG}" >> $GITHUB_OUTPUT
+            echo "📌 Using latest tag: ${LATEST_TAG}"
+          fi
+      
+      - name: Checkout code at tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.source.outputs.tag }}
+          fetch-depth: 0
+      
+      - name: Validate tag is on main branch
+        run: |
+          echo "🔍 Validating tag ${{ steps.source.outputs.tag }} is on main branch..."
+          
+          # Get the commit SHA of the tag
+          TAG_SHA=$(git rev-list -n 1 ${{ steps.source.outputs.tag }})
+          echo "Tag SHA: ${TAG_SHA}"
+          
+          # Check if this commit exists on main branch
+          git fetch origin main
+          if git merge-base --is-ancestor ${TAG_SHA} origin/main; then
+            echo "✅ Tag ${{ steps.source.outputs.tag }} is on main branch"
+          else
+            echo "❌ ERROR: Tag ${{ steps.source.outputs.tag }} is not on main branch!"
+            echo "Production deployments must be from tags on the main branch."
+            exit 1
+          fi
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci
+      
+      - name: Build Astro site for production
+        run: |
+          echo "🔨 Building Astro site for production..."
+          echo "📍 Building from tag: ${{ steps.source.outputs.tag }}"
+          
+          # Build with production optimizations
+          NODE_ENV=production npm run build
+          
+          echo "✅ Production build complete"
+      
+      - name: Prepare production deployment files
+        run: |
+          echo "📝 Preparing production deployment files..."
+          
+          # Create CNAME file for production domain
+          echo "geoffmiller.cloud" > dist/CNAME
+          echo "✅ Created CNAME file: geoffmiller.cloud"
+          
+          # Create .nojekyll to support underscore paths
+          touch dist/.nojekyll
+          echo "✅ Created .nojekyll file"
+          
+          # Create deployment info file
+          cat > dist/deployment.txt << EOF
+          Deployment Information
+          ======================
+          Tag: ${{ steps.source.outputs.tag }}
+          Commit: ${GITHUB_SHA::7}
+          Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          Repository: ${{ github.repository }}
+          EOF
+          echo "✅ Created deployment info file"
+          
+          # List files to be deployed
+          echo "📋 Files to be deployed:"
+          find dist -type f | head -50
+          echo ""
+          echo "📊 Deployment statistics:"
+          echo "Total files: $(find dist -type f | wc -l)"
+          echo "Total size: $(du -sh dist | cut -f1)"
+      
+      - name: Deploy to production repository
+        env:
+          PROD_TOKEN: ${{ secrets.PROD_REPO_TOKEN }}
+        run: |
+          echo "🚀 Deploying to GeoffMillerAZ/geoff-live repository..."
+          
+          # Validate token exists
+          if [ -z "$PROD_TOKEN" ]; then
+            echo "❌ ERROR: PROD_REPO_TOKEN secret is not configured!"
+            echo "Please add a Personal Access Token with Contents read/write access to GeoffMillerAZ/geoff-live"
+            exit 1
+          fi
+          
+          # Configure git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Clone the production repository (just the latest commit)
+          echo "📥 Cloning production repository..."
+          git clone --depth 1 --branch main https://x-access-token:${PROD_TOKEN}@github.com/GeoffMillerAZ/geoff-live.git prod-repo || {
+            echo "⚠️  Production repository doesn't exist or main branch not found, will create it"
+            mkdir prod-repo
+            cd prod-repo
+            git init
+            git checkout -b main
+            cd ..
+          }
+          
+          # Clear existing files (except .git)
+          echo "🧹 Cleaning production repository..."
+          cd prod-repo
+          find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+          
+          # Copy new build files
+          echo "📤 Copying build files..."
+          cp -r ../dist/* .
+          cp -r ../dist/.* . 2>/dev/null || true
+          
+          # Add and commit changes
+          git add -A
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "⚠️  No changes to deploy"
+            exit 0
+          fi
+          
+          # Commit with descriptive message
+          git commit -m "Deploy production site v${{ steps.source.outputs.tag }} from ${GITHUB_SHA::7}
+          
+          Repository: ${{ github.repository }}
+          Tag: ${{ steps.source.outputs.tag }}
+          Commit: ${GITHUB_SHA}
+          Deployed by: GitHub Actions
+          [skip ci]"
+          
+          # Push to production repository
+          git push https://x-access-token:${PROD_TOKEN}@github.com/GeoffMillerAZ/geoff-live.git main --force
+          
+          echo "✅ Production deployment complete!"
+      
+      - name: Verify production deployment
+        run: |
+          echo "🔍 Production Deployment Verification"
+          echo "============================================"
+          echo "✅ Site deployed to: https://geoffmiller.cloud"
+          echo "📦 Version deployed: ${{ steps.source.outputs.tag }}"
+          echo ""
+          echo "⚠️  IMPORTANT: Verify GitHub Pages settings on geoff-live:"
+          echo "1. Go to: https://github.com/GeoffMillerAZ/geoff-live/settings/pages"
+          echo "2. Ensure these settings:"
+          echo "   - Source: Deploy from a branch"
+          echo "   - Branch: main / (root)"
+          echo "   - Custom domain: geoffmiller.cloud"
+          echo "   - Enforce HTTPS: ✓ Enabled"
+          echo ""
+          echo "🔄 To rollback:"
+          echo "   1. Go to Actions tab and re-run a previous successful workflow"
+          echo "   2. Or manually: git push --force to geoff-live with a previous version"
+          echo ""
+          echo "📝 Deployment tracking:"
+          echo "   - This deployment: Tag ${{ steps.source.outputs.tag }} (${GITHUB_SHA::7})"
+          echo "   - Check deployment.txt in the live site for deployment details"
+          echo "============================================"
+      
+      - name: Create deployment summary
+        if: always()
+        run: |
+          echo "## 🚀 Production Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Environment** | Production |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Domain** | [geoffmiller.cloud](https://geoffmiller.cloud) |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Version** | ${{ steps.source.outputs.tag }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Commit** | \`${GITHUB_SHA::7}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Repository** | GeoffMillerAZ/geoff-live |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Status** | ${{ job.status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ **Deployment successful!**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The production site should be live at [https://geoffmiller.cloud](https://geoffmiller.cloud) within a few minutes." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Deployment failed!**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Please check the workflow logs for details." >> $GITHUB_STEP_SUMMARY
+          fi
