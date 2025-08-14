@@ -131,4 +131,4 @@ jobs:
             echo "✅ index.html is accessible on master branch"
           else
             echo "⚠️  index.html may not be accessible yet"
-          fi
+          fi# Trigger CI/CD
