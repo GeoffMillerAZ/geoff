@@ -1,13 +1,13 @@
 # Dev Deploy Workflow
 # 
 # Triggers: Push or merge to 'dev' branch
-# Output: Static site deployed to 'main' branch of this repository
+# Output: Static site deployed to 'master' branch of this repository
 # Domain: https://dev.geoffmiller.cloud
 # 
-# Rollback: Force push a previous commit to main branch or rerun a previous workflow
+# Rollback: Force push a previous commit to master branch or rerun a previous workflow
 # 
 # GitHub Pages Configuration Required:
-# - Source: Deploy from branch (main)
+# - Source: Deploy from branch (master)
 # - Folder: / (root)
 # - Custom domain: dev.geoffmiller.cloud
 # - Enforce HTTPS: Enabled
@@ -74,7 +74,7 @@ jobs:
       
       - name: Deploy to GitHub Pages branch
         run: |
-          echo "🚀 Deploying to main branch..."
+          echo "🚀 Deploying to master branch..."
           
           # Configure git
           git config --global user.name "github-actions[bot]"
@@ -83,14 +83,14 @@ jobs:
           # Create orphan branch for clean history
           cd dist
           git init
-          git checkout -b main
+          git checkout -b master
           
           # Add all files
           git add -A
           git commit -m "Deploy dev site from commit ${GITHUB_SHA::7} [skip ci]"
           
-          # Force push to main branch
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" main:main
+          # Force push to master branch
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" master:master
           
           echo "✅ Deployment complete!"
       
@@ -104,7 +104,7 @@ jobs:
           echo "1. Go to: https://github.com/${{ github.repository }}/settings/pages"
           echo "2. Ensure these settings:"
           echo "   - Source: Deploy from a branch"
-          echo "   - Branch: main / (root)"
+          echo "   - Branch: master / (root)"
           echo "   - Custom domain: dev.geoffmiller.cloud"
           echo "   - Enforce HTTPS: ✓ Enabled"
           echo ""
@@ -120,15 +120,15 @@ jobs:
           echo "🌐 Checking deployment status..."
           
           # Check if CNAME is accessible
-          if curl -s -o /dev/null -w "%{http_code}" "https://raw.githubusercontent.com/${{ github.repository }}/main/CNAME" | grep -q "200"; then
-            echo "✅ CNAME file is accessible on main branch"
+          if curl -s -o /dev/null -w "%{http_code}" "https://raw.githubusercontent.com/${{ github.repository }}/master/CNAME" | grep -q "200"; then
+            echo "✅ CNAME file is accessible on master branch"
           else
             echo "⚠️  CNAME file may not be accessible yet"
           fi
           
           # Check if index.html is accessible
-          if curl -s -o /dev/null -w "%{http_code}" "https://raw.githubusercontent.com/${{ github.repository }}/main/index.html" | grep -q "200"; then
-            echo "✅ index.html is accessible on main branch"
+          if curl -s -o /dev/null -w "%{http_code}" "https://raw.githubusercontent.com/${{ github.repository }}/master/index.html" | grep -q "200"; then
+            echo "✅ index.html is accessible on master branch"
           else
             echo "⚠️  index.html may not be accessible yet"
           fi

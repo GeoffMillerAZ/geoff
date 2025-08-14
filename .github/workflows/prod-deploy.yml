@@ -1,7 +1,7 @@
 # Production Deploy Workflow
 # 
 # Triggers: 
-#   - Version tags (v*) on main branch
+#   - Version tags (v*) on master branch
 #   - Manual workflow dispatch
 # Output: Static site deployed to 'main' branch of GeoffMillerAZ/geoff-live repository
 # Domain: https://geoffmiller.cloud
@@ -61,21 +61,21 @@ jobs:
           ref: ${{ steps.source.outputs.tag }}
           fetch-depth: 0
       
-      - name: Validate tag is on main branch
+      - name: Validate tag is on master branch
         run: |
-          echo "🔍 Validating tag ${{ steps.source.outputs.tag }} is on main branch..."
+          echo "🔍 Validating tag ${{ steps.source.outputs.tag }} is on master branch..."
           
           # Get the commit SHA of the tag
           TAG_SHA=$(git rev-list -n 1 ${{ steps.source.outputs.tag }})
           echo "Tag SHA: ${TAG_SHA}"
           
-          # Check if this commit exists on main branch
-          git fetch origin main
-          if git merge-base --is-ancestor ${TAG_SHA} origin/main; then
-            echo "✅ Tag ${{ steps.source.outputs.tag }} is on main branch"
+          # Check if this commit exists on master branch
+          git fetch origin master
+          if git merge-base --is-ancestor ${TAG_SHA} origin/master; then
+            echo "✅ Tag ${{ steps.source.outputs.tag }} is on master branch"
           else
-            echo "❌ ERROR: Tag ${{ steps.source.outputs.tag }} is not on main branch!"
-            echo "Production deployments must be from tags on the main branch."
+            echo "❌ ERROR: Tag ${{ steps.source.outputs.tag }} is not on master branch!"
+            echo "Production deployments must be from tags on the master branch."
             exit 1
           fi
       
