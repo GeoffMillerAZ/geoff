@@ -39,17 +39,10 @@ jobs:
           node-version: '22'
       
       - name: Install dependencies
-        run: |
-          echo "📦 Installing dependencies..."
-          npm install
+        run: npm install
       
       - name: Build Astro site
-        run: |
-          echo "🔨 Building Astro site for dev environment..."
-          echo "Node version: $(node --version)"
-          echo "NPM version: $(npm --version)"
-          npx astro build
-          echo "✅ Build complete"
+        run: npx astro build
       
       - name: Prepare deployment files
         run: |
