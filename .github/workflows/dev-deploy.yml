@@ -49,8 +49,10 @@ jobs:
       - name: Build Astro site
         run: |
           echo "🔨 Building Astro site for dev environment..."
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
           # Build without type checking for now (warnings shouldn't fail CI)
-          npx astro build
+          npx astro build || (echo "Build failed with exit code $?"; exit 1)
           echo "✅ Build complete"
       
       - name: Prepare deployment files
