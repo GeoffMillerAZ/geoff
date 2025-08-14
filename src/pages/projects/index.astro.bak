@@ -1,56 +1,62 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/navigation/Header.astro';
-import Footer from '../components/navigation/Footer.astro';
 import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/navigation/Header.astro';
+import Footer from '../../components/navigation/Footer.astro';
 
-// Get all project entries
+// Get all projects
 const allProjects = await getCollection('projects');
+
+// Sort projects by date (newest first) or featured status
 const sortedProjects = allProjects.sort((a, b) => {
-  // Sort by featured status first, then by date
+  // Featured projects first
   if (a.data.featured && !b.data.featured) return -1;
   if (!a.data.featured && b.data.featured) return 1;
-  return new Date(b.data.startDate).getTime() - new Date(a.data.startDate).getTime();
+  
+  // Then by date
+  return new Date(b.data.startDate).valueOf() - new Date(a.data.startDate).valueOf();
 });
 
 // Group projects by category
-const categories = ['platform-projects', 'open-source', 'case-studies'] as const;
+const categories = [...new Set(allProjects.map(project => project.data.category))];
 const projectsByCategory = categories.reduce((acc, category) => {
-  acc[category] = sortedProjects.filter(p => p.data.category === category);
+  acc[category] = sortedProjects.filter(project => project.data.category === category);
   return acc;
-}, {} as Record<typeof categories[number], typeof sortedProjects>);
+}, {} as Record<string, typeof sortedProjects>);
 
-// Category metadata
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+  }).format(date);
+}
+
+// Define category metadata
 const categoryMeta = {
   'platform-projects': {
     title: 'Platform Engineering',
-    description: 'Building internal developer platforms and infrastructure',
+    description: 'Internal platforms and developer experience tools',
     icon: '🏗️',
+    color: 'from-blue-500/20 to-cyan-500/20'
   },
   'open-source': {
     title: 'Open Source',
-    description: 'Contributing to the developer ecosystem',
-    icon: '🌍',
+    description: 'Community contributions and open source projects',
+    icon: '🌟',
+    color: 'from-green-500/20 to-emerald-500/20'
   },
   'case-studies': {
     title: 'Case Studies',
     description: 'Real-world implementations and outcomes',
-    icon: '📊',
-  },
+    icon: '📋',
+    color: 'from-purple-500/20 to-pink-500/20'
+  }
 };
-
-// Date formatter
-function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short' 
-  });
-}
 ---
 
 <BaseLayout 
-  title="Projects & Portfolio - Geoffrey Miller"
-  description="A showcase of platform engineering projects, open source contributions, and real-world case studies demonstrating scalable infrastructure solutions."
+  title="Projects | Geoffrey Miller - Platform Engineering Portfolio & Case Studies"
+  description="Explore platform engineering projects, open source contributions, and real-world case studies from Geoffrey Miller's 12+ years building scalable cloud infrastructure."
 >
   <Header />
   
@@ -117,6 +123,36 @@ function formatDate(date: Date): string {
                       {project.data.description}
                     </p>
 
+                    {/* Metrics if available */}
+                    {project.data.metrics && Object.keys(project.data.metrics).length > 0 && (
+                      <div class="grid grid-cols-2 gap-4 p-4 bg-base-200/50 rounded-lg mb-6">
+                        {project.data.metrics.users && (
+                          <div class="text-center">
+                            <div class="text-sm opacity-70">Users</div>
+                            <div class="text-2xl font-bold text-primary">{project.data.metrics.users.toLocaleString()}</div>
+                          </div>
+                        )}
+                        {project.data.metrics.costSavings && (
+                          <div class="text-center">
+                            <div class="text-sm opacity-70">Cost Savings</div>
+                            <div class="text-lg font-bold text-primary">{project.data.metrics.costSavings}</div>
+                          </div>
+                        )}
+                        {project.data.metrics.performance && (
+                          <div class="text-center col-span-2">
+                            <div class="text-sm opacity-70">Performance</div>
+                            <div class="text-lg font-bold text-primary">{project.data.metrics.performance}</div>
+                          </div>
+                        )}
+                        {project.data.metrics.impact && (
+                          <div class="text-center col-span-2">
+                            <div class="text-sm opacity-70">Impact</div>
+                            <div class="text-lg font-bold text-primary">{project.data.metrics.impact}</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Technology stack */}
                     <div class="flex flex-wrap gap-1.5 mb-6">
                       {project.data.technologies?.slice(0, 4).map((tech: string) => (
@@ -169,7 +205,6 @@ function formatDate(date: Date): string {
                       </div>
                     </div>
                     </div>
-                    </div>
                   </article>
                 )
               })}
@@ -186,8 +221,6 @@ function formatDate(date: Date): string {
           
           {Object.entries(projectsByCategory).map(([category, projects]) => {
             const meta = categoryMeta[category as keyof typeof categoryMeta];
-            if (projects.length === 0) return null;
-            
             return (
               <div class="mb-12">
                 <div class="flex items-center gap-4 mb-8">
@@ -251,6 +284,7 @@ function formatDate(date: Date): string {
                           </div>
                         )}
                       </div>
+                      </div>
                       
                       <div class="card-actions justify-between items-center">
                         <a 
@@ -291,7 +325,6 @@ function formatDate(date: Date): string {
                             </a>
                           )}
                         </div>
-                      </div>
                       </div>
                       </div>
                     </article>
@@ -371,6 +404,18 @@ function formatDate(date: Date): string {
       </div>
     </section>
   </main>
-  
   <Footer />
 </BaseLayout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px #f92aad;
+  }
+</style>
