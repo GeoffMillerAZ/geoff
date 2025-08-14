@@ -23,6 +23,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Check environment
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Files in root:"
+          ls -la
+          echo ""
+          echo "Source files:"
+          ls -la src/ | head -20
+          echo ""
+          echo "Package.json content:"
+          cat package.json | head -30
+      
       - name: Run Astro build
         run: |
           echo "Starting build..."
