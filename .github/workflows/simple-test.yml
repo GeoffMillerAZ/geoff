@@ -1,0 +1,38 @@
+name: Simple Test
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  simple-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Check versions
+        run: |
+          echo "Node: $(node --version)"
+          echo "NPM: $(npm --version)"
+      
+      - name: Install deps
+        run: npm install
+      
+      - name: List Astro
+        run: |
+          echo "Checking if Astro is installed:"
+          npx astro --version || echo "Astro version check failed"
+      
+      - name: Try simple build
+        run: |
+          echo "Attempting build..."
+          npx astro build 2>&1 || echo "Build failed with code: $?"
