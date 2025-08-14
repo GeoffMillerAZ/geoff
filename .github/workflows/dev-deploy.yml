@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies..."
-          npm ci
+          npm install
       
       - name: Build Astro site
         run: |
