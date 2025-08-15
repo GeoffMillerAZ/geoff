@@ -1,0 +1,42 @@
+name: Deploy to Test Branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Build
+        run: |
+          npm install
+          npx astro build
+          echo "dev.geoffmiller.cloud" > dist/CNAME
+          touch dist/.nojekyll
+      
+      - name: Deploy to master-deployment branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd dist
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy at $(date)"
+          git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:master-deployment
+          echo "Deployed to master-deployment branch"
