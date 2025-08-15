@@ -1,0 +1,1096 @@
+<!DOCTYPE html><html lang="en" class="scroll-smooth"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="generator" content="Astro v4.16.18"><!-- Primary Meta Tags --><title>Production Kubernetes Security: Best Practices &amp; Implementation Guide | Geoffrey Miller Platform Engineering Guides</title><meta name="title" content="Production Kubernetes Security: Best Practices &#38; Implementation Guide | Geoffrey Miller Platform Engineering Guides"><meta name="description" content="Comprehensive security hardening guide for production Kubernetes clusters, covering authentication, authorization, network security, workload isolation, and compliance frameworks."><link rel="canonical" href="/guides/best-practices/production-kubernetes-security"><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://geoffmiller.dev/guides/best-practices/production-kubernetes-security"><meta property="og:title" content="Production Kubernetes Security: Best Practices &#38; Implementation Guide | Geoffrey Miller Platform Engineering Guides"><meta property="og:description" content="Comprehensive security hardening guide for production Kubernetes clusters, covering authentication, authorization, network security, workload isolation, and compliance frameworks."><meta property="og:image" content="https://geoffmiller.dev/og-image.png"><meta property="og:site_name" content="Geoffrey Miller"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://geoffmiller.dev/guides/best-practices/production-kubernetes-security"><meta property="twitter:title" content="Production Kubernetes Security: Best Practices &#38; Implementation Guide | Geoffrey Miller Platform Engineering Guides"><meta property="twitter:description" content="Comprehensive security hardening guide for production Kubernetes clusters, covering authentication, authorization, network security, workload isolation, and compliance frameworks."><meta property="twitter:image" content="https://geoffmiller.dev/og-image.png"><!-- Additional Meta Tags --><meta name="robots" content="index,follow"><meta name="author" content="Geoffrey Miller"><meta name="theme-color" content="#2a2139"><!-- Google Fonts --><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><!-- JSON-LD Structured Data --><script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Geoffrey Miller",
+        "jobTitle": "Infrastructure Director & Principal Cloud Architect",
+        "url": "https://geoffmiller.dev",
+        "sameAs": [
+          "https://github.com/GeoffMillerAZ",
+          "https://linkedin.com/in/geoff-e-miller"
+        ],
+        "knowsAbout": [
+          "Cloud Architecture",
+          "Platform Engineering",
+          "DevOps",
+          "Kubernetes",
+          "AWS",
+          "Infrastructure as Code"
+        ],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "First Citizens Bank"
+        }
+      }
+    </script><link rel="stylesheet" href="/_astro/index.CeRRDWJH.css">
+<style>.line-clamp-3[data-astro-cid-oolc5s6i]{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.prose[data-astro-cid-oolc5s6i]{color:var(--synth-text)}.prose[data-astro-cid-oolc5s6i] h1[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] h2[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] h3[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] h4[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] h5[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] h6[data-astro-cid-oolc5s6i]{color:var(--synth-glow-text);text-shadow:0 0 7px var(--synth-pink)}.prose[data-astro-cid-oolc5s6i] h2[data-astro-cid-oolc5s6i]{font-size:1.5rem;font-weight:700;margin-top:2rem;margin-bottom:1rem;display:flex;align-items:center;gap:.75rem}.prose[data-astro-cid-oolc5s6i] h2[data-astro-cid-oolc5s6i]:before{content:"";width:.25rem;height:1.5rem;background-color:var(--synth-pink);border-radius:9999px}.prose[data-astro-cid-oolc5s6i] h3[data-astro-cid-oolc5s6i]{font-size:1.25rem;font-weight:600;margin-top:1.5rem;margin-bottom:.75rem}.prose[data-astro-cid-oolc5s6i] p[data-astro-cid-oolc5s6i]{margin-bottom:1rem;line-height:1.625}.prose[data-astro-cid-oolc5s6i] a[data-astro-cid-oolc5s6i]{color:var(--synth-pink);transition:color .2s ease-in-out;text-decoration:underline;text-decoration-color:#f92aad4d}.prose[data-astro-cid-oolc5s6i] a[data-astro-cid-oolc5s6i]:hover{color:#f92aadcc;text-decoration-color:var(--synth-pink)}.prose[data-astro-cid-oolc5s6i] blockquote[data-astro-cid-oolc5s6i]{border-left:4px solid var(--synth-pink);padding-left:1.5rem;padding-top:.5rem;padding-bottom:.5rem;font-style:italic;color:#e5e5e5b3;background-color:#f92aad0d;border-radius:0 .5rem .5rem 0}.prose[data-astro-cid-oolc5s6i] code[data-astro-cid-oolc5s6i]{background-color:var(--synth-card-bg);padding:.25rem .5rem;border-radius:.25rem;color:var(--synth-pink);font-size:.875rem;font-family:ui-monospace,monospace}.prose[data-astro-cid-oolc5s6i] pre[data-astro-cid-oolc5s6i]{background-color:var(--synth-card-bg);padding:1rem;border-radius:.5rem;border:1px solid var(--synth-border);overflow-x:auto}.prose[data-astro-cid-oolc5s6i] pre[data-astro-cid-oolc5s6i] code[data-astro-cid-oolc5s6i]{background-color:transparent;padding:0;color:var(--synth-text)}.prose[data-astro-cid-oolc5s6i] ul[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] ol[data-astro-cid-oolc5s6i]{margin-bottom:1rem;padding-left:1.5rem}.prose[data-astro-cid-oolc5s6i] li[data-astro-cid-oolc5s6i]{margin-bottom:.5rem}.prose[data-astro-cid-oolc5s6i] li[data-astro-cid-oolc5s6i]::marker{color:var(--synth-pink)}.prose[data-astro-cid-oolc5s6i] table[data-astro-cid-oolc5s6i]{width:100%;border-collapse:collapse;border:1px solid var(--synth-border);border-radius:.5rem;overflow:hidden}.prose[data-astro-cid-oolc5s6i] th[data-astro-cid-oolc5s6i],.prose[data-astro-cid-oolc5s6i] td[data-astro-cid-oolc5s6i]{border-right:1px solid var(--synth-border);padding:.75rem 1rem}.prose[data-astro-cid-oolc5s6i] th[data-astro-cid-oolc5s6i]{background-color:var(--synth-card-bg);font-weight:600;color:var(--synth-pink)}.prose[data-astro-cid-oolc5s6i] tr[data-astro-cid-oolc5s6i]:nth-child(2n){background-color:#140a1e26}.prose[data-astro-cid-oolc5s6i] img[data-astro-cid-oolc5s6i]{border-radius:.5rem;border:1px solid var(--synth-border);box-shadow:0 10px 15px -3px #0000001a,0 4px 6px -2px #0000000d}.prose[data-astro-cid-oolc5s6i] .implementation-step[data-astro-cid-oolc5s6i]{padding:1rem;border-left:4px solid var(--synth-pink);background-color:#f92aad0d;border-radius:0 .5rem .5rem 0;margin-bottom:1rem}
+</style><script type="module" src="/_astro/hoisted.BWC0YMlF.js"></script></head> <body class="antialiased"> <style>
+    :root {
+      /* Primary Colors */
+      --color-primary: #f92aad;
+      --color-secondary: #16fbff;
+      --color-accent: #fee77b;
+      --color-neutral: #2a2139;
+      
+      /* Base Colors */
+      --color-base-100: #241b2f;
+      --color-base-200: #262c49;
+      --color-base-300: #2a2139;
+      
+      /* Status Colors */
+      --color-info: #00d9ff;
+      --color-success: #00ff88;
+      --color-warning: #ffaa00;
+      --color-error: #ff0055;
+      
+      /* Text Colors */
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #f72f84;
+      --color-text-accent: #16fbff;
+      
+      /* Glow Effects */
+      --glow-pink: #f92aad;
+      --glow-cyan: #16fbff;
+      --glow-white: #ffffff;
+      --glow-intensity: 10px;
+      
+      /* Typography */
+      --font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      --font-family-heading: 'Orbitron', 'JetBrains Mono', monospace;
+      --font-size-base: 16px;
+      --font-size-small: 14px;
+      --font-size-large: 18px;
+      
+      /* Animations */
+      --animation-duration: 300ms;
+      --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Layout */
+      --max-width: 1600px;
+      
+      /* Custom CSS Variables */
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --border-radius: 0.5rem;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Apply effects based on configuration */
+    
+    
+    
+    
+    
+  </style><!-- Apply theme classes to body --><script>(function(){const theme = {"preset":"synthwave84","colors":{"primary":"#f92aad","secondary":"#16fbff","accent":"#fee77b","neutral":"#2a2139","base100":"#241b2f","base200":"#262c49","base300":"#2a2139","info":"#00d9ff","success":"#00ff88","warning":"#ffaa00","error":"#ff0055","textPrimary":"#ffffff","textSecondary":"#f72f84","textAccent":"#16fbff","glowPink":"#f92aad","glowCyan":"#16fbff","glowWhite":"#ffffff","glowIntensity":"10px"},"typography":{"fontFamily":"'JetBrains Mono', 'Fira Code', monospace","fontSize":{"base":"16px","small":"14px","large":"18px"},"headingFamily":"'Orbitron', 'JetBrains Mono', monospace"},"effects":{"animations":true,"glowEffects":true,"gradients":true,"blur":true,"transitions":true,"neonBorders":true,"scanlines":false},"components":{"avatar":{"show":true,"showRing":true,"glowEffect":true},"cards":{"glassmorphism":true,"borderGlow":true,"hoverEffects":true},"buttons":{"glowOnHover":true,"pulseAnimation":false},"navigation":{"sticky":true,"blur":true,"transparentOnScroll":false}},"features":{"blog":true,"projects":true,"guides":true,"resources":true,"about":true,"contact":true,"profileSection":true,"experienceSection":true,"skillsSection":true,"educationSection":true,"certificationsSection":true,"awardsSection":true,"achievementsSection":true,"search":true,"darkModeToggle":false,"analytics":true,"newsletter":false,"comments":false},"layout":{"maxWidth":"1600px","sidebarPosition":"left","contentLayout":"default","spacing":"normal"},"animations":{"pageTransitions":true,"scrollAnimations":true,"hoverAnimations":true,"loadingAnimations":true,"duration":"300ms","easing":"cubic-bezier(0.4, 0, 0.2, 1)"},"customCSS":{"variables":{"--gradient-1":"linear-gradient(135deg, #667eea 0%, #764ba2 100%)","--gradient-2":"linear-gradient(135deg, #f093fb 0%, #f5576c 100%)","--border-radius":"0.5rem","--shadow-sm":"0 1px 2px 0 rgba(0, 0, 0, 0.05)","--shadow-lg":"0 10px 15px -3px rgba(0, 0, 0, 0.1)"}}};
+
+  // Apply theme-based body classes
+  if (theme.effects.scanlines) {
+    document.body.classList.add('scanlines-effect');
+  }
+  
+  if (!theme.effects.animations) {
+    document.body.classList.add('no-animations');
+  }
+  
+  if (theme.effects.glassmorphism) {
+    document.body.classList.add('glass-effect');
+  }
+  
+  // Set theme preset as data attribute
+  document.documentElement.setAttribute('data-theme', theme.preset || 'custom');
+})();</script>  <header class="sticky top-0 z-50 mx-4 mt-4 pt-2 sm:pt-4 max-w-10xl 3xl:mx-auto" role="banner"> <nav class="navbar bg-base-200/90 backdrop-blur-md border border-secondary/30 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300" role="navigation" aria-label="Primary navigation"> <!-- Logo/Brand --> <div class="navbar-start"> <a href="/" class="btn btn-ghost text-xl font-bold hover:bg-primary/10 transition-all duration-300" aria-label="Geoffrey Miller - Go to homepage"> <span class="text-glow-white">Geoffrey Miller</span> </a> </div> <!-- Desktop Navigation --> <div class="navbar-center hidden lg:flex"> <ul class="menu menu-horizontal px-1" role="menubar"> <li role="none"> <a href="/" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md"> Home </a> </li><li role="none"> <a href="/about" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md"> About </a> </li><li role="none"> <a href="/blog" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md"> Blog </a> </li><li role="none"> <a href="/projects" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md"> Projects </a> </li><li role="none"> <a href="/guides" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-accent bg-accent/15 border border-accent/30 shadow-lg"> Guides </a> </li><li role="none"> <a href="/resources" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md"> Resources </a> </li><li role="none"> <a href="/contact" role="menuitem" class="font-medium transition-all duration-300 rounded-lg px-4 py-2 text-base-content hover:text-accent hover:bg-accent/10 hover:border hover:border-accent/20 hover:shadow-md"> Contact </a> </li> </ul> </div> <!-- Mobile Menu --> <div class="navbar-end lg:hidden"> <!-- Menu Toggle Button --> <button id="mobile-menu-toggle" type="button" class="btn btn-ghost btn-square lg:hidden transition-all duration-300 relative" aria-label="Toggle mobile menu" aria-expanded="false"> <!-- Hamburger Icon with Synthwave glow --> <div id="hamburger-icon" class="flex flex-col gap-1.5 transition-all duration-300"> <span class="block w-6 h-0.5 bg-white shadow-[0_0_8px_rgba(249,42,173,0.8),0_0_12px_rgba(249,42,173,0.4)]"></span> <span class="block w-6 h-0.5 bg-white shadow-[0_0_8px_rgba(249,42,173,0.8),0_0_12px_rgba(249,42,173,0.4)]"></span> <span class="block w-6 h-0.5 bg-white shadow-[0_0_8px_rgba(249,42,173,0.8),0_0_12px_rgba(249,42,173,0.4)]"></span> </div> <!-- X Icon (hidden by default) --> <svg id="close-icon" class="w-6 h-6 text-white hidden absolute inset-0 m-auto transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3" style="filter: drop-shadow(0 0 8px rgba(249,42,173,0.8)) drop-shadow(0 0 12px rgba(249,42,173,0.4));"> <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path> </svg> </button> </div> </nav> </header> <!-- Full Screen Mobile Menu (Outside Header) --> <div id="mobile-menu" class="fixed inset-0 hidden" style="z-index: 999999 !important;"> <!-- Backdrop --> <div class="absolute inset-0 bg-black/80" id="menu-backdrop" style="z-index: 999998 !important;"></div> <!-- Menu Panel --> <div class="absolute right-0 top-0 h-full w-full sm:w-96 shadow-2xl transform transition-transform duration-300 translate-x-full overflow-y-auto" id="menu-panel" style="background-color: rgb(36, 27, 47) !important; z-index: 999999 !important;"> <!-- Menu Header --> <div class="flex items-center justify-between p-6 border-b border-secondary/30 relative z-10" style="background-color: rgb(36, 27, 47) !important;"> <h2 class="text-2xl font-bold text-glow-white">Menu</h2> <button id="mobile-menu-close" type="button" class="relative z-20 w-12 h-12 flex items-center justify-center rounded-lg transition-all duration-300 hover:scale-110" style="background-color: rgba(249, 42, 173, 0.3) !important; border: 2px solid rgba(249, 42, 173, 0.8) !important;" aria-label="Close menu"> <div class="flex flex-col gap-0 w-6 h-6 relative"> <span class="absolute top-1/2 left-0 w-full h-0.5 bg-white transform -translate-y-1/2 rotate-45" style="box-shadow: 0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(249,42,173,0.8);"></span> <span class="absolute top-1/2 left-0 w-full h-0.5 bg-white transform -translate-y-1/2 -rotate-45" style="box-shadow: 0 0 10px rgba(255,255,255,0.9), 0 0 20px rgba(249,42,173,0.8);"></span> </div> </button> </div> <!-- Menu Items --> <nav class="p-6 space-y-2" style="background-color: rgb(36, 27, 47) !important;"> <a href="/" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent"> <span class="text-2xl"> 🏠       </span> <span class="flex-1 text-lg">Home</span>  </a><a href="/about" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent"> <span class="text-2xl">  👤      </span> <span class="flex-1 text-lg">About</span>  </a><a href="/blog" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent"> <span class="text-2xl">   📝     </span> <span class="flex-1 text-lg">Blog</span>  </a><a href="/projects" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent"> <span class="text-2xl">    🚀    </span> <span class="flex-1 text-lg">Projects</span>  </a><a href="/guides" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 bg-primary/20 text-white border-2 border-primary/50 shadow-lg shadow-primary/20"> <span class="text-2xl">     📚   </span> <span class="flex-1 text-lg">Guides</span> <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 20 20"> <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path> </svg> </a><a href="/resources" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent"> <span class="text-2xl">      🔧  </span> <span class="flex-1 text-lg">Resources</span>  </a><a href="/contact" class="block font-medium transition-all duration-300 rounded-xl py-4 px-5 min-h-[60px] flex items-center gap-4 text-white/80 hover:text-white hover:bg-primary/10 hover:border-2 hover:border-primary/30 hover:translate-x-2 border-2 border-transparent"> <span class="text-2xl">       📧 </span> <span class="flex-1 text-lg">Contact</span>  </a> </nav> <!-- Menu Footer --> <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-secondary/30" style="background-color: rgb(36, 27, 47) !important;"> <p class="text-center text-sm text-base-content/50">© 2025 Geoffrey Miller</p> </div> </div> </div>  <main class="container mx-auto px-4 py-8 max-w-5xl" data-astro-cid-oolc5s6i> <!-- Breadcrumbs --> <nav class="mb-8" data-astro-cid-oolc5s6i> <ol class="flex items-center space-x-2 text-sm text-synth-text-muted" data-astro-cid-oolc5s6i> <li data-astro-cid-oolc5s6i><a href="/" class="hover:text-accent transition-colors" data-astro-cid-oolc5s6i>Home</a></li> <li class="before:content-['/'] before:mx-2" data-astro-cid-oolc5s6i> <a href="/guides" class="hover:text-accent transition-colors" data-astro-cid-oolc5s6i>Guides</a> </li> <li class="before:content-['/'] before:mx-2 text-synth-text truncate" data-astro-cid-oolc5s6i> Production Kubernetes Security: Best Practices &amp; Implementation Guide </li> </ol> </nav> <!-- Guide Header --> <header class="mb-12" data-astro-cid-oolc5s6i> <div class="card p-8 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border-accent/20" data-astro-cid-oolc5s6i> <!-- Category Badge --> <div class="flex items-center gap-4 mb-6" data-astro-cid-oolc5s6i> <span class="text-3xl" data-astro-cid-oolc5s6i>⭐</span> <div data-astro-cid-oolc5s6i> <span class="px-4 py-2 text-sm font-medium rounded-full bg-accent/20 text-accent border border-accent/30" data-astro-cid-oolc5s6i> Best Practices </span> <div class="flex items-center gap-4 mt-2" data-astro-cid-oolc5s6i> <time class="text-sm text-synth-text-muted" data-astro-cid-oolc5s6i> February 4, 2024 </time> <span class="text-sm text-synth-text-muted" data-astro-cid-oolc5s6i> 25 min read
+</span> <span class="text-sm text-synth-text-muted" data-astro-cid-oolc5s6i>
+Implementation Guide
+</span> </div> </div> </div> <!-- Title and Description --> <h1 class="text-4xl md:text-5xl font-bold text-glow mb-6 leading-tight" data-astro-cid-oolc5s6i> Production Kubernetes Security: Best Practices &amp; Implementation Guide </h1> <p class="text-xl text-synth-text leading-relaxed mb-6" data-astro-cid-oolc5s6i> Comprehensive security hardening guide for production Kubernetes clusters, covering authentication, authorization, network security, workload isolation, and compliance frameworks. </p> <!-- Tags --> <div class="flex flex-wrap gap-2 mb-6" data-astro-cid-oolc5s6i> <span class="px-3 py-1 text-sm rounded-full bg-white/10 text-synth-text border border-white/20" data-astro-cid-oolc5s6i>
+#kubernetes </span><span class="px-3 py-1 text-sm rounded-full bg-white/10 text-synth-text border border-white/20" data-astro-cid-oolc5s6i>
+#security </span><span class="px-3 py-1 text-sm rounded-full bg-white/10 text-synth-text border border-white/20" data-astro-cid-oolc5s6i>
+#production </span><span class="px-3 py-1 text-sm rounded-full bg-white/10 text-synth-text border border-white/20" data-astro-cid-oolc5s6i>
+#best-practices </span><span class="px-3 py-1 text-sm rounded-full bg-white/10 text-synth-text border border-white/20" data-astro-cid-oolc5s6i>
+#compliance </span> </div> <!-- Guide Difficulty & Prerequisites (if applicable) --> <div class="grid md:grid-cols-2 gap-4 text-sm" data-astro-cid-oolc5s6i> <div class="flex items-center gap-2" data-astro-cid-oolc5s6i> <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-oolc5s6i> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" data-astro-cid-oolc5s6i></path> </svg> <span class="text-synth-text-muted" data-astro-cid-oolc5s6i>Practical Implementation Focus</span> </div> <div class="flex items-center gap-2" data-astro-cid-oolc5s6i> <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-oolc5s6i> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" data-astro-cid-oolc5s6i></path> </svg> <span class="text-synth-text-muted" data-astro-cid-oolc5s6i>Battle-tested Approach</span> </div> </div> </div> </header> <!-- Table of Contents (if the guide has headers) --> <aside class="mb-12" data-astro-cid-oolc5s6i> <div class="card p-6 bg-synth-card-bg/50" data-astro-cid-oolc5s6i> <h2 class="font-semibold text-accent mb-4 flex items-center gap-2" data-astro-cid-oolc5s6i> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-oolc5s6i> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" data-astro-cid-oolc5s6i></path> </svg>
+Guide Overview
+</h2> <p class="text-sm text-synth-text-muted mb-3" data-astro-cid-oolc5s6i>
+This guide provides a comprehensive framework with practical implementation steps, 
+          real-world examples, and actionable takeaways you can apply immediately.
+</p> <div class="text-sm text-synth-text" data-astro-cid-oolc5s6i> <span class="font-medium" data-astro-cid-oolc5s6i>What you'll learn:</span> Industry-proven approaches, common pitfalls to avoid, 
+          and step-by-step implementation guidance.
+</div> </div> </aside> <!-- Guide Content --> <article class="prose prose-lg prose-invert max-w-none mb-12" data-astro-cid-oolc5s6i> <div class="card p-8" data-astro-cid-oolc5s6i> <h1 id="production-kubernetes-security-best-practices--implementation-guide">Production Kubernetes Security: Best Practices &#x26; Implementation Guide</h1>
+<p>Kubernetes security is not a single technology or configuration—it’s a comprehensive approach that spans multiple layers and requires ongoing attention. This guide provides battle-tested practices for securing Kubernetes in production environments, based on real-world implementations and industry standards.</p>
+<h2 id="security-architecture-overview">Security Architecture Overview</h2>
+<h3 id="defense-in-depth-strategy">Defense in Depth Strategy</h3>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="plaintext"><code><span class="line"><span>┌─────────────────────────────────────────────────────────────┐</span></span>
+<span class="line"><span>│  Application Security (Code, Dependencies, Secrets)        │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  Workload Security (Pods, Containers, Runtime)             │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  Platform Security (RBAC, Admission Controllers, Policies) │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  Network Security (Segmentation, Encryption, Firewalls)    │</span></span>
+<span class="line"><span>├─────────────────────────────────────────────────────────────┤</span></span>
+<span class="line"><span>│  Infrastructure Security (Nodes, OS, Hardware)             │</span></span>
+<span class="line"><span>└─────────────────────────────────────────────────────────────┘</span></span>
+<span class="line"><span></span></span></code></pre>
+<h3 id="security-principles">Security Principles</h3>
+<ol>
+<li><strong>Zero Trust</strong>: Never trust, always verify</li>
+<li><strong>Least Privilege</strong>: Minimal permissions required for function</li>
+<li><strong>Defense in Depth</strong>: Multiple security layers</li>
+<li><strong>Immutable Infrastructure</strong>: Treat infrastructure as code</li>
+<li><strong>Continuous Monitoring</strong>: Real-time threat detection</li>
+</ol>
+<h2 id="cluster-hardening">Cluster Hardening</h2>
+<h3 id="control-plane-security">Control Plane Security</h3>
+<p><strong>API Server Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># /etc/kubernetes/manifests/kube-apiserver.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Pod</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kube-apiserver</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  containers</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kube-apiserver</span></span>
+<span class="line"><span style="color:#72F1B8">    command</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">kube-apiserver</span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Authentication and Authorization</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--anonymous-auth=false</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--basic-auth-file=</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--token-auth-file=</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--authorization-mode=Node,RBAC</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--enable-admission-plugins=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,PodSecurityPolicy</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Encryption and TLS</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--tls-cert-file=/etc/kubernetes/pki/apiserver.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--tls-private-key-file=/etc/kubernetes/pki/apiserver.key</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--encryption-provider-config=/etc/kubernetes/encryption-config.yaml</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--tls-cipher-suites=TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Auditing</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--audit-log-path=/var/log/audit.log</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--audit-log-maxage=30</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--audit-log-maxbackup=3</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--audit-log-maxsize=100</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--audit-policy-file=/etc/kubernetes/audit-policy.yaml</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Security features</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--enable-bootstrap-token-auth=true</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--kubelet-certificate-authority=/etc/kubernetes/pki/ca.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Etcd Security Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># /etc/kubernetes/manifests/etcd.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  containers</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> etcd</span></span>
+<span class="line"><span style="color:#72F1B8">    command</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">etcd</span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Client communication</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--cert-file=/etc/kubernetes/pki/etcd/server.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--key-file=/etc/kubernetes/pki/etcd/server.key</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--client-cert-auth=true</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Peer communication</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--peer-key-file=/etc/kubernetes/pki/etcd/peer.key</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--peer-client-cert-auth=true</span></span>
+<span class="line"></span></code></pre>
+<h3 id="node-security">Node Security</h3>
+<p><strong>Kubelet Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># /var/lib/kubelet/config.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kubelet.config.k8s.io/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> KubeletConfiguration</span></span>
+<span class="line"><span style="color:#72F1B8">authentication</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  anonymous</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    enabled</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> false</span></span>
+<span class="line"><span style="color:#72F1B8">  webhook</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    enabled</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">  x509</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    clientCAFile</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /etc/kubernetes/pki/ca.crt</span></span>
+<span class="line"><span style="color:#72F1B8">authorization</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  mode</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Webhook</span></span>
+<span class="line"><span style="color:#72F1B8">tlsCertFile</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /var/lib/kubelet/pki/kubelet.crt</span></span>
+<span class="line"><span style="color:#72F1B8">tlsPrivateKeyFile</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /var/lib/kubelet/pki/kubelet.key</span></span>
+<span class="line"><span style="color:#72F1B8">rotateCertificates</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">serverTLSBootstrap</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">readOnlyPort</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 0</span></span>
+<span class="line"><span style="color:#72F1B8">protectKernelDefaults</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">makeIPTablesUtilChains</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">eventRecordQPS</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 0</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Node OS Hardening</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#848BBD;font-style:italic">#!/bin/bash</span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Node hardening script</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Disable unnecessary services</span></span>
+<span class="line"><span style="color:#FE4450">systemctl</span><span style="color:#BBBBBB"> disable</span><span style="color:#BBBBBB"> avahi-daemon</span></span>
+<span class="line"><span style="color:#FE4450">systemctl</span><span style="color:#BBBBBB"> disable</span><span style="color:#BBBBBB"> cups</span></span>
+<span class="line"><span style="color:#FE4450">systemctl</span><span style="color:#BBBBBB"> disable</span><span style="color:#BBBBBB"> bluetooth</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Configure kernel parameters</span></span>
+<span class="line"><span style="color:#FE4450">cat</span><span style="color:#FEDE5D"> >></span><span style="color:#BBBBBB"> /etc/sysctl.d/99-kubernetes-security.conf</span><span style="color:#FEDE5D"> &#x3C;&#x3C;</span><span style="color:#FF8B39"> EOF</span></span>
+<span class="line"><span style="color:#BBBBBB"># Network security</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.conf.all.send_redirects = 0</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.conf.default.send_redirects = 0</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.conf.all.accept_redirects = 0</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.conf.default.accept_redirects = 0</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.conf.all.secure_redirects = 0</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.conf.default.secure_redirects = 0</span></span>
+<span class="line"><span style="color:#BBBBBB">net.ipv4.ip_forward = 1</span></span>
+<span class="line"><span style="color:#BBBBBB">net.bridge.bridge-nf-call-iptables = 1</span></span>
+<span class="line"><span style="color:#BBBBBB">net.bridge.bridge-nf-call-ip6tables = 1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB"># Memory protection</span></span>
+<span class="line"><span style="color:#BBBBBB">kernel.randomize_va_space = 2</span></span>
+<span class="line"><span style="color:#BBBBBB">kernel.exec-shield = 1</span></span>
+<span class="line"><span style="color:#BBBBBB">kernel.kptr_restrict = 2</span></span>
+<span class="line"><span style="color:#FF8B39">EOF</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FE4450">sysctl</span><span style="color:#F97E72"> --system</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Configure audit logging</span></span>
+<span class="line"><span style="color:#FE4450">cat</span><span style="color:#FEDE5D"> ></span><span style="color:#BBBBBB"> /etc/audit/audit.rules</span><span style="color:#FEDE5D"> &#x3C;&#x3C;</span><span style="color:#FF8B39"> EOF</span></span>
+<span class="line"><span style="color:#BBBBBB"># Monitor system calls</span></span>
+<span class="line"><span style="color:#BBBBBB">-a always,exit -F arch=b64 -S execve -k exec</span></span>
+<span class="line"><span style="color:#BBBBBB">-a always,exit -F arch=b32 -S execve -k exec</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB"># Monitor file access</span></span>
+<span class="line"><span style="color:#BBBBBB">-w /etc/kubernetes/ -p wa -k kubernetes-config</span></span>
+<span class="line"><span style="color:#BBBBBB">-w /var/lib/kubelet/ -p wa -k kubelet-config</span></span>
+<span class="line"><span style="color:#BBBBBB">-w /etc/systemd/system/kubelet.service -p wa -k kubelet-service</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB"># Monitor network</span></span>
+<span class="line"><span style="color:#BBBBBB">-a always,exit -F arch=b64 -S socket -k network</span></span>
+<span class="line"><span style="color:#BBBBBB">-a always,exit -F arch=b32 -S socket -k network</span></span>
+<span class="line"><span style="color:#FF8B39">EOF</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FE4450">systemctl</span><span style="color:#BBBBBB"> enable</span><span style="color:#BBBBBB"> auditd</span></span>
+<span class="line"><span style="color:#FE4450">systemctl</span><span style="color:#BBBBBB"> start</span><span style="color:#BBBBBB"> auditd</span></span>
+<span class="line"></span></code></pre>
+<h2 id="identity-and-access-management">Identity and Access Management</h2>
+<h3 id="rbac-implementation">RBAC Implementation</h3>
+<p><strong>Namespace-based RBAC</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># namespace-rbac.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Role</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production-developer</span></span>
+<span class="line"><span style="color:#72F1B8">rules</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">apiGroups</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">""</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  resources</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"pods"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"services"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"configmaps"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"secrets"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  verbs</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"get"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"list"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"create"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"update"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"patch"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"delete"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">apiGroups</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"apps"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  resources</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"deployments"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"replicasets"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  verbs</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"get"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"list"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"create"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"update"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"patch"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"delete"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">apiGroups</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">""</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  resources</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"pods/log"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"pods/exec"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  verbs</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"get"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"list"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> RoleBinding</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production-developers</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">subjects</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> User</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> developer@company.com</span></span>
+<span class="line"><span style="color:#72F1B8">  apiGroup</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Group</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production-team</span></span>
+<span class="line"><span style="color:#72F1B8">  apiGroup</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io</span></span>
+<span class="line"><span style="color:#72F1B8">roleRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Role</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production-developer</span></span>
+<span class="line"><span style="color:#72F1B8">  apiGroup</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Service Account Management</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># service-account-security.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ServiceAccount</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> application-service-account</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">automountServiceAccountToken</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> false</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Role</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> application-role</span></span>
+<span class="line"><span style="color:#72F1B8">rules</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">apiGroups</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">""</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  resources</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"configmaps"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  verbs</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"get"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"list"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  resourceNames</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"app-config"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> RoleBinding</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> application-binding</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">subjects</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ServiceAccount</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> application-service-account</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">roleRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Role</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> application-role</span></span>
+<span class="line"><span style="color:#72F1B8">  apiGroup</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rbac.authorization.k8s.io</span></span>
+<span class="line"></span></code></pre>
+<h3 id="external-identity-integration">External Identity Integration</h3>
+<p><strong>OIDC Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># api-server-oidc.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Pod</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kube-apiserver</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  containers</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kube-apiserver</span></span>
+<span class="line"><span style="color:#72F1B8">    command</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">kube-apiserver</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--oidc-issuer-url=https://company.okta.com</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--oidc-client-id=kubernetes-client</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--oidc-username-claim=email</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--oidc-groups-claim=groups</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#BBBBBB">--oidc-ca-file=/etc/kubernetes/pki/oidc-ca.crt</span></span>
+<span class="line"></span></code></pre>
+<h2 id="network-security">Network Security</h2>
+<h3 id="network-policies">Network Policies</h3>
+<p><strong>Default Deny Policy</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># default-deny.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> networking.k8s.io/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> NetworkPolicy</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> default-deny-all</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  podSelector</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> {}</span></span>
+<span class="line"><span style="color:#72F1B8">  policyTypes</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#BBBBBB">Ingress</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#BBBBBB">Egress</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Application-Specific Policies</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># web-app-network-policy.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> networking.k8s.io/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> NetworkPolicy</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> web-app-policy</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  podSelector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> web-app</span></span>
+<span class="line"><span style="color:#72F1B8">  policyTypes</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#BBBBBB">Ingress</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#BBBBBB">Egress</span></span>
+<span class="line"><span style="color:#72F1B8">  ingress</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">from</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">namespaceSelector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ingress-system</span></span>
+<span class="line"><span style="color:#72F1B8">    ports</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">protocol</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> TCP</span></span>
+<span class="line"><span style="color:#72F1B8">      port</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 8080</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">from</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">podSelector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> api-gateway</span></span>
+<span class="line"><span style="color:#72F1B8">    ports</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">protocol</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> TCP</span></span>
+<span class="line"><span style="color:#72F1B8">      port</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 8080</span></span>
+<span class="line"><span style="color:#72F1B8">  egress</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">to</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">podSelector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> database</span></span>
+<span class="line"><span style="color:#72F1B8">    ports</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">protocol</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> TCP</span></span>
+<span class="line"><span style="color:#72F1B8">      port</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 5432</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">to</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">namespaceSelector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kube-system</span></span>
+<span class="line"><span style="color:#72F1B8">      podSelector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          k8s-app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> kube-dns</span></span>
+<span class="line"><span style="color:#72F1B8">    ports</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">protocol</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> UDP</span></span>
+<span class="line"><span style="color:#72F1B8">      port</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 53</span></span>
+<span class="line"></span></code></pre>
+<h3 id="service-mesh-security">Service Mesh Security</h3>
+<p><strong>Istio mTLS Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># istio-mtls.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> security.istio.io/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> PeerAuthentication</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> default</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  mtls</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    mode</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> STRICT</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> security.istio.io/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> AuthorizationPolicy</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> web-app-authz</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  selector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> web-app</span></span>
+<span class="line"><span style="color:#72F1B8">  rules</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">from</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">source</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        principals</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"cluster.local/ns/production/sa/api-gateway"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">to</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">operation</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        methods</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"GET"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"POST"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">        paths</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"/api/*"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"></span></code></pre>
+<h2 id="workload-security">Workload Security</h2>
+<h3 id="pod-security-standards">Pod Security Standards</h3>
+<p><strong>Pod Security Policy (Deprecated) Alternative</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># pod-security-standards.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Namespace</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">  labels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    pod-security.kubernetes.io/enforce</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> restricted</span></span>
+<span class="line"><span style="color:#72F1B8">    pod-security.kubernetes.io/audit</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> restricted</span></span>
+<span class="line"><span style="color:#72F1B8">    pod-security.kubernetes.io/warn</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> restricted</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Secure Pod Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># secure-pod.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> apps/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Deployment</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> secure-app</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  replicas</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 3</span></span>
+<span class="line"><span style="color:#72F1B8">  selector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> secure-app</span></span>
+<span class="line"><span style="color:#72F1B8">  template</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      labels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> secure-app</span></span>
+<span class="line"><span style="color:#72F1B8">    spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      serviceAccountName</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> application-service-account</span></span>
+<span class="line"><span style="color:#72F1B8">      automountServiceAccountToken</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> false</span></span>
+<span class="line"><span style="color:#72F1B8">      securityContext</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        runAsNonRoot</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">        runAsUser</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 10001</span></span>
+<span class="line"><span style="color:#72F1B8">        runAsGroup</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 10001</span></span>
+<span class="line"><span style="color:#72F1B8">        fsGroup</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 10001</span></span>
+<span class="line"><span style="color:#72F1B8">        seccompProfile</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          type</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> RuntimeDefault</span></span>
+<span class="line"><span style="color:#72F1B8">      containers</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">      - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> app</span></span>
+<span class="line"><span style="color:#72F1B8">        image</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> myapp:v1.2.3</span></span>
+<span class="line"><span style="color:#72F1B8">        securityContext</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          allowPrivilegeEscalation</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> false</span></span>
+<span class="line"><span style="color:#72F1B8">          readOnlyRootFilesystem</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">          runAsNonRoot</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">          runAsUser</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 10001</span></span>
+<span class="line"><span style="color:#72F1B8">          runAsGroup</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 10001</span></span>
+<span class="line"><span style="color:#72F1B8">          capabilities</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            drop</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">            - </span><span style="color:#BBBBBB">ALL</span></span>
+<span class="line"><span style="color:#72F1B8">          seccompProfile</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            type</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> RuntimeDefault</span></span>
+<span class="line"><span style="color:#72F1B8">        ports</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">        - </span><span style="color:#72F1B8">containerPort</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 8080</span></span>
+<span class="line"><span style="color:#72F1B8">          protocol</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> TCP</span></span>
+<span class="line"><span style="color:#72F1B8">        resources</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          requests</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            memory</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "64Mi"</span></span>
+<span class="line"><span style="color:#72F1B8">            cpu</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "250m"</span></span>
+<span class="line"><span style="color:#72F1B8">          limits</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            memory</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "128Mi"</span></span>
+<span class="line"><span style="color:#72F1B8">            cpu</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "500m"</span></span>
+<span class="line"><span style="color:#72F1B8">        livenessProbe</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          httpGet</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            path</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /health</span></span>
+<span class="line"><span style="color:#72F1B8">            port</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 8080</span></span>
+<span class="line"><span style="color:#72F1B8">          initialDelaySeconds</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 30</span></span>
+<span class="line"><span style="color:#72F1B8">          periodSeconds</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 10</span></span>
+<span class="line"><span style="color:#72F1B8">        readinessProbe</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          httpGet</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            path</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /ready</span></span>
+<span class="line"><span style="color:#72F1B8">            port</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 8080</span></span>
+<span class="line"><span style="color:#72F1B8">          initialDelaySeconds</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 5</span></span>
+<span class="line"><span style="color:#72F1B8">          periodSeconds</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> 5</span></span>
+<span class="line"><span style="color:#72F1B8">        volumeMounts</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">        - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> tmp</span></span>
+<span class="line"><span style="color:#72F1B8">          mountPath</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /tmp</span></span>
+<span class="line"><span style="color:#BBBBBB">        - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> cache</span></span>
+<span class="line"><span style="color:#72F1B8">          mountPath</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /app/cache</span></span>
+<span class="line"><span style="color:#72F1B8">      volumes</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">      - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> tmp</span></span>
+<span class="line"><span style="color:#72F1B8">        emptyDir</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> {}</span></span>
+<span class="line"><span style="color:#BBBBBB">      - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> cache</span></span>
+<span class="line"><span style="color:#72F1B8">        emptyDir</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> {}</span></span>
+<span class="line"></span></code></pre>
+<h3 id="container-image-security">Container Image Security</h3>
+<p><strong>Secure Dockerfile Example</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="dockerfile"><code><span class="line"><span style="color:#848BBD;font-style:italic"># Use specific, minimal base image</span></span>
+<span class="line"><span style="color:#FEDE5D">FROM</span><span style="color:#BBBBBB"> alpine:3.18.4</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Create non-root user</span></span>
+<span class="line"><span style="color:#FEDE5D">RUN</span><span style="color:#BBBBBB"> addgroup -g 10001 appgroup &#x26;&#x26; \</span></span>
+<span class="line"><span style="color:#BBBBBB">    adduser -D -u 10001 -G appgroup appuser</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Install only necessary packages</span></span>
+<span class="line"><span style="color:#FEDE5D">RUN</span><span style="color:#BBBBBB"> apk add --no-cache ca-certificates tzdata &#x26;&#x26; \</span></span>
+<span class="line"><span style="color:#BBBBBB">    rm -rf /var/cache/apk/*</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Copy application</span></span>
+<span class="line"><span style="color:#FEDE5D">COPY</span><span style="color:#BBBBBB"> --chown=appuser:appgroup app /usr/local/bin/app</span></span>
+<span class="line"><span style="color:#FEDE5D">RUN</span><span style="color:#BBBBBB"> chmod +x /usr/local/bin/app</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Use non-root user</span></span>
+<span class="line"><span style="color:#FEDE5D">USER</span><span style="color:#BBBBBB"> 10001:10001</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Expose port</span></span>
+<span class="line"><span style="color:#FEDE5D">EXPOSE</span><span style="color:#BBBBBB"> 8080</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Health check</span></span>
+<span class="line"><span style="color:#FEDE5D">HEALTHCHECK</span><span style="color:#BBBBBB"> --interval=30s --timeout=3s --start-period=5s --retries=3 \</span></span>
+<span class="line"><span style="color:#FEDE5D">  CMD</span><span style="color:#BBBBBB"> wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Run application</span></span>
+<span class="line"><span style="color:#FEDE5D">ENTRYPOINT</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"/usr/local/bin/app"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Image Scanning Integration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># .github/workflows/security-scan.yml</span></span>
+<span class="line"><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Container Security Scan</span></span>
+<span class="line"><span style="color:#F97E72">on</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  push</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    branches</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#BBBBBB">main</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  pull_request</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    branches</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#BBBBBB">main</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#72F1B8">jobs</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  scan</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    runs-on</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ubuntu-latest</span></span>
+<span class="line"><span style="color:#72F1B8">    steps</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">uses</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> actions/checkout@v4</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Build Image</span></span>
+<span class="line"><span style="color:#72F1B8">      run</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> docker build -t myapp:${{ github.sha }} .</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Trivy Vulnerability Scan</span></span>
+<span class="line"><span style="color:#72F1B8">      uses</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> aquasecurity/trivy-action@master</span></span>
+<span class="line"><span style="color:#72F1B8">      with</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        image-ref</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> myapp:${{ github.sha }}</span></span>
+<span class="line"><span style="color:#72F1B8">        format</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> 'sarif'</span></span>
+<span class="line"><span style="color:#72F1B8">        output</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> 'trivy-results.sarif'</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Upload Trivy Results</span></span>
+<span class="line"><span style="color:#72F1B8">      uses</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> github/codeql-action/upload-sarif@v2</span></span>
+<span class="line"><span style="color:#72F1B8">      with</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        sarif_file</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> 'trivy-results.sarif'</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Cosign Sign Image</span></span>
+<span class="line"><span style="color:#72F1B8">      run</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> |</span></span>
+<span class="line"><span style="color:#BBBBBB">        cosign sign --key cosign.key myapp:${{ github.sha }}</span></span>
+<span class="line"><span style="color:#72F1B8">      env</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        COSIGN_PASSWORD</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ${{ secrets.COSIGN_PASSWORD }}</span></span>
+<span class="line"></span></code></pre>
+<h2 id="secrets-management">Secrets Management</h2>
+<h3 id="external-secrets-integration">External Secrets Integration</h3>
+<p><strong>External Secrets Operator Configuration</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># external-secrets.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> external-secrets.io/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> SecretStore</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> vault-backend</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  provider</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    vault</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      server</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "https://vault.company.com"</span></span>
+<span class="line"><span style="color:#72F1B8">      path</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "secret"</span></span>
+<span class="line"><span style="color:#72F1B8">      version</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "v2"</span></span>
+<span class="line"><span style="color:#72F1B8">      auth</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        kubernetes</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          mountPath</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "kubernetes"</span></span>
+<span class="line"><span style="color:#72F1B8">          role</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "production-role"</span></span>
+<span class="line"><span style="color:#72F1B8">          serviceAccountRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            name</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "external-secrets-sa"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> external-secrets.io/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ExternalSecret</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> app-secrets</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  refreshInterval</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> 1h</span></span>
+<span class="line"><span style="color:#72F1B8">  secretStoreRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> vault-backend</span></span>
+<span class="line"><span style="color:#72F1B8">    kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> SecretStore</span></span>
+<span class="line"><span style="color:#72F1B8">  target</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> app-secrets</span></span>
+<span class="line"><span style="color:#72F1B8">    creationPolicy</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Owner</span></span>
+<span class="line"><span style="color:#72F1B8">  data</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">secretKey</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> database-password</span></span>
+<span class="line"><span style="color:#72F1B8">    remoteRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      key</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production/database</span></span>
+<span class="line"><span style="color:#72F1B8">      property</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> password</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">secretKey</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> api-key</span></span>
+<span class="line"><span style="color:#72F1B8">    remoteRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      key</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production/external-api</span></span>
+<span class="line"><span style="color:#72F1B8">      property</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> key</span></span>
+<span class="line"></span></code></pre>
+<h3 id="secret-rotation">Secret Rotation</h3>
+<p><strong>Automatic Secret Rotation</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># secret-rotation.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> batch/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> CronJob</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rotate-secrets</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> production</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  schedule</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "0 2 * * 0"</span><span style="color:#848BBD;font-style:italic">  # Weekly at 2 AM Sunday</span></span>
+<span class="line"><span style="color:#72F1B8">  jobTemplate</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      template</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          serviceAccountName</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> secret-rotator</span></span>
+<span class="line"><span style="color:#72F1B8">          containers</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">          - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rotator</span></span>
+<span class="line"><span style="color:#72F1B8">            image</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> secret-rotator:v1.0.0</span></span>
+<span class="line"><span style="color:#72F1B8">            command</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">            - </span><span style="color:#BBBBBB">/bin/sh</span></span>
+<span class="line"><span style="color:#BBBBBB">            - </span><span style="color:#BBBBBB">-c</span></span>
+<span class="line"><span style="color:#BBBBBB">            - </span><span style="color:#FEDE5D">|</span></span>
+<span class="line"><span style="color:#BBBBBB">              # Rotate database password</span></span>
+<span class="line"><span style="color:#BBBBBB">              NEW_PASSWORD=$(openssl rand -base64 32)</span></span>
+<span class="line"><span style="color:#BBBBBB">              vault kv put secret/production/database password="$NEW_PASSWORD"</span></span>
+<span class="line"><span style="color:#BBBBBB">              </span></span>
+<span class="line"><span style="color:#BBBBBB">              # Update database with new password</span></span>
+<span class="line"><span style="color:#BBBBBB">              kubectl patch secret app-secrets -p '{"data":{"database-password":"'$(echo -n "$NEW_PASSWORD" | base64)'"}}'</span></span>
+<span class="line"><span style="color:#BBBBBB">              </span></span>
+<span class="line"><span style="color:#BBBBBB">              # Restart pods to pick up new secret</span></span>
+<span class="line"><span style="color:#BBBBBB">              kubectl rollout restart deployment/web-app</span></span>
+<span class="line"><span style="color:#72F1B8">            env</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">            - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> VAULT_ADDR</span></span>
+<span class="line"><span style="color:#72F1B8">              value</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "https://vault.company.com"</span></span>
+<span class="line"><span style="color:#BBBBBB">            - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> VAULT_TOKEN</span></span>
+<span class="line"><span style="color:#72F1B8">              valueFrom</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">                secretKeyRef</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">                  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> vault-token</span></span>
+<span class="line"><span style="color:#72F1B8">                  key</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> token</span></span>
+<span class="line"><span style="color:#72F1B8">          restartPolicy</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> OnFailure</span></span>
+<span class="line"></span></code></pre>
+<h2 id="monitoring-and-incident-response">Monitoring and Incident Response</h2>
+<h3 id="security-monitoring">Security Monitoring</h3>
+<p><strong>Falco Rules for Runtime Security</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># falco-rules.yaml</span></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">rule</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Suspicious Network Activity</span></span>
+<span class="line"><span style="color:#72F1B8">  desc</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Detect suspicious network connections</span></span>
+<span class="line"><span style="color:#72F1B8">  condition</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> ></span></span>
+<span class="line"><span style="color:#BBBBBB">    spawned_process and</span></span>
+<span class="line"><span style="color:#BBBBBB">    proc.name in (nc, ncat, netcat) and</span></span>
+<span class="line"><span style="color:#BBBBBB">    not container.image.repository in (allowed_images)</span></span>
+<span class="line"><span style="color:#72F1B8">  output</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> ></span></span>
+<span class="line"><span style="color:#BBBBBB">    Suspicious network activity detected (user=%user.name container=%container.name</span></span>
+<span class="line"><span style="color:#BBBBBB">    image=%container.image.repository:%container.image.tag command=%proc.cmdline)</span></span>
+<span class="line"><span style="color:#72F1B8">  priority</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> WARNING</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">rule</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Privileged Container Spawned</span></span>
+<span class="line"><span style="color:#72F1B8">  desc</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Detect privileged container</span></span>
+<span class="line"><span style="color:#72F1B8">  condition</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> ></span></span>
+<span class="line"><span style="color:#BBBBBB">    container.privileged=true and</span></span>
+<span class="line"><span style="color:#BBBBBB">    not container.image.repository in (system_images)</span></span>
+<span class="line"><span style="color:#72F1B8">  output</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> ></span></span>
+<span class="line"><span style="color:#BBBBBB">    Privileged container spawned (user=%user.name container=%container.name</span></span>
+<span class="line"><span style="color:#BBBBBB">    image=%container.image.repository:%container.image.tag)</span></span>
+<span class="line"><span style="color:#72F1B8">  priority</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ERROR</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">- </span><span style="color:#72F1B8">rule</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Sensitive File Access</span></span>
+<span class="line"><span style="color:#72F1B8">  desc</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> Detect access to sensitive files</span></span>
+<span class="line"><span style="color:#72F1B8">  condition</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> ></span></span>
+<span class="line"><span style="color:#BBBBBB">    open_read and</span></span>
+<span class="line"><span style="color:#BBBBBB">    fd.name in (/etc/passwd, /etc/shadow, /etc/hosts) and</span></span>
+<span class="line"><span style="color:#BBBBBB">    not proc.name in (allowed_processes)</span></span>
+<span class="line"><span style="color:#72F1B8">  output</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> ></span></span>
+<span class="line"><span style="color:#BBBBBB">    Sensitive file accessed (user=%user.name container=%container.name</span></span>
+<span class="line"><span style="color:#BBBBBB">    file=%fd.name process=%proc.name)</span></span>
+<span class="line"><span style="color:#72F1B8">  priority</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> WARNING</span></span>
+<span class="line"></span></code></pre>
+<p><strong>Security Metrics Collection</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># security-monitoring.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> monitoring.coreos.com/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ServiceMonitor</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> security-metrics</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> monitoring</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  selector</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    matchLabels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      app</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> security-exporter</span></span>
+<span class="line"><span style="color:#72F1B8">  endpoints</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">port</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> metrics</span></span>
+<span class="line"><span style="color:#72F1B8">    path</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> /metrics</span></span>
+<span class="line"><span style="color:#72F1B8">    interval</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> 30s</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> monitoring.coreos.com/v1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> PrometheusRule</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> security-alerts</span></span>
+<span class="line"><span style="color:#72F1B8">  namespace</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> monitoring</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  groups</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - </span><span style="color:#72F1B8">name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> security.rules</span></span>
+<span class="line"><span style="color:#72F1B8">    rules</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">alert</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> PodSecurityViolation</span></span>
+<span class="line"><span style="color:#72F1B8">      expr</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> increase(falco_events_total[5m]) > 0</span></span>
+<span class="line"><span style="color:#72F1B8">      for</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> 0m</span></span>
+<span class="line"><span style="color:#72F1B8">      labels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        severity</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> warning</span></span>
+<span class="line"><span style="color:#72F1B8">      annotations</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        summary</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "Security violation detected"</span></span>
+<span class="line"><span style="color:#72F1B8">        description</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "Falco detected {{ $value }} security violations in the last 5 minutes"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">alert</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> HighFailedLogins</span></span>
+<span class="line"><span style="color:#72F1B8">      expr</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> rate(kubernetes_audit_failed_logins[5m]) > 0.1</span></span>
+<span class="line"><span style="color:#72F1B8">      for</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> 2m</span></span>
+<span class="line"><span style="color:#72F1B8">      labels</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        severity</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> critical</span></span>
+<span class="line"><span style="color:#72F1B8">      annotations</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        summary</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "High rate of failed login attempts"</span></span>
+<span class="line"><span style="color:#72F1B8">        description</span><span style="color:#B6B1B1">:</span><span style="color:#FF8B39"> "{{ $value }} failed login attempts per second"</span></span>
+<span class="line"></span></code></pre>
+<h3 id="incident-response-playbook">Incident Response Playbook</h3>
+<p><strong>Security Incident Response</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#848BBD;font-style:italic">#!/bin/bash</span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># security-incident-response.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Step 1: Isolate affected workloads</span></span>
+<span class="line"><span style="color:#36F9F6">isolate_workload</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> namespace</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">$1</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> pod_name</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">$2</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#36F9F6">    echo</span><span style="color:#FF8B39"> "Isolating workload: </span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">/</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Create network policy to block all traffic</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> apply</span><span style="color:#F97E72"> -f</span><span style="color:#BBBBBB"> -</span><span style="color:#FEDE5D"> &#x3C;&#x3C;</span><span style="color:#FF8B39">EOF</span></span>
+<span class="line"><span style="color:#BBBBBB">apiVersion: networking.k8s.io/v1</span></span>
+<span class="line"><span style="color:#BBBBBB">kind: NetworkPolicy</span></span>
+<span class="line"><span style="color:#BBBBBB">metadata:</span></span>
+<span class="line"><span style="color:#BBBBBB">  name: isolate-</span><span style="color:#FF7EDB">$pod_name</span></span>
+<span class="line"><span style="color:#BBBBBB">  namespace: </span><span style="color:#FF7EDB">$namespace</span></span>
+<span class="line"><span style="color:#BBBBBB">spec:</span></span>
+<span class="line"><span style="color:#BBBBBB">  podSelector:</span></span>
+<span class="line"><span style="color:#BBBBBB">    matchLabels:</span></span>
+<span class="line"><span style="color:#BBBBBB">      kubernetes.io/pod-name: </span><span style="color:#FF7EDB">$pod_name</span></span>
+<span class="line"><span style="color:#BBBBBB">  policyTypes:</span></span>
+<span class="line"><span style="color:#BBBBBB">  - Ingress</span></span>
+<span class="line"><span style="color:#BBBBBB">  - Egress</span></span>
+<span class="line"><span style="color:#FF8B39">EOF</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Step 2: Collect forensic data</span></span>
+<span class="line"><span style="color:#36F9F6">collect_forensics</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> namespace</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">$1</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> pod_name</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">$2</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> output_dir</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF8B39">"/tmp/forensics-$(</span><span style="color:#FE4450">date</span><span style="color:#FF8B39"> +%Y%m%d-%H%M%S)"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#FE4450">    mkdir</span><span style="color:#F97E72"> -p</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Pod details</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> describe</span><span style="color:#BBBBBB"> pod</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/pod-describe.txt"</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> get</span><span style="color:#BBBBBB"> pod</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -o</span><span style="color:#BBBBBB"> yaml</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/pod-manifest.yaml"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Logs</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> logs</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> --previous</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/previous-logs.txt"</span><span style="color:#FEDE5D"> ||</span><span style="color:#36F9F6"> true</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> logs</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/current-logs.txt"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Events</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> get</span><span style="color:#BBBBBB"> events</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> --field-selector</span><span style="color:#BBBBBB"> involvedObject.name=</span><span style="color:#FF8B39">"</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/events.txt"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Network info</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> exec</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> --</span><span style="color:#BBBBBB"> netstat</span><span style="color:#F97E72"> -tuln</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/network-connections.txt"</span><span style="color:#FEDE5D"> ||</span><span style="color:#36F9F6"> true</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> exec</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> -n</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#F97E72"> --</span><span style="color:#BBBBBB"> ps</span><span style="color:#BBBBBB"> aux</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">/processes.txt"</span><span style="color:#FEDE5D"> ||</span><span style="color:#36F9F6"> true</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#36F9F6">    echo</span><span style="color:#FF8B39"> "Forensic data collected in: </span><span style="color:#FF7EDB">$output_dir</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Step 3: Notification</span></span>
+<span class="line"><span style="color:#36F9F6">send_alert</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> message</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">$1</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Send to Slack</span></span>
+<span class="line"><span style="color:#FE4450">    curl</span><span style="color:#F97E72"> -X</span><span style="color:#BBBBBB"> POST</span><span style="color:#F97E72"> -H</span><span style="color:#FF8B39"> 'Content-type: application/json'</span><span style="color:#36F9F6"> \</span></span>
+<span class="line"><span style="color:#F97E72">        --data</span><span style="color:#FF8B39"> '{"text":"🚨 Security Incident: '"</span><span style="color:#FF7EDB">$message</span><span style="color:#FF8B39">"'"}'</span><span style="color:#36F9F6"> \</span></span>
+<span class="line"><span style="color:#FF8B39">        "</span><span style="color:#FF7EDB">$SLACK_WEBHOOK_URL</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Send to PagerDuty</span></span>
+<span class="line"><span style="color:#FE4450">    curl</span><span style="color:#F97E72"> -X</span><span style="color:#BBBBBB"> POST</span><span style="color:#FF8B39"> 'https://events.pagerduty.com/v2/enqueue'</span><span style="color:#36F9F6"> \</span></span>
+<span class="line"><span style="color:#F97E72">        -H</span><span style="color:#FF8B39"> 'Content-Type: application/json'</span><span style="color:#36F9F6"> \</span></span>
+<span class="line"><span style="color:#F97E72">        -d</span><span style="color:#FF8B39"> '{</span></span>
+<span class="line"><span style="color:#FF8B39">            "routing_key": "'"</span><span style="color:#FF7EDB">$PAGERDUTY_ROUTING_KEY</span><span style="color:#FF8B39">"'",</span></span>
+<span class="line"><span style="color:#FF8B39">            "event_action": "trigger",</span></span>
+<span class="line"><span style="color:#FF8B39">            "payload": {</span></span>
+<span class="line"><span style="color:#FF8B39">                "summary": "Kubernetes Security Incident",</span></span>
+<span class="line"><span style="color:#FF8B39">                "source": "kubernetes-security",</span></span>
+<span class="line"><span style="color:#FF8B39">                "severity": "critical",</span></span>
+<span class="line"><span style="color:#FF8B39">                "custom_details": {</span></span>
+<span class="line"><span style="color:#FF8B39">                    "message": "'"</span><span style="color:#FF7EDB">$message</span><span style="color:#FF8B39">"'"</span></span>
+<span class="line"><span style="color:#FF8B39">                }</span></span>
+<span class="line"><span style="color:#FF8B39">            }</span></span>
+<span class="line"><span style="color:#FF8B39">        }'</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Main incident response workflow</span></span>
+<span class="line"><span style="color:#36F9F6">main</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> namespace</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">${1</span><span style="color:#FEDE5D">:-</span><span style="color:#FF7EDB">default</span><span style="color:#FF7EDB;font-style:italic">}</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> pod_name</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF7EDB;font-style:italic">${2</span><span style="color:#FEDE5D">:-</span><span style="color:#FF7EDB;font-style:italic">}</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#FEDE5D">    if</span><span style="color:#BBBBBB"> [[ </span><span style="color:#FEDE5D">-z</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span><span style="color:#BBBBBB"> ]]; </span><span style="color:#FEDE5D">then</span></span>
+<span class="line"><span style="color:#36F9F6">        echo</span><span style="color:#FF8B39"> "Usage: </span><span style="color:#FF7EDB;font-style:italic">$0</span><span style="color:#FF8B39"> &#x3C;namespace> &#x3C;pod_name>"</span></span>
+<span class="line"><span style="color:#36F9F6">        exit</span><span style="color:#F97E72"> 1</span></span>
+<span class="line"><span style="color:#FEDE5D">    fi</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#36F9F6">    echo</span><span style="color:#FF8B39"> "Starting security incident response for </span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">/</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Execute response steps</span></span>
+<span class="line"><span style="color:#FE4450">    isolate_workload</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#FE4450">    collect_forensics</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">"</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#FE4450">    send_alert</span><span style="color:#FF8B39"> "Security incident detected in </span><span style="color:#FF7EDB">$namespace</span><span style="color:#FF8B39">/</span><span style="color:#FF7EDB">$pod_name</span><span style="color:#FF8B39">. Workload isolated and forensics collected."</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#36F9F6">    echo</span><span style="color:#FF8B39"> "Incident response completed. Review forensic data and take further action as needed."</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FE4450">main</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB;font-style:italic">$@</span><span style="color:#FF8B39">"</span></span>
+<span class="line"></span></code></pre>
+<h2 id="compliance-and-governance">Compliance and Governance</h2>
+<h3 id="policy-as-code">Policy as Code</h3>
+<p><strong>Open Policy Agent (OPA) Gatekeeper</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="yaml"><code><span class="line"><span style="color:#848BBD;font-style:italic"># opa-constraint-template.yaml</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> templates.gatekeeper.sh/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> ConstraintTemplate</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> k8srequiredsecuritycontext</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  crd</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">      names</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> K8sRequiredSecurityContext</span></span>
+<span class="line"><span style="color:#72F1B8">      validation</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">        properties</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">          runAsNonRoot</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            type</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> boolean</span></span>
+<span class="line"><span style="color:#72F1B8">          readOnlyRootFilesystem</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            type</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> boolean</span></span>
+<span class="line"><span style="color:#72F1B8">          allowPrivilegeEscalation</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">            type</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> boolean</span></span>
+<span class="line"><span style="color:#72F1B8">  targets</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">    - </span><span style="color:#72F1B8">target</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> admission.k8s.gatekeeper.sh</span></span>
+<span class="line"><span style="color:#72F1B8">      rego</span><span style="color:#B6B1B1">:</span><span style="color:#FEDE5D"> |</span></span>
+<span class="line"><span style="color:#BBBBBB">        package k8srequiredsecuritycontext</span></span>
+<span class="line"><span style="color:#BBBBBB">        </span></span>
+<span class="line"><span style="color:#BBBBBB">        violation[{"msg": msg}] {</span></span>
+<span class="line"><span style="color:#BBBBBB">          container := input.review.object.spec.containers[_]</span></span>
+<span class="line"><span style="color:#BBBBBB">          not container.securityContext.runAsNonRoot == true</span></span>
+<span class="line"><span style="color:#BBBBBB">          msg := "Container must run as non-root user"</span></span>
+<span class="line"><span style="color:#BBBBBB">        }</span></span>
+<span class="line"><span style="color:#BBBBBB">        </span></span>
+<span class="line"><span style="color:#BBBBBB">        violation[{"msg": msg}] {</span></span>
+<span class="line"><span style="color:#BBBBBB">          container := input.review.object.spec.containers[_]</span></span>
+<span class="line"><span style="color:#BBBBBB">          not container.securityContext.readOnlyRootFilesystem == true</span></span>
+<span class="line"><span style="color:#BBBBBB">          msg := "Container must have read-only root filesystem"</span></span>
+<span class="line"><span style="color:#BBBBBB">        }</span></span>
+<span class="line"><span style="color:#BBBBBB">        </span></span>
+<span class="line"><span style="color:#BBBBBB">        violation[{"msg": msg}] {</span></span>
+<span class="line"><span style="color:#BBBBBB">          container := input.review.object.spec.containers[_]</span></span>
+<span class="line"><span style="color:#BBBBBB">          not container.securityContext.allowPrivilegeEscalation == false</span></span>
+<span class="line"><span style="color:#BBBBBB">          msg := "Container must not allow privilege escalation"</span></span>
+<span class="line"><span style="color:#BBBBBB">        }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#BBBBBB">---</span></span>
+<span class="line"><span style="color:#72F1B8">apiVersion</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> constraints.gatekeeper.sh/v1beta1</span></span>
+<span class="line"><span style="color:#72F1B8">kind</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> K8sRequiredSecurityContext</span></span>
+<span class="line"><span style="color:#72F1B8">metadata</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  name</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> must-have-security-context</span></span>
+<span class="line"><span style="color:#72F1B8">spec</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">  match</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    kinds</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#BBBBBB">      - </span><span style="color:#72F1B8">apiGroups</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"apps"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">        kinds</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"Deployment"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">    namespaces</span><span style="color:#B6B1B1">:</span><span style="color:#BBBBBB"> [</span><span style="color:#FF8B39">"production"</span><span style="color:#BBBBBB">, </span><span style="color:#FF8B39">"staging"</span><span style="color:#BBBBBB">]</span></span>
+<span class="line"><span style="color:#72F1B8">  parameters</span><span style="color:#B6B1B1">:</span></span>
+<span class="line"><span style="color:#72F1B8">    runAsNonRoot</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">    readOnlyRootFilesystem</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> true</span></span>
+<span class="line"><span style="color:#72F1B8">    allowPrivilegeEscalation</span><span style="color:#B6B1B1">:</span><span style="color:#F97E72"> false</span></span>
+<span class="line"></span></code></pre>
+<h3 id="compliance-reporting">Compliance Reporting</h3>
+<p><strong>CIS Kubernetes Benchmark Automation</strong></p>
+<pre class="astro-code synthwave-84" style="background-color:#262335;color:#bbbbbb; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#848BBD;font-style:italic">#!/bin/bash</span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># cis-kubernetes-benchmark.sh</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Run kube-bench for CIS compliance</span></span>
+<span class="line"><span style="color:#36F9F6">run_kube_bench</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#36F9F6">    echo</span><span style="color:#FF8B39"> "Running CIS Kubernetes Benchmark..."</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> apply</span><span style="color:#F97E72"> -f</span><span style="color:#BBBBBB"> -</span><span style="color:#FEDE5D"> &#x3C;&#x3C;</span><span style="color:#FF8B39">EOF</span></span>
+<span class="line"><span style="color:#BBBBBB">apiVersion: batch/v1</span></span>
+<span class="line"><span style="color:#BBBBBB">kind: Job</span></span>
+<span class="line"><span style="color:#BBBBBB">metadata:</span></span>
+<span class="line"><span style="color:#BBBBBB">  name: kube-bench-$(</span><span style="color:#FE4450">date</span><span style="color:#BBBBBB"> +%s)</span></span>
+<span class="line"><span style="color:#BBBBBB">  namespace: kube-system</span></span>
+<span class="line"><span style="color:#BBBBBB">spec:</span></span>
+<span class="line"><span style="color:#BBBBBB">  template:</span></span>
+<span class="line"><span style="color:#BBBBBB">    spec:</span></span>
+<span class="line"><span style="color:#BBBBBB">      hostPID: true</span></span>
+<span class="line"><span style="color:#BBBBBB">      nodeSelector:</span></span>
+<span class="line"><span style="color:#BBBBBB">        kubernetes.io/os: linux</span></span>
+<span class="line"><span style="color:#BBBBBB">      tolerations:</span></span>
+<span class="line"><span style="color:#BBBBBB">      - key: node-role.kubernetes.io/master</span></span>
+<span class="line"><span style="color:#BBBBBB">        operator: Exists</span></span>
+<span class="line"><span style="color:#BBBBBB">        effect: NoSchedule</span></span>
+<span class="line"><span style="color:#BBBBBB">      containers:</span></span>
+<span class="line"><span style="color:#BBBBBB">      - name: kube-bench</span></span>
+<span class="line"><span style="color:#BBBBBB">        image: aquasec/kube-bench:latest</span></span>
+<span class="line"><span style="color:#BBBBBB">        command: ["kube-bench"]</span></span>
+<span class="line"><span style="color:#BBBBBB">        args: ["--json"]</span></span>
+<span class="line"><span style="color:#BBBBBB">        volumeMounts:</span></span>
+<span class="line"><span style="color:#BBBBBB">        - name: var-lib-etcd</span></span>
+<span class="line"><span style="color:#BBBBBB">          mountPath: /var/lib/etcd</span></span>
+<span class="line"><span style="color:#BBBBBB">          readOnly: true</span></span>
+<span class="line"><span style="color:#BBBBBB">        - name: var-lib-kubelet</span></span>
+<span class="line"><span style="color:#BBBBBB">          mountPath: /var/lib/kubelet</span></span>
+<span class="line"><span style="color:#BBBBBB">          readOnly: true</span></span>
+<span class="line"><span style="color:#BBBBBB">        - name: etc-kubernetes</span></span>
+<span class="line"><span style="color:#BBBBBB">          mountPath: /etc/kubernetes</span></span>
+<span class="line"><span style="color:#BBBBBB">          readOnly: true</span></span>
+<span class="line"><span style="color:#BBBBBB">        - name: usr-bin</span></span>
+<span class="line"><span style="color:#BBBBBB">          mountPath: /usr/local/mount-from-host/bin</span></span>
+<span class="line"><span style="color:#BBBBBB">          readOnly: true</span></span>
+<span class="line"><span style="color:#BBBBBB">      restartPolicy: Never</span></span>
+<span class="line"><span style="color:#BBBBBB">      volumes:</span></span>
+<span class="line"><span style="color:#BBBBBB">      - name: var-lib-etcd</span></span>
+<span class="line"><span style="color:#BBBBBB">        hostPath:</span></span>
+<span class="line"><span style="color:#BBBBBB">          path: "/var/lib/etcd"</span></span>
+<span class="line"><span style="color:#BBBBBB">      - name: var-lib-kubelet</span></span>
+<span class="line"><span style="color:#BBBBBB">        hostPath:</span></span>
+<span class="line"><span style="color:#BBBBBB">          path: "/var/lib/kubelet"</span></span>
+<span class="line"><span style="color:#BBBBBB">      - name: etc-kubernetes</span></span>
+<span class="line"><span style="color:#BBBBBB">        hostPath:</span></span>
+<span class="line"><span style="color:#BBBBBB">          path: "/etc/kubernetes"</span></span>
+<span class="line"><span style="color:#BBBBBB">      - name: usr-bin</span></span>
+<span class="line"><span style="color:#BBBBBB">        hostPath:</span></span>
+<span class="line"><span style="color:#BBBBBB">          path: "/usr/bin"</span></span>
+<span class="line"><span style="color:#FF8B39">EOF</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Wait for job to complete and get results</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> wait</span><span style="color:#F97E72"> --for=condition=complete</span><span style="color:#BBBBBB"> job/kube-bench-</span><span style="color:#FE4450;font-weight:bold">*</span><span style="color:#F97E72"> -n</span><span style="color:#BBBBBB"> kube-system</span><span style="color:#F97E72"> --timeout=300s</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> logs</span><span style="color:#F97E72"> -l</span><span style="color:#BBBBBB"> job-name=kube-bench-</span><span style="color:#FE4450;font-weight:bold">*</span><span style="color:#F97E72"> -n</span><span style="color:#BBBBBB"> kube-system</span><span style="color:#FEDE5D"> ></span><span style="color:#BBBBBB"> cis-benchmark-results.json</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#848BBD;font-style:italic">    # Clean up</span></span>
+<span class="line"><span style="color:#FE4450">    kubectl</span><span style="color:#BBBBBB"> delete</span><span style="color:#BBBBBB"> job</span><span style="color:#F97E72"> -l</span><span style="color:#BBBBBB"> job-name=kube-bench-</span><span style="color:#FE4450;font-weight:bold">*</span><span style="color:#F97E72"> -n</span><span style="color:#BBBBBB"> kube-system</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#848BBD;font-style:italic"># Generate compliance report</span></span>
+<span class="line"><span style="color:#36F9F6">generate_compliance_report</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> report_date</span><span style="color:#FFFFFFEE">=</span><span style="color:#BBBBBB">$(</span><span style="color:#FE4450">date</span><span style="color:#BBBBBB"> +%Y-%m-%d</span><span style="color:#BBBBBB">)</span></span>
+<span class="line"><span style="color:#FEDE5D">    local</span><span style="color:#FF7EDB"> report_file</span><span style="color:#FFFFFFEE">=</span><span style="color:#FF8B39">"compliance-report-</span><span style="color:#FF7EDB">$report_date</span><span style="color:#FF8B39">.html"</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#FE4450">    cat</span><span style="color:#FEDE5D"> ></span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB">$report_file</span><span style="color:#FF8B39">"</span><span style="color:#FEDE5D"> &#x3C;&#x3C;</span><span style="color:#FF8B39">EOF</span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;!DOCTYPE html></span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;html></span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;head></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;title>Kubernetes Security Compliance Report - </span><span style="color:#FF7EDB">$report_date</span><span style="color:#BBBBBB">&#x3C;/title></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;style></span></span>
+<span class="line"><span style="color:#BBBBBB">        body { font-family: Arial, sans-serif; margin: 40px; }</span></span>
+<span class="line"><span style="color:#BBBBBB">        .pass { color: green; }</span></span>
+<span class="line"><span style="color:#BBBBBB">        .fail { color: red; }</span></span>
+<span class="line"><span style="color:#BBBBBB">        .warn { color: orange; }</span></span>
+<span class="line"><span style="color:#BBBBBB">        table { border-collapse: collapse; width: 100%; }</span></span>
+<span class="line"><span style="color:#BBBBBB">        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }</span></span>
+<span class="line"><span style="color:#BBBBBB">        th { background-color: #f2f2f2; }</span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;/style></span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;/head></span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;body></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;h1>Kubernetes Security Compliance Report&#x3C;/h1></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;p>Report Date: </span><span style="color:#FF7EDB">$report_date</span><span style="color:#BBBBBB">&#x3C;/p></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;p>Cluster: $(</span><span style="color:#FE4450">kubectl</span><span style="color:#BBBBBB"> config current-context)&#x3C;/p></span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;h2>CIS Kubernetes Benchmark Results&#x3C;/h2></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;div id="cis-results"></span></span>
+<span class="line"><span style="color:#BBBBBB">        &#x3C;!-- CIS results will be inserted here --></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;/div></span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;h2>Security Policy Violations&#x3C;/h2></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;div id="policy-violations"></span></span>
+<span class="line"><span style="color:#BBBBBB">        &#x3C;!-- Policy violations will be inserted here --></span></span>
+<span class="line"><span style="color:#BBBBBB">    &#x3C;/div></span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;/body></span></span>
+<span class="line"><span style="color:#BBBBBB">&#x3C;/html></span></span>
+<span class="line"><span style="color:#FF8B39">EOF</span></span>
+<span class="line"><span style="color:#BBBBBB">    </span></span>
+<span class="line"><span style="color:#36F9F6">    echo</span><span style="color:#FF8B39"> "Compliance report generated: </span><span style="color:#FF7EDB">$report_file</span><span style="color:#FF8B39">"</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#36F9F6">main</span><span style="color:#BBBBBB">() {</span></span>
+<span class="line"><span style="color:#FE4450">    run_kube_bench</span></span>
+<span class="line"><span style="color:#FE4450">    generate_compliance_report</span></span>
+<span class="line"><span style="color:#BBBBBB">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#FE4450">main</span><span style="color:#FF8B39"> "</span><span style="color:#FF7EDB;font-style:italic">$@</span><span style="color:#FF8B39">"</span></span>
+<span class="line"></span></code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Kubernetes security is an ongoing journey that requires attention across multiple layers and continuous improvement. This guide provides a comprehensive foundation, but security practices must evolve with your threat landscape and organizational needs.</p>
+<p>Key takeaways:</p>
+<ul>
+<li><strong>Start with the fundamentals</strong>: Secure cluster configuration and RBAC</li>
+<li><strong>Implement defense in depth</strong>: Multiple security layers provide better protection</li>
+<li><strong>Automate security practices</strong>: Manual processes don’t scale and are error-prone</li>
+<li><strong>Monitor continuously</strong>: Real-time detection and response are crucial</li>
+<li><strong>Stay current</strong>: Security is an ongoing process, not a one-time implementation</li>
+</ul>
+<p>Remember that security is not just about technology—it requires organizational commitment, proper training, and a culture that values security as an enabler of business objectives, not an impediment to development velocity.</p> </div> </article> <!-- AI Summary Section (if available) --> <section class="mb-12" data-astro-cid-oolc5s6i> <div class="card p-6 bg-gradient-to-r from-accent/5 to-accent-dark/5 border-accent/20" data-astro-cid-oolc5s6i> <div class="flex items-start gap-3" data-astro-cid-oolc5s6i> <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center mt-1" data-astro-cid-oolc5s6i> <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-oolc5s6i> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" data-astro-cid-oolc5s6i></path> </svg> </div> <div data-astro-cid-oolc5s6i> <h3 class="font-semibold text-accent mb-3" data-astro-cid-oolc5s6i>Key Takeaways</h3> <p class="text-synth-text leading-relaxed" data-astro-cid-oolc5s6i> A detailed guide for securing Kubernetes in production environments, covering all layers from cluster hardening to workload security, with practical implementation examples and compliance considerations. </p> </div> </div> </div> </section> <!-- Implementation Checklist (Placeholder) --> <section class="mb-12" data-astro-cid-oolc5s6i> <div class="card p-6 border-accent/20" data-astro-cid-oolc5s6i> <h3 class="font-semibold text-glow mb-4 flex items-center gap-2" data-astro-cid-oolc5s6i> <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-oolc5s6i> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" data-astro-cid-oolc5s6i></path> </svg>
+Quick Implementation Checklist
+</h3> <p class="text-sm text-synth-text-muted mb-4" data-astro-cid-oolc5s6i>
+Use this checklist to track your progress implementing the concepts from this guide:
+</p> <div class="grid md:grid-cols-2 gap-3 text-sm" data-astro-cid-oolc5s6i> <label class="flex items-center gap-2 cursor-pointer" data-astro-cid-oolc5s6i> <input type="checkbox" class="w-4 h-4 text-accent rounded border-synth-border focus:ring-accent/50" data-astro-cid-oolc5s6i> <span class="text-synth-text" data-astro-cid-oolc5s6i>Review current state assessment</span> </label> <label class="flex items-center gap-2 cursor-pointer" data-astro-cid-oolc5s6i> <input type="checkbox" class="w-4 h-4 text-accent rounded border-synth-border focus:ring-accent/50" data-astro-cid-oolc5s6i> <span class="text-synth-text" data-astro-cid-oolc5s6i>Identify key stakeholders</span> </label> <label class="flex items-center gap-2 cursor-pointer" data-astro-cid-oolc5s6i> <input type="checkbox" class="w-4 h-4 text-accent rounded border-synth-border focus:ring-accent/50" data-astro-cid-oolc5s6i> <span class="text-synth-text" data-astro-cid-oolc5s6i>Define success metrics</span> </label> <label class="flex items-center gap-2 cursor-pointer" data-astro-cid-oolc5s6i> <input type="checkbox" class="w-4 h-4 text-accent rounded border-synth-border focus:ring-accent/50" data-astro-cid-oolc5s6i> <span class="text-synth-text" data-astro-cid-oolc5s6i>Create implementation timeline</span> </label> </div> </div> </section> <!-- Share Section --> <section class="mb-12" data-astro-cid-oolc5s6i> <div class="card p-6" data-astro-cid-oolc5s6i> <h3 class="font-semibold text-glow mb-4" data-astro-cid-oolc5s6i>Share this guide</h3> <div class="flex flex-wrap gap-3" data-astro-cid-oolc5s6i> <a href="https://twitter.com/intent/tweet?text=Production%20Kubernetes%20Security%3A%20Best%20Practices%20%26%20Implementation%20Guide%20-%20A%20comprehensive%20platform%20engineering%20guide&url=https%3A%2F%2Fgeoffmiller.dev%2Fguides%2Fbest-practices%2Fproduction-kubernetes-security" target="_blank" rel="noopener noreferrer" class="btn-secondary text-sm" data-astro-cid-oolc5s6i>
+Share on Twitter
+</a> <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgeoffmiller.dev%2Fguides%2Fbest-practices%2Fproduction-kubernetes-security" target="_blank" rel="noopener noreferrer" class="btn-secondary text-sm" data-astro-cid-oolc5s6i>
+Share on LinkedIn
+</a> <button onclick="navigator.clipboard.writeText('https://geoffmiller.dev/guides/best-practices/production-kubernetes-security')" class="btn-secondary text-sm" data-astro-cid-oolc5s6i>
+Copy Link
+</button> </div> </div> </section> <!-- Related Guides -->  <!-- Back to Guides --> <section class="text-center" data-astro-cid-oolc5s6i> <a href="/guides" class="btn-secondary" data-astro-cid-oolc5s6i>
+← Back to All Guides
+</a> </section> </main> <footer class="footer footer-center bg-base-200/50 backdrop-blur-sm text-base-content rounded-t-2xl mt-8 sm:mt-12 border-t border-primary/20"> <div class="container mx-auto p-4 sm:p-8 md:p-10"> <!-- Mobile Layout --> <div class="sm:hidden space-y-4"> <!-- Brand --> <div class="text-center"> <div class="text-lg font-bold text-glow-white">Geoffrey Miller</div> <p class="text-xs opacity-70 mt-1"> Infrastructure Director &amp; Principal Cloud Architect </p> </div> <!-- Quick Links Grid --> <div class="text-center"> <div class="text-glow-cyan text-xs uppercase tracking-wider mb-2">Quick Links</div> <div class="flex justify-center gap-3 text-sm flex-wrap">  <a href="/about" class="text-white/70 hover:text-glow-cyan transition-colors">About</a> <span class="text-white/30">•</span> <a href="/blog" class="text-white/70 hover:text-glow-cyan transition-colors">Blog</a> <span class="text-white/30">•</span> <a href="/projects" class="text-white/70 hover:text-glow-cyan transition-colors">Projects</a> <span class="text-white/30">•</span> <a href="/guides" class="text-white/70 hover:text-glow-cyan transition-colors">Guides</a> <span class="text-white/30">•</span> <a href="/resources" class="text-white/70 hover:text-glow-cyan transition-colors">Resources</a> <span class="text-white/30">•</span> <a href="/contact" class="text-white/70 hover:text-glow-cyan transition-colors">Contact</a>  </div> </div> <!-- Social & Location --> <div class="flex items-center justify-center gap-4"> <a href="https://github.com/GeoffMillerAZ" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm btn-square hover:text-glow-pink" aria-label="GitHub"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path> </svg> </a> <span class="text-xs opacity-70">Phoenix, AZ</span> <a href="https://linkedin.com/in/geoff-e-miller" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-sm btn-square hover:text-glow-pink" aria-label="LinkedIn"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path> </svg> </a> </div> </div> <!-- Desktop Layout --> <div class="hidden sm:grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl"> <!-- Brand Section --> <div class="space-y-3 sm:space-y-4"> <div class="text-base sm:text-lg font-bold text-glow-white">Geoffrey Miller</div> <p class="text-sm sm:text-base opacity-70 leading-relaxed"> Infrastructure Director &amp; Principal Cloud Architect with 12 years designing, leading, and operating cloud platforms (20 years in IT overall). Deep expertise in AWS Kubernetes and the broader CNCF ecosystem with a strong focus on developer efficiency and platform scale. </p> </div> <!-- Quick Links --> <div class="space-y-3 sm:space-y-4"> <div class="footer-title text-glow-cyan opacity-100 text-sm sm:text-base">Quick Links</div> <nav class="flex flex-wrap gap-x-4 gap-y-2 text-sm sm:text-base"> <a href="/about" class="text-white/70 hover:text-glow-cyan min-h-[44px] flex items-center touch-manipulation transition-colors">About</a><a href="/blog" class="text-white/70 hover:text-glow-cyan min-h-[44px] flex items-center touch-manipulation transition-colors">Blog</a><a href="/projects" class="text-white/70 hover:text-glow-cyan min-h-[44px] flex items-center touch-manipulation transition-colors">Projects</a><a href="/guides" class="text-white/70 hover:text-glow-cyan min-h-[44px] flex items-center touch-manipulation transition-colors">Guides</a><a href="/resources" class="text-white/70 hover:text-glow-cyan min-h-[44px] flex items-center touch-manipulation transition-colors">Resources</a><a href="/contact" class="text-white/70 hover:text-glow-cyan min-h-[44px] flex items-center touch-manipulation transition-colors">Contact</a> </nav> </div> <!-- Social Links --> <div class="space-y-3 sm:space-y-4"> <div class="footer-title text-glow-cyan opacity-100 text-sm sm:text-base">Connect</div> <div class="flex justify-center md:justify-start space-x-3 sm:space-x-4"> <a href="https://github.com/GeoffMillerAZ" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-md btn-square hover:text-glow-pink hover:bg-accent/10 min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-200" aria-label="GitHub Profile"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path> </svg> </a> <a href="https://linkedin.com/in/geoff-e-miller" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-md btn-square hover:text-glow-pink hover:bg-accent/10 min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-200" aria-label="LinkedIn Profile"> <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"> <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path> </svg> </a> </div> <div class="text-sm sm:text-base text-center md:text-left"> <p class="text-white/70">Phoenix, AZ</p> <p class="mt-1 sm:mt-2 text-white/70">
+Contact via
+<a href="https://linkedin.com/in/geoff-e-miller" target="_blank" rel="noopener noreferrer" class="text-glow-cyan font-medium py-2 px-1 min-h-[44px] inline-flex items-center touch-manipulation hover:text-glow-pink transition-colors">
+LinkedIn
+</a> </p> </div> </div> </div> <!-- Bottom Section --> <div class="divider my-4 sm:my-6"></div> <div class="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4"> <div class="text-xs opacity-60 text-center sm:text-left"> <p>
+© 2025 Geoffrey Miller. Built with
+ <a href="https://astro.build" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-glow-cyan">Astro</a> ,  <a href="https://daisyui.com" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-glow-cyan">DaisyUI</a> 
+and hosted on
+<a href="https://pages.github.com" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-glow-cyan">GitHub Pages</a>.
+<span class="hidden sm:inline">
+This site is open source on
+<a href="https://github.com/GeoffMillerAZ/geoff" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-glow-cyan">
+GitHub
+</a>.
+</span> </p> <p class="mt-1">
+Theme inspired by
+<a href="https://marketplace.visualstudio.com/items?itemName=RobbOwen.synthwave-vscode" target="_blank" rel="noopener noreferrer" class="link link-accent hover:text-glow-pink">
+VS Code's Synthwave '84
+</a> </p> </div> <div class="badge badge-outline badge-xs opacity-60 shrink-0">
+v2025.01.15.1
+</div> </div> </div> </footer>  <!-- Analytics would go here --> <!-- Vercel Analytics --> <!-- PostHog Analytics --> </body></html>  <!-- JSON-LD Structured Data for Guide --> <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Production Kubernetes Security: Best Practices & Implementation Guide","description":"Comprehensive security hardening guide for production Kubernetes clusters, covering authentication, authorization, network security, workload isolation, and compliance frameworks.","author":{"@type":"Person","name":"Geoffrey Miller","url":"https://geoffmiller.dev","jobTitle":"Infrastructure Director & Principal Cloud Architect"},"datePublished":"2024-02-05T00:00:00.000Z","dateModified":"2024-02-05T00:00:00.000Z","publisher":{"@type":"Person","name":"Geoffrey Miller"},"url":"https://geoffmiller.dev/guides/best-practices/production-kubernetes-security","keywords":"kubernetes, security, production, best-practices, compliance","articleSection":"Platform Engineering Guide","wordCount":4843,"timeRequired":"PT25M","learningResourceType":"Guide","educationalLevel":"Professional","about":{"@type":"Thing","name":"Best Practices"}}</script>
