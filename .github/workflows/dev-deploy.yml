@@ -18,7 +18,6 @@ on:
   push:
     branches:
       - dev
-      - bugfix/ci-deployment-fix  # Temporary for testing
   workflow_dispatch:
 
 permissions:
