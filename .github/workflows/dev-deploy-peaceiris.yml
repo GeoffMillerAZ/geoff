@@ -1,0 +1,45 @@
+# Deploy using peaceiris/actions-gh-pages
+name: Deploy with Peaceiris Action
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  BUILD_DIR: './dist'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Astro
+        run: npx astro build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.BUILD_DIR }}
+          publish_branch: master
+          force_orphan: true
+          cname: dev.geoffmiller.cloud
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '🚀 Deploy from ${{ github.sha }}'

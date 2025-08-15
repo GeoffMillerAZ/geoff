@@ -1,0 +1,121 @@
+# Enhanced Dev Deploy Workflow V2
+# 
+# Triggers: Push to 'dev' branch
+# Output: Static site deployed to 'master' branch
+# Domain: https://dev.geoffmiller.cloud
+
+name: Deploy Dev Site V2
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  BUILD_DIR: 'dist'
+  DEPLOY_BRANCH: 'master'
+  DOMAIN: 'dev.geoffmiller.cloud'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  actions: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: 📦 Install dependencies
+        run: |
+          echo "Installing dependencies..."
+          npm install
+      
+      - name: 🔨 Build Astro site
+        run: |
+          echo "Building Astro site..."
+          npx astro build
+          
+          # Verify build succeeded
+          if [ ! -d "${{ env.BUILD_DIR }}" ]; then
+            echo "❌ Build failed: ${{ env.BUILD_DIR }} directory not found"
+            exit 1
+          fi
+          
+          if [ ! -f "${{ env.BUILD_DIR }}/index.html" ]; then
+            echo "❌ Build failed: index.html not found"
+            exit 1
+          fi
+          
+          echo "✅ Build successful"
+          echo "Files in ${{ env.BUILD_DIR }}:"
+          ls -la ${{ env.BUILD_DIR }}/ | head -20
+      
+      - name: 📝 Prepare deployment files
+        run: |
+          echo "Preparing deployment files..."
+          
+          # Create CNAME for custom domain
+          echo "${{ env.DOMAIN }}" > ${{ env.BUILD_DIR }}/CNAME
+          
+          # Create .nojekyll to bypass Jekyll processing
+          touch ${{ env.BUILD_DIR }}/.nojekyll
+          
+          # Add deployment timestamp
+          echo "Deployed: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" > ${{ env.BUILD_DIR }}/deployment.txt
+          echo "Commit: ${GITHUB_SHA}" >> ${{ env.BUILD_DIR }}/deployment.txt
+          
+          echo "✅ Deployment files prepared"
+      
+      - name: 🚀 Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Starting deployment to ${{ env.DEPLOY_BRANCH }} branch..."
+          
+          # Configure git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global init.defaultBranch master
+          
+          # Move to build directory
+          cd ${{ env.BUILD_DIR }}
+          
+          # Initialize new git repository
+          git init
+          
+          # Add all files
+          git add -A
+          
+          # Create commit
+          git commit -m "🚀 Deploy from ${GITHUB_SHA::8} - $(date -u +"%Y-%m-%d %H:%M UTC")"
+          
+          # Force push to deployment branch
+          git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:${{ env.DEPLOY_BRANCH }}
+          
+          echo "✅ Deployment complete!"
+      
+      - name: ✅ Verify deployment
+        run: |
+          echo "=========================================="
+          echo "Deployment Summary"
+          echo "=========================================="
+          echo "✅ Site URL: https://${{ env.DOMAIN }}"
+          echo "📦 Branch: ${{ env.DEPLOY_BRANCH }}"
+          echo "🔨 Commit: ${GITHUB_SHA::8}"
+          echo "📅 Time: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          echo ""
+          echo "Verify deployment at:"
+          echo "👉 https://github.com/${{ github.repository }}/tree/${{ env.DEPLOY_BRANCH }}"
+          echo "=========================================="
