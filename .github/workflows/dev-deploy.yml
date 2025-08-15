@@ -45,6 +45,7 @@ jobs:
       - name: Build Astro site
         run: |
           echo "🔨 Building Astro site..."
+          # Build without type checking - using astro build directly
           npx astro build
           echo "✅ Build completed successfully"
           

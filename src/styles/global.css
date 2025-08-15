@@ -216,11 +216,6 @@
     opacity: 1;
   }
 
-  .text-glow {
-    color: var(--synth-glow-text);
-    text-shadow: 0 0 4px rgba(249, 42, 173, 0.4);
-  }
-
   /* Synthwave accent colors */
   .text-accent {
     color: var(--synth-pink);
@@ -342,6 +337,12 @@
 
 /* Utility classes */
 @layer utilities {
+  /* Text glow effects - moved to utilities for @apply usage */
+  .text-glow {
+    color: var(--synth-glow-text);
+    text-shadow: 0 0 4px rgba(249, 42, 173, 0.4);
+  }
+  
   .text-balance {
     text-wrap: balance;
   }

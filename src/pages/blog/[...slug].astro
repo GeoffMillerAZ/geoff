@@ -235,67 +235,98 @@ const readingTime = Math.ceil(entry.body.split(' ').length / 200); // Approximat
   
   /* Custom prose styles for dark theme */
   .prose {
-    @apply text-synth-text;
+    color: var(--synth-text, #e5e5e5);
   }
   
+  /* Apply glow effect to headings without @apply */
   .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    @apply text-glow;
+    color: var(--synth-glow-text, #ffffff);
+    text-shadow: 0 0 4px rgba(249, 42, 173, 0.4);
   }
   
   .prose h2 {
-    @apply text-2xl font-bold mt-8 mb-4;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
   }
   
   .prose h3 {
-    @apply text-xl font-semibold mt-6 mb-3;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
   }
   
   .prose p {
-    @apply mb-4 leading-relaxed;
+    margin-bottom: 1rem;
+    line-height: 1.625;
   }
   
   .prose a {
-    @apply text-accent hover:brightness-125 transition-all;
+    color: var(--synth-pink, #f92aad);
+    transition: all 0.3s;
+  }
+  .prose a:hover {
+    filter: brightness(1.25);
   }
   
   .prose blockquote {
-    @apply border-l-4 border-accent pl-4 italic opacity-70;
+    border-left: 4px solid var(--synth-pink, #f92aad);
+    padding-left: 1rem;
+    font-style: italic;
+    opacity: 0.7;
   }
   
   .prose code {
-    @apply bg-synth-card-bg px-2 py-1 rounded text-accent text-sm;
+    background-color: var(--synth-card-bg, rgba(36, 27, 47, 0.6));
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    color: var(--synth-pink, #f92aad);
+    font-size: 0.875rem;
   }
   
   .prose pre {
-    @apply bg-synth-card-bg p-4 rounded-lg border border-synth-border overflow-x-auto;
+    background-color: var(--synth-card-bg, rgba(36, 27, 47, 0.6));
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--synth-border, rgba(114, 241, 184, 0.2));
+    overflow-x: auto;
   }
   
   .prose pre code {
-    @apply bg-transparent p-0;
+    background-color: transparent;
+    padding: 0;
   }
   
   .prose ul, .prose ol {
-    @apply mb-4 pl-6;
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
   }
   
   .prose li {
-    @apply mb-2;
+    margin-bottom: 0.5rem;
   }
   
   .prose table {
-    @apply w-full border-collapse border border-synth-border;
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--synth-border, rgba(114, 241, 184, 0.2));
   }
   
   .prose th, .prose td {
-    @apply border border-synth-border px-4 py-2;
+    border: 1px solid var(--synth-border, rgba(114, 241, 184, 0.2));
+    padding: 0.5rem 1rem;
   }
   
   .prose th {
-    @apply bg-synth-card-bg font-semibold;
+    background-color: var(--synth-card-bg, rgba(36, 27, 47, 0.6));
+    font-weight: 600;
   }
   
   .prose img {
-    @apply rounded-lg border border-synth-border;
+    border-radius: 0.5rem;
+    border: 1px solid var(--synth-border, rgba(114, 241, 184, 0.2));
   }
 </style>
 
