@@ -18,6 +18,7 @@ on:
   push:
     branches:
       - dev
+      - bugfix/ci-deployment-fix  # Temporary for testing
   workflow_dispatch:
 
 permissions:
@@ -42,7 +43,24 @@ jobs:
         run: npm install
       
       - name: Build Astro site
-        run: npx astro build
+        run: |
+          echo "🔨 Building Astro site..."
+          npx astro build
+          echo "✅ Build completed successfully"
+          
+      - name: Verify build output
+        run: |
+          echo "📁 Checking dist folder..."
+          if [ ! -d "dist" ]; then
+            echo "❌ ERROR: dist folder not found!"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ ERROR: index.html not found in dist!"
+            exit 1
+          fi
+          echo "✅ Build output verified"
+          ls -la dist/ | head -20
       
       - name: Prepare deployment files
         run: |
@@ -72,17 +90,26 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Create orphan branch for clean history
+          # Move to dist folder
           cd dist
+          
+          # Initialize git repo
           git init
-          git checkout -b master
+          
+          # Create initial commit on orphan branch
+          git checkout --orphan master
           
           # Add all files
           git add -A
+          
+          # Create commit
           git commit -m "Deploy dev site from commit ${GITHUB_SHA::7} [skip ci]"
           
+          # Add remote and push
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          
           # Force push to master branch
-          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" master:master
+          git push -f origin master
           
           echo "✅ Deployment complete!"
       
