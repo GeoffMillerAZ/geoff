@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div style={{ 
+    <main style={{ 
       minHeight: '100vh', 
       background: '#0a0a12', 
       color: '#fff',
@@ -23,6 +23,6 @@ export default function Home() {
         Building and leading high-performance engineering teams that transform how organizations deliver software.
         20+ years in IT, 12+ years specializing in cloud architecture and platform engineering.
       </p>
-    </div>
+    </main>
   )
 }
