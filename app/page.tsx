@@ -128,11 +128,11 @@ export default function ResumeDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <span className="text-xl font-bold text-teal-400">GM</span>
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="#about" className="text-slate-400 hover:text-teal-400 transition-colors">About</a>
-              <a href="#experience" className="text-slate-400 hover:text-teal-400 transition-colors">Experience</a>
-              <a href="#skills" className="text-slate-400 hover:text-teal-400 transition-colors">Skills</a>
-              <a href="#certifications" className="text-slate-400 hover:text-teal-400 transition-colors">Certifications</a>
+            <nav className="hidden md:flex items-center">
+              <a href="#about" className="text-slate-400 hover:text-teal-400 transition-colors px-3">About</a>
+              <a href="#experience" className="text-slate-400 hover:text-teal-400 transition-colors px-3">Experience</a>
+              <a href="#skills" className="text-slate-400 hover:text-teal-400 transition-colors px-3">Skills</a>
+              <a href="#certifications" className="text-slate-400 hover:text-teal-400 transition-colors px-3">Certifications</a>
             </nav>
             <a 
               href={resumeData.profile.links.resume}
@@ -194,18 +194,18 @@ export default function ResumeDashboard() {
               {/* Quick Stats */}
               <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
                 <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Quick Stats</h3>
-                <div className="space-y-3">
+                <div className="flex flex-col" style={{ gap: '12px' }}>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">Years in IT</span>
-                    <span className="text-teal-400 font-bold">{resumeData.profile.stats.yearsIT}+</span>
+                    <span className="text-slate-400 text-sm">Years in IT</span>
+                    <span className="text-teal-400 font-bold text-lg">{resumeData.profile.stats.yearsIT}+</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">Years in Cloud</span>
-                    <span className="text-teal-400 font-bold">{resumeData.profile.stats.yearsCloud}+</span>
+                    <span className="text-slate-400 text-sm">Years in Cloud</span>
+                    <span className="text-teal-400 font-bold text-lg">{resumeData.profile.stats.yearsCloud}+</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-400">AWS Certifications</span>
-                    <span className="text-teal-400 font-bold">{resumeData.profile.stats.certifications}</span>
+                    <span className="text-slate-400 text-sm">AWS Certifications</span>
+                    <span className="text-teal-400 font-bold text-lg">{resumeData.profile.stats.certifications}</span>
                   </div>
                 </div>
               </div>
