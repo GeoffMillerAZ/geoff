@@ -10,8 +10,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Geoffrey Miller | Cloud Architect & Infrastructure Director",
-  description: "Infrastructure Director & Principal Cloud Architect - 20+ years of IT experience specializing in cloud architecture, platform engineering, and technical leadership.",
+  title: "Geoffrey Miller | Cloud Architect",
+  description: "Infrastructure Director & Principal Cloud Architect - 20+ years building high-performance engineering teams.",
 }
 
 export default function RootLayout({
