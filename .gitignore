@@ -1,57 +1,43 @@
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# Development files (shouldn't be in deployment)
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Next.js
+.next/
+out/
+
+# Production
+build/
+dist/
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-# Environment variables
+# Local env files
 .env
 .env.local
-.env.production.local
 .env.development.local
 .env.test.local
+.env.production.local
 
-# Editor directories and files
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Editor
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-
-# Source files (these should never be in the deployment branch)
-*.ts
-*.tsx
-*.astro
-*.md
-*.mdx
-src/
-tests/
-scripts/
-
-# Build tools
-package.json
-package-lock.json
-tsconfig.json
-astro.config.*
-vite.config.*
-tailwind.config.*
-
-# Logs
-logs/
-*.log
-
-# Temporary files
-*.tmp
-*.temp
-.cache/
