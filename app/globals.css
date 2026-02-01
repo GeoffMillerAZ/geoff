@@ -76,3 +76,32 @@ body {
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
 ::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--neon-pink) / 0.5); }
+
+/* Responsive sidebar */
+@media (max-width: 1024px) {
+  .desktop-sidebar {
+    display: none !important;
+  }
+  .mobile-header {
+    display: flex !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    padding-top: 80px !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .desktop-sidebar {
+    display: flex !important;
+  }
+  .mobile-header {
+    display: none !important;
+  }
+}
+
+/* Nav link hover states */
+nav a:hover {
+  background: hsl(230 25% 15%);
+  color: #ff2e97 !important;
+}
