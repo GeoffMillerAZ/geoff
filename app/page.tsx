@@ -7,16 +7,12 @@ const resumeData = {
     title: "Infrastructure Director & Principal Cloud Architect",
     location: "Phoenix, AZ",
     photo: "/images/geoff-miller.jpg",
-    links: {
-      github: "https://github.com/GeoffMillerAZ",
-      linkedin: "https://linkedin.com/in/geoff-e-miller",
-      resume: "/GeoffreyMiller-Resume.pdf"
-    },
-    stats: {
-      yearsIT: 20,
-      yearsCloud: 12,
-      certifications: 2
-    }
+    github: "https://github.com/GeoffMillerAZ",
+    linkedin: "https://linkedin.com/in/geoff-e-miller",
+    resume: "/GeoffreyMiller-Resume.pdf",
+    yearsIT: 20,
+    yearsCloud: 12,
+    certifications: 2
   },
   summary: {
     headline: "Building and leading high-performing platform engineering teams that transform how organizations deliver software.",
@@ -33,12 +29,12 @@ const resumeData = {
       company: "First Citizens Bank",
       location: "Remote",
       period: "Jun 2021 - Present",
-      description: "Leading cloud infrastructure strategy and platform engineering for a top-20 US bank. Managing teams responsible for Kubernetes platforms, cloud architecture, and developer experience.",
+      description: "Leading cloud infrastructure strategy and platform engineering for a top-20 US bank.",
       achievements: [
         "Built and scaled platform engineering team from 3 to 15+ engineers",
         "Architected multi-region Kubernetes platform serving 500+ microservices",
         "Reduced cloud costs by 40% through FinOps initiatives",
-        "Established Internal Developer Platform (IDP) reducing deployment time by 80%"
+        "Established Internal Developer Platform reducing deployment time by 80%"
       ],
       technologies: ["AWS", "Kubernetes", "Terraform", "ArgoCD", "Istio"]
     },
@@ -47,7 +43,7 @@ const resumeData = {
       company: "Carvana",
       location: "Phoenix, AZ",
       period: "2018 - 2021",
-      description: "Led DevOps transformation and cloud migration initiatives for the fastest-growing automotive retailer.",
+      description: "Led DevOps transformation and cloud migration for the fastest-growing automotive retailer.",
       achievements: [
         "Migrated 200+ applications to Kubernetes",
         "Implemented GitOps workflows with ArgoCD",
@@ -69,158 +65,92 @@ const resumeData = {
     }
   ],
   skills: [
-    {
-      category: "Cloud Platforms",
-      items: ["AWS", "Multi-Cloud Strategy", "Cost Optimization", "Well-Architected Framework"]
-    },
-    {
-      category: "Platform Engineering",
-      items: ["Kubernetes", "Service Mesh (Istio)", "Internal Developer Platforms", "GitOps"]
-    },
-    {
-      category: "DevOps & SRE",
-      items: ["CI/CD", "Infrastructure as Code", "Observability", "Incident Management"]
-    },
-    {
-      category: "Leadership",
-      items: ["Team Building", "Technical Strategy", "Stakeholder Management", "Mentoring"]
-    },
-    {
-      category: "Technologies",
-      items: ["Go", "Python", "TypeScript", "Terraform", "ArgoCD", "Prometheus"]
-    }
+    { category: "Cloud Platforms", items: ["AWS", "Multi-Cloud Strategy", "Cost Optimization", "Well-Architected Framework"] },
+    { category: "Platform Engineering", items: ["Kubernetes", "Service Mesh (Istio)", "Internal Developer Platforms", "GitOps"] },
+    { category: "DevOps & SRE", items: ["CI/CD", "Infrastructure as Code", "Observability", "Incident Management"] },
+    { category: "Leadership", items: ["Team Building", "Technical Strategy", "Stakeholder Management", "Mentoring"] },
+    { category: "Technologies", items: ["Go", "Python", "TypeScript", "Terraform", "ArgoCD", "Prometheus"] }
   ],
   certifications: [
-    {
-      name: "AWS Certified Solutions Architect",
-      level: "Associate",
-      issuer: "Amazon Web Services"
-    },
-    {
-      name: "AWS Certified Developer",
-      level: "Associate", 
-      issuer: "Amazon Web Services"
-    }
+    { name: "AWS Certified Solutions Architect", level: "Associate", issuer: "Amazon Web Services" },
+    { name: "AWS Certified Developer", level: "Associate", issuer: "Amazon Web Services" }
   ],
-  education: [
-    {
-      degree: "Computer Science Studies",
-      school: "Northern Illinois University",
-      location: "DeKalb, IL",
-      period: "2005 - 2008",
-      notes: "Teaching Assistant for Introduction to Programming"
-    }
-  ],
-  awards: [
-    {
-      title: "DECA National Competition",
-      achievement: "First Place - Extemporaneous Speaking",
-      year: "2004"
-    }
-  ]
+  education: { degree: "Computer Science Studies", school: "Northern Illinois University", location: "DeKalb, IL", period: "2005 - 2008", notes: "Teaching Assistant for Introduction to Programming" },
+  awards: [{ title: "DECA National Competition", achievement: "First Place - Extemporaneous Speaking", year: "2004" }]
 }
 
 export default function ResumeDashboard() {
   return (
-    <div className="min-h-screen bg-slate-900">
+    <div style={{ minHeight: '100vh', backgroundColor: '#0f172a', color: '#f1f5f9' }}>
       {/* Header */}
-      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <span className="text-xl font-bold text-teal-400">GM</span>
-            <nav className="hidden md:flex items-center">
-              <a href="#about" className="text-slate-400 hover:text-teal-400 transition-colors px-3">About</a>
-              <a href="#experience" className="text-slate-400 hover:text-teal-400 transition-colors px-3">Experience</a>
-              <a href="#skills" className="text-slate-400 hover:text-teal-400 transition-colors px-3">Skills</a>
-              <a href="#certifications" className="text-slate-400 hover:text-teal-400 transition-colors px-3">Certifications</a>
+      <header style={{ borderBottom: '1px solid #1e293b', backgroundColor: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(8px)', position: 'sticky', top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px' }}>
+            <span style={{ fontSize: '20px', fontWeight: 700, color: '#14b8a6' }}>GM</span>
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+              {['About', 'Experience', 'Skills', 'Certifications'].map(item => (
+                <a key={item} href={`#${item.toLowerCase()}`} style={{ color: '#94a3b8', textDecoration: 'none', fontSize: '14px' }}>{item}</a>
+              ))}
             </nav>
-            <a 
-              href={resumeData.profile.links.resume}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-slate-900 font-medium rounded-lg transition-colors"
-            >
-              <Download className="w-4 h-4" />
-              <span className="hidden sm:inline">Resume</span>
+            <a href={resumeData.profile.resume} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', backgroundColor: '#14b8a6', color: '#0f172a', borderRadius: '8px', textDecoration: 'none', fontWeight: 500, fontSize: '14px' }}>
+              <Download style={{ width: '16px', height: '16px' }} />
+              Resume
             </a>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '32px 24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '32px' }}>
           {/* Sidebar */}
-          <aside className="lg:col-span-3 mb-8 lg:mb-0">
-            <div className="lg:sticky lg:top-24 space-y-6">
+          <aside>
+            <div style={{ position: 'sticky', top: '96px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Profile Card */}
-              <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-teal-500/20 mb-4">
-                    <Image
-                      src={resumeData.profile.photo}
-                      alt={resumeData.profile.name}
-                      width={128}
-                      height={128}
-                      className="object-cover w-full h-full"
-                    />
+              <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: '1px solid #334155' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+                  <div style={{ width: '128px', height: '128px', borderRadius: '50%', overflow: 'hidden', border: '4px solid rgba(20, 184, 166, 0.2)', marginBottom: '16px' }}>
+                    <Image src={resumeData.profile.photo} alt={resumeData.profile.name} width={128} height={128} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
                   </div>
-                  <h1 className="text-xl font-bold text-slate-100">{resumeData.profile.name}</h1>
-                  <p className="text-sm text-teal-400 mt-1">{resumeData.profile.title}</p>
-                  <div className="flex items-center gap-1 text-slate-400 text-sm mt-2">
-                    <MapPin className="w-4 h-4" />
+                  <h1 style={{ fontSize: '20px', fontWeight: 700, margin: 0 }}>{resumeData.profile.name}</h1>
+                  <p style={{ fontSize: '14px', color: '#14b8a6', margin: '4px 0 0 0' }}>{resumeData.profile.title}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#94a3b8', fontSize: '14px', marginTop: '8px' }}>
+                    <MapPin style={{ width: '16px', height: '16px' }} />
                     <span>{resumeData.profile.location}</span>
                   </div>
-                  
-                  {/* Social Links */}
-                  <div className="flex items-center gap-3 mt-4">
-                    <a 
-                      href={resumeData.profile.links.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                    >
-                      <Github className="w-5 h-5 text-slate-300" />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '16px' }}>
+                    <a href={resumeData.profile.github} target="_blank" rel="noopener noreferrer" style={{ padding: '10px', backgroundColor: '#334155', borderRadius: '8px', display: 'flex' }}>
+                      <Github style={{ width: '20px', height: '20px', color: '#cbd5e1' }} />
                     </a>
-                    <a 
-                      href={resumeData.profile.links.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
-                    >
-                      <Linkedin className="w-5 h-5 text-slate-300" />
+                    <a href={resumeData.profile.linkedin} target="_blank" rel="noopener noreferrer" style={{ padding: '10px', backgroundColor: '#334155', borderRadius: '8px', display: 'flex' }}>
+                      <Linkedin style={{ width: '20px', height: '20px', color: '#cbd5e1' }} />
                     </a>
                   </div>
                 </div>
               </div>
 
               {/* Quick Stats */}
-              <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Quick Stats</h3>
-                <div className="flex flex-col" style={{ gap: '12px' }}>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-sm">Years in IT</span>
-                    <span className="text-teal-400 font-bold text-lg">{resumeData.profile.stats.yearsIT}+</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-sm">Years in Cloud</span>
-                    <span className="text-teal-400 font-bold text-lg">{resumeData.profile.stats.yearsCloud}+</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-400 text-sm">AWS Certifications</span>
-                    <span className="text-teal-400 font-bold text-lg">{resumeData.profile.stats.certifications}</span>
-                  </div>
+              <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: '1px solid #334155' }}>
+                <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 16px 0' }}>Quick Stats</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {[
+                    { label: 'Years in IT', value: `${resumeData.profile.yearsIT}+` },
+                    { label: 'Years in Cloud', value: `${resumeData.profile.yearsCloud}+` },
+                    { label: 'AWS Certifications', value: resumeData.profile.certifications }
+                  ].map(stat => (
+                    <div key={stat.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ color: '#94a3b8', fontSize: '14px' }}>{stat.label}</span>
+                      <span style={{ color: '#14b8a6', fontWeight: 700, fontSize: '18px' }}>{stat.value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               {/* Section Nav */}
-              <nav className="hidden lg:block bg-slate-800 rounded-xl p-4 border border-slate-700">
-                <ul className="space-y-2">
-                  {["About", "Experience", "Skills", "Certifications", "Education", "Awards"].map((section) => (
+              <nav style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '16px', border: '1px solid #334155' }}>
+                <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {['About', 'Experience', 'Skills', 'Certifications', 'Education', 'Awards'].map(section => (
                     <li key={section}>
-                      <a 
-                        href={`#${section.toLowerCase()}`}
-                        className="block px-3 py-2 text-slate-400 hover:text-teal-400 hover:bg-slate-700/50 rounded-lg transition-colors"
-                      >
-                        {section}
-                      </a>
+                      <a href={`#${section.toLowerCase()}`} style={{ display: 'block', padding: '8px 12px', color: '#94a3b8', textDecoration: 'none', borderRadius: '8px', fontSize: '14px' }}>{section}</a>
                     </li>
                   ))}
                 </ul>
@@ -229,24 +159,22 @@ export default function ResumeDashboard() {
           </aside>
 
           {/* Main Content */}
-          <main className="lg:col-span-9 space-y-12">
+          <main style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
             {/* About Section */}
-            <section id="about" className="scroll-mt-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-500/10 rounded-lg">
-                  <Briefcase className="w-5 h-5 text-teal-400" />
+            <section id="about">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ padding: '8px', backgroundColor: 'rgba(20, 184, 166, 0.1)', borderRadius: '8px' }}>
+                  <Briefcase style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-100">Career Summary</h2>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Career Summary</h2>
               </div>
-              <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                <p className="text-lg text-slate-300 leading-relaxed mb-4">
-                  {resumeData.summary.headline}
-                </p>
-                <ul className="space-y-2">
-                  {resumeData.summary.highlights.map((highlight, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <span className="w-1.5 h-1.5 bg-teal-400 rounded-full mt-2 flex-shrink-0" />
-                      <span className="text-slate-400">{highlight}</span>
+              <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: '1px solid #334155' }}>
+                <p style={{ fontSize: '18px', color: '#cbd5e1', lineHeight: 1.6, margin: '0 0 16px 0' }}>{resumeData.summary.headline}</p>
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {resumeData.summary.highlights.map((highlight, i) => (
+                    <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                      <span style={{ width: '6px', height: '6px', backgroundColor: '#14b8a6', borderRadius: '50%', marginTop: '8px', flexShrink: 0 }} />
+                      <span style={{ color: '#94a3b8' }}>{highlight}</span>
                     </li>
                   ))}
                 </ul>
@@ -254,46 +182,41 @@ export default function ResumeDashboard() {
             </section>
 
             {/* Experience Section */}
-            <section id="experience" className="scroll-mt-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-500/10 rounded-lg">
-                  <Briefcase className="w-5 h-5 text-teal-400" />
+            <section id="experience">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ padding: '8px', backgroundColor: 'rgba(20, 184, 166, 0.1)', borderRadius: '8px' }}>
+                  <Briefcase style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-100">Experience</h2>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Experience</h2>
               </div>
-              <div className="space-y-6">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                 {resumeData.experience.map((job, index) => (
-                  <div key={index} className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
+                  <div key={index} style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: '1px solid #334155' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
                       <div>
-                        <h3 className="text-lg font-semibold text-slate-100">{job.title}</h3>
-                        <p className="text-teal-400">{job.company}</p>
+                        <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>{job.title}</h3>
+                        <p style={{ color: '#14b8a6', margin: '4px 0 0 0' }}>{job.company}</p>
                       </div>
-                      <div className="text-sm text-slate-400">
-                        <p>{job.period}</p>
-                        <p>{job.location}</p>
+                      <div style={{ textAlign: 'right', fontSize: '14px', color: '#64748b' }}>
+                        <p style={{ margin: 0 }}>{job.period}</p>
+                        <p style={{ margin: '2px 0 0 0' }}>{job.location}</p>
                       </div>
                     </div>
-                    <p className="text-slate-400 mb-4">{job.description}</p>
-                    <div className="mb-4">
-                      <h4 className="text-sm font-semibold text-slate-300 mb-2">Key Achievements</h4>
-                      <ul className="space-y-1">
+                    <p style={{ color: '#94a3b8', margin: '0 0 16px 0' }}>{job.description}</p>
+                    <div style={{ marginBottom: '16px' }}>
+                      <h4 style={{ fontSize: '14px', fontWeight: 600, color: '#cbd5e1', margin: '0 0 8px 0' }}>Key Achievements</h4>
+                      <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                         {job.achievements.map((achievement, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-slate-400">
-                            <span className="text-teal-400 mt-1">-</span>
+                          <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '14px', color: '#94a3b8' }}>
+                            <span style={{ color: '#14b8a6' }}>-</span>
                             {achievement}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="flex flex-wrap gap-2">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {job.technologies.map((tech, i) => (
-                        <span 
-                          key={i}
-                          className="px-3 py-1 bg-slate-700 text-slate-300 text-xs rounded-full"
-                        >
-                          {tech}
-                        </span>
+                        <span key={i} style={{ padding: '4px 12px', backgroundColor: '#334155', color: '#cbd5e1', fontSize: '12px', borderRadius: '9999px' }}>{tech}</span>
                       ))}
                     </div>
                   </div>
@@ -302,27 +225,20 @@ export default function ResumeDashboard() {
             </section>
 
             {/* Skills Section */}
-            <section id="skills" className="scroll-mt-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-500/10 rounded-lg">
-                  <Code2 className="w-5 h-5 text-teal-400" />
+            <section id="skills">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ padding: '8px', backgroundColor: 'rgba(20, 184, 166, 0.1)', borderRadius: '8px' }}>
+                  <Code2 style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-100">Skills & Expertise</h2>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Skills & Expertise</h2>
               </div>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                 {resumeData.skills.map((skillGroup, index) => (
-                  <div key={index} className="bg-slate-800 rounded-xl p-5 border border-slate-700">
-                    <h3 className="text-sm font-semibold text-teal-400 uppercase tracking-wider mb-3">
-                      {skillGroup.category}
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
+                  <div key={index} style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '20px', border: '1px solid #334155' }}>
+                    <h3 style={{ fontSize: '12px', fontWeight: 600, color: '#14b8a6', textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 12px 0' }}>{skillGroup.category}</h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {skillGroup.items.map((skill, i) => (
-                        <span 
-                          key={i}
-                          className="px-3 py-1.5 bg-slate-700/50 text-slate-300 text-sm rounded-lg border border-slate-600"
-                        >
-                          {skill}
-                        </span>
+                        <span key={i} style={{ padding: '6px 12px', backgroundColor: 'rgba(51, 65, 85, 0.5)', color: '#cbd5e1', fontSize: '14px', borderRadius: '8px', border: '1px solid #475569' }}>{skill}</span>
                       ))}
                     </div>
                   </div>
@@ -331,24 +247,24 @@ export default function ResumeDashboard() {
             </section>
 
             {/* Certifications Section */}
-            <section id="certifications" className="scroll-mt-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-500/10 rounded-lg">
-                  <Award className="w-5 h-5 text-teal-400" />
+            <section id="certifications">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ padding: '8px', backgroundColor: 'rgba(20, 184, 166, 0.1)', borderRadius: '8px' }}>
+                  <Award style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-100">Certifications</h2>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Certifications</h2>
               </div>
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
                 {resumeData.certifications.map((cert, index) => (
-                  <div key={index} className="bg-slate-800 rounded-xl p-5 border border-slate-700">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 bg-amber-500/10 rounded-lg">
-                        <Award className="w-6 h-6 text-amber-400" />
+                  <div key={index} style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '20px', border: '1px solid #334155' }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                      <div style={{ padding: '12px', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderRadius: '8px' }}>
+                        <Award style={{ width: '24px', height: '24px', color: '#f59e0b' }} />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-slate-100">{cert.name}</h3>
-                        <p className="text-sm text-teal-400">{cert.level}</p>
-                        <p className="text-sm text-slate-400 mt-1">{cert.issuer}</p>
+                        <h3 style={{ fontSize: '16px', fontWeight: 600, margin: 0 }}>{cert.name}</h3>
+                        <p style={{ color: '#14b8a6', fontSize: '14px', margin: '4px 0 0 0' }}>{cert.level}</p>
+                        <p style={{ color: '#64748b', fontSize: '14px', margin: '4px 0 0 0' }}>{cert.issuer}</p>
                       </div>
                     </div>
                   </div>
@@ -357,48 +273,46 @@ export default function ResumeDashboard() {
             </section>
 
             {/* Education Section */}
-            <section id="education" className="scroll-mt-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-500/10 rounded-lg">
-                  <GraduationCap className="w-5 h-5 text-teal-400" />
+            <section id="education">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ padding: '8px', backgroundColor: 'rgba(20, 184, 166, 0.1)', borderRadius: '8px' }}>
+                  <GraduationCap style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-100">Education</h2>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Education</h2>
               </div>
-              {resumeData.education.map((edu, index) => (
-                <div key={index} className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-100">{edu.degree}</h3>
-                      <p className="text-teal-400">{edu.school}</p>
-                      {edu.notes && <p className="text-sm text-slate-400 mt-2">{edu.notes}</p>}
-                    </div>
-                    <div className="text-sm text-slate-400">
-                      <p>{edu.period}</p>
-                      <p>{edu.location}</p>
-                    </div>
+              <div style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: '1px solid #334155' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '8px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>{resumeData.education.degree}</h3>
+                    <p style={{ color: '#14b8a6', margin: '4px 0 0 0' }}>{resumeData.education.school}</p>
+                    <p style={{ color: '#64748b', fontSize: '14px', margin: '8px 0 0 0' }}>{resumeData.education.notes}</p>
+                  </div>
+                  <div style={{ textAlign: 'right', fontSize: '14px', color: '#64748b' }}>
+                    <p style={{ margin: 0 }}>{resumeData.education.period}</p>
+                    <p style={{ margin: '2px 0 0 0' }}>{resumeData.education.location}</p>
                   </div>
                 </div>
-              ))}
+              </div>
             </section>
 
             {/* Awards Section */}
-            <section id="awards" className="scroll-mt-24">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 bg-teal-500/10 rounded-lg">
-                  <Trophy className="w-5 h-5 text-teal-400" />
+            <section id="awards">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ padding: '8px', backgroundColor: 'rgba(20, 184, 166, 0.1)', borderRadius: '8px' }}>
+                  <Trophy style={{ width: '20px', height: '20px', color: '#14b8a6' }} />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-100">Awards & Recognition</h2>
+                <h2 style={{ fontSize: '24px', fontWeight: 700, margin: 0 }}>Awards & Recognition</h2>
               </div>
               {resumeData.awards.map((award, index) => (
-                <div key={index} className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-amber-500/10 rounded-lg">
-                      <Trophy className="w-6 h-6 text-amber-400" />
+                <div key={index} style={{ backgroundColor: '#1e293b', borderRadius: '16px', padding: '24px', border: '1px solid #334155' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                    <div style={{ padding: '12px', backgroundColor: 'rgba(245, 158, 11, 0.1)', borderRadius: '8px' }}>
+                      <Trophy style={{ width: '24px', height: '24px', color: '#f59e0b' }} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-100">{award.title}</h3>
-                      <p className="text-teal-400">{award.achievement}</p>
-                      <p className="text-sm text-slate-400 mt-1">{award.year}</p>
+                      <h3 style={{ fontSize: '16px', fontWeight: 600, margin: 0 }}>{award.title}</h3>
+                      <p style={{ color: '#14b8a6', margin: '4px 0 0 0' }}>{award.achievement}</p>
+                      <p style={{ color: '#64748b', fontSize: '14px', margin: '4px 0 0 0' }}>{award.year}</p>
                     </div>
                   </div>
                 </div>
@@ -409,9 +323,9 @@ export default function ResumeDashboard() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 mt-16 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-400 text-sm">
-          <p>Geoffrey Miller - Built with Next.js and Tailwind CSS</p>
+      <footer style={{ borderTop: '1px solid #1e293b', marginTop: '64px', padding: '32px 0' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center', color: '#64748b', fontSize: '14px' }}>
+          <p style={{ margin: 0 }}>Geoffrey Miller - Built with Next.js</p>
         </div>
       </footer>
     </div>
