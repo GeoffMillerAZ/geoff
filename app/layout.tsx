@@ -1,15 +1,17 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import { Sidebar } from "@/components/sidebar"
+import { MobileNav } from "@/components/mobile-nav"
 
 const inter = Inter({ 
   subsets: ["latin"],
-  variable: "--font-inter"
+  variable: "--font-sans"
 })
 
 export const metadata: Metadata = {
-  title: "Geoffrey Miller | Infrastructure Director & Cloud Architect",
-  description: "Professional resume and portfolio - 20+ years of IT experience, specializing in cloud architecture and platform engineering.",
+  title: "Geoffrey Miller | Cloud Architect & Infrastructure Leader",
+  description: "Infrastructure Director & Principal Cloud Architect - 20+ years of IT experience specializing in cloud architecture, platform engineering, and technical leadership.",
 }
 
 export default function RootLayout({
@@ -19,7 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>{children}</body>
+      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
+        <div className="synthwave-grid min-h-screen">
+          <MobileNav />
+          <Sidebar />
+          <main className="lg:pl-64 pt-16 lg:pt-0 min-h-screen">
+            {children}
+          </main>
+        </div>
+      </body>
     </html>
   )
 }

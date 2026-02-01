@@ -3,18 +3,76 @@
 @tailwind utilities;
 
 :root {
-  --background: 222.2 47.4% 11.2%;
-  --foreground: 210 40% 98%;
-  --card: 217.2 32.6% 17.5%;
-  --card-foreground: 210 40% 98%;
-  --primary: 173 58% 39%;
-  --primary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 25%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --border: 217.2 32.6% 25%;
+  /* Synthwave 84 Color Palette */
+  --background: 230 25% 7%;
+  --background-secondary: 230 25% 10%;
+  --foreground: 0 0% 95%;
+  
+  /* Card/Surface colors */
+  --card: 230 25% 12%;
+  --card-foreground: 0 0% 95%;
+  
+  /* Muted colors */
+  --muted: 230 20% 18%;
+  --muted-foreground: 230 10% 55%;
+  
+  /* Neon accent colors */
+  --neon-pink: 328 100% 63%;
+  --neon-cyan: 180 100% 45%;
+  --neon-purple: 270 100% 70%;
+  --neon-blue: 210 100% 60%;
+  --neon-orange: 25 100% 55%;
+  
+  /* Primary uses neon pink */
+  --primary: 328 100% 63%;
+  --primary-foreground: 0 0% 100%;
+  
+  /* Secondary uses neon cyan */
+  --secondary: 180 100% 45%;
+  --secondary-foreground: 230 25% 10%;
+  
+  /* Borders */
+  --border: 230 20% 20%;
+  
+  --radius: 0.75rem;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: hsl(var(--background));
+  background: hsl(var(--background));
   color: hsl(var(--foreground));
+  min-height: 100vh;
 }
+
+/* Synthwave grid background */
+.synthwave-grid {
+  background-image: 
+    linear-gradient(rgba(255, 46, 151, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 46, 151, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Neon glow effects */
+.glow-pink { box-shadow: 0 0 20px rgba(255, 46, 151, 0.4); }
+.glow-cyan { box-shadow: 0 0 20px rgba(0, 230, 230, 0.4); }
+.glow-purple { box-shadow: 0 0 20px rgba(167, 85, 255, 0.4); }
+
+/* Neon text */
+.text-neon-pink { color: hsl(var(--neon-pink)); text-shadow: 0 0 10px rgba(255, 46, 151, 0.5); }
+.text-neon-cyan { color: hsl(var(--neon-cyan)); text-shadow: 0 0 10px rgba(0, 230, 230, 0.5); }
+.text-neon-purple { color: hsl(var(--neon-purple)); text-shadow: 0 0 10px rgba(167, 85, 255, 0.5); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: hsl(var(--background)); }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted)); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--neon-pink) / 0.5); }
